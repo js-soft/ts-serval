@@ -1,0 +1,13 @@
+{
+    "testFolder": "./lib-web",
+    "runners": [
+        {
+            "dependencies": ["tsserval.js", "tsserval.test.js"],
+            "globals": ["TSServal", "TSServalTest"]
+        },
+        {
+            "dependencies": ["tsserval.min.js", "tsserval.test.js"],
+            "globals": ["TSServal", "TSServalTest"]
+        }
+    ]
+}

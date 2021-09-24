@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "sourceMap": true,
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "outDir": "dist-test",
+        "strict": false, // Unfortunately strict mode has problems with decorators accessing the this context within getters/setters
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
+        "downlevelIteration": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": true,
+        "lib": ["es2017", "dom"],
+        "baseUrl": "./test",
+        "paths": {
+            "@js-soft/ts-serval": ["../dist"]
+        }
+    },
+    "include": ["test/**/*.ts"],
+    "exclude": ["node_modules"]
+}

@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "sourceMap": true,
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "outDir": "../lib-test",
+        "strict": false, // Unfortunately strict mode has problems with decorators accessing the this context within getters/setters
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
+        "downlevelIteration": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": true,
+        "lib": ["es2017", "dom"],
+        "typeRoots": ["../node_modules/@types"],
+        "baseUrl": "../",
+        "paths": {
+            "@js-soft/ts-serval": ["src"]
+        }
+    },
+    "include": ["**/*.ts"],
+    "exclude": []
+}
