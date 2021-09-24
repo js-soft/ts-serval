@@ -1,5 +1,5 @@
 set -e
 set -x
 
-npm set //nexus.js-soft.com/repository/:_authToken=${NPM_TOKEN}
+npm set //registry.npmjs.org/:_authToken=${NPM_TOKEN}
 npm publish
