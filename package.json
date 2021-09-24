@@ -34,6 +34,8 @@
         "bundle:min": "webpack --stats-all --config webpack.min.config.js",
         "bundle:test": "webpack --stats-all --config webpack.test.config.js",
         "cdep": "tsc && madge --circular dist",
+        "test:local": "npm run test",
+        "test:ci": "npm run test",
         "test": "npm run test:node && npm run test:web",
         "test:node": "mocha -r ts-node/register -r tsconfig-paths/register ./test/index.ts --project ./test/tsconfig.json --exit",
         "test:web:debug": "browsertest-runner-debug",
