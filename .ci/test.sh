@@ -1,4 +1,4 @@
 set -e
 set -x
 
-npm run test
+npm run test:ci
