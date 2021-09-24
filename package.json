@@ -32,11 +32,12 @@
         "bundle:test": "webpack --stats-all --config webpack.test.config.js",
         "cdep": "tsc && madge --circular dist",
         "test:local": "npm run test",
+        "test:local:node": "npm run test:node",
         "test:ci": "npm run test",
         "test": "npm run test:node && npm run test:web",
         "test:node": "mocha -r ts-node/register -r tsconfig-paths/register ./test/index.ts --project ./test/tsconfig.json --exit",
-        "test:web:debug": "browsertest-runner-debug",
-        "test:web": "browsertest-runner"
+        "test:web": "browsertest-runner",
+        "test:web:debug": "browsertest-runner-debug"
     },
     "dependencies": {
         "reflect-metadata": "^0.1.13"
