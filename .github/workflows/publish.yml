@@ -11,10 +11,9 @@ jobs:
     container: jssoft/node_browsertests
     steps:
       - uses: actions/checkout@v2
-      - run: npm set //nexus.js-soft.com/repository/:_authToken=${NPM_TOKEN}
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: apt-get update && apt-get install jq -y
       - run: bash .ci/build.sh
       - run: bash .ci/test.sh
       - run: bash .ci/publish.sh
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
