@@ -3,10 +3,7 @@
     "version": "1.0.0",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/js-soft/ts-serval.git"
-    },
+    "repository": "github:js-soft/ts-serval",
     "license": "MIT",
     "author": "j&s-soft GmbH",
     "main": "dist/index.js",
@@ -65,7 +62,6 @@
         "webpack-cli": "^4.8.0"
     },
     "publishConfig": {
-        "registry": "https://nexus.js-soft.com/repository/npm-private/"
-    },
-    "readme": "Enter 'npm run build' to build."
+        "access": "public"
+    }
 }
