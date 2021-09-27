@@ -1,0 +1,68 @@
+{
+    "name": "@js-soft/ts-serval",
+    "version": "1.0.0",
+    "description": "TypeScript Runtime Serialization and Validation",
+    "homepage": "https://github.com/js-soft/ts-serval#readme",
+    "repository": "github:js-soft/ts-serval",
+    "license": "MIT",
+    "author": "j&s-soft GmbH",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "lib-web/tsserval.js",
+        "lib-web/tsserval.min.js",
+        "lib-web/tsserval.js.map",
+        "lib-web/tsserval.min.js.map",
+        "ui5.yaml"
+    ],
+    "scripts": {
+        "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:tsc",
+        "lint:prettier": "prettier --check .",
+        "lint:eslint": "eslint --ext .ts ./src ./test",
+        "lint:tsc": "tsc --noEmit && tsc -p test/tsconfig.json --noEmit",
+        "bt": "npm run test:node && npm run build:node && npm run build:test && npm run bundle && npm run test:web",
+        "build": "npm run build:node && npm run bundle",
+        "build:node": "tsc -p tsconfig.json && madge --circular dist",
+        "build:ci": "npm run build:node && .ci/writeBuildInformation.sh && npm run build:test && npm run bundle",
+        "build:test": "tsc -p tsconfig.test.json",
+        "bundle": "npm run bundle:lib && npm run bundle:min && npm run bundle:test",
+        "bundle:lib": "webpack --stats-all --config webpack.config.js",
+        "bundle:min": "webpack --stats-all --config webpack.min.config.js",
+        "bundle:test": "webpack --stats-all --config webpack.test.config.js",
+        "cdep": "tsc && madge --circular dist",
+        "test:local": "npm run test",
+        "test:local:node": "npm run test:node",
+        "test:ci": "npm run test",
+        "test": "npm run test:node && npm run test:web",
+        "test:node": "mocha -r ts-node/register -r tsconfig-paths/register ./test/index.ts --project ./test/tsconfig.json --exit",
+        "test:web": "browsertest-runner",
+        "test:web:debug": "browsertest-runner-debug"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.1.13"
+    },
+    "devDependencies": {
+        "@js-soft/eslint-config-ts": "1.3.3",
+        "@js-soft/license-check": "1.0.2",
+        "@types/chai": "^4.2.22",
+        "@types/mocha": "^9.0.0",
+        "@types/node": "^16.9.6",
+        "bt-runner": "^1.0.17",
+        "buffer": "^6.0.3",
+        "chai": "^4.3.4",
+        "eslint": "7.32.0",
+        "madge": "^5.0.1",
+        "mocha": "^9.1.1",
+        "prettier": "^2.4.1",
+        "terser-webpack-plugin": "5.2.4",
+        "ts-node": "^10.2.1",
+        "tsconfig-paths": "^3.11.0",
+        "typescript": "^4.4.3",
+        "webpack": "^5.53.0",
+        "webpack-cli": "^4.8.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

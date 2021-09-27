@@ -1,0 +1,9 @@
+---
+specVersion: "2.0"
+type: module
+resources:
+  configuration:
+    paths:
+      /resources/ts-serval: ./lib-web/
+metadata:
+  name: ts-serval
