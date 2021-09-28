@@ -15,6 +15,7 @@ jobs:
       - run: bash .ci/build.sh
         env:
           BUILD_NUMBER: ${{ github.run_number }}
+          COMMIT_HASH: ${{ github.sha }}
       - run: bash .ci/test.sh
       - run: bash .ci/publish.sh
         env:

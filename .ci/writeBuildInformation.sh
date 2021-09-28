@@ -11,15 +11,14 @@ if [ -z "$BUILD_NUMBER" ]; then
     exit 1
 fi
 
+if [ -z "$COMMIT_HASH" ]; then
+    echo "The environment variable 'COMMIT_HASH' must be set."
+    exit 1
+fi
+
 DEPENDENCIES=$(jq .dependencies package.json -cr)
 if [ "$DEPENDENCIES" = "null" ]; then
     DEPENDENCIES="{}"
-fi
-
-COMMIT_HASH=$(git rev-parse HEAD)
-if [ -z "$COMMIT_HASH" ]; then
-    echo "Couldn't determine the hash of the latest commit."
-    exit 1
 fi
 
 VERSION=$(jq .version package.json -cr)
