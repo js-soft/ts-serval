@@ -13,4 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: apt-get update && apt-get install jq -y
       - run: bash .ci/build.sh
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          COMMIT_HASH: ${{ github.sha }}
       - run: bash .ci/test.sh
