@@ -1,4 +1,4 @@
-export default {
+export const buildInformation = {
     version: "{{version}}",
     build: "{{build}}",
     date: "{{date}}",
