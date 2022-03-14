@@ -80,23 +80,23 @@ export class SerializeAsyncWrapperTest {
             it("should deserialize unknown content to Wrapper", async function () {
                 wrapper = await JSONWrapperAsync.from({
                     attribute: {
-                        "@type": "Attribute",
+                        "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
                         name: "Person.firstname",
                         value: "outerFirstname"
                     },
                     child: {
-                        "@type": "JSONWrapperAsync",
+                        "@type": "JSONWrapperAsync", // eslint-disable-line @typescript-eslint/naming-convention
                         someProperty: {
                             boolean: true,
                             number: 5,
                             array: [
                                 {
-                                    "@type": "Attribute",
+                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
                                     name: "Person.firstname",
                                     value: "innerFirstname"
                                 },
                                 {
-                                    "@type": "Attribute",
+                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
                                     name: "Person.lastname",
                                     value: "innerLastname"
                                 }
