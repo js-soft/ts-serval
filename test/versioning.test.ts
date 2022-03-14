@@ -17,7 +17,7 @@ class VersionedClassV2 extends Serializable {
 
 export class VersioningTest {
     public static init(): void {
-        describe.only("VersionedClassV1", function () {
+        describe("VersionedClassV1", function () {
             const json = { "@type": "VersionedClass", propOld: "val" }
 
             it("fromT", function () {
@@ -26,7 +26,7 @@ export class VersioningTest {
             })
         })
 
-        describe.only("VersionedClassV2", function () {
+        describe("VersionedClassV2", function () {
             const json = { "@type": "VersionedClass", "@version": "2", propNew: "val" }
 
             it("fromT", function () {
@@ -34,7 +34,7 @@ export class VersioningTest {
                 expect((obj.toJSON() as any)["@version"]).to.equal("2")
             })
 
-            // when the value of "@version" is an object instead of a string (as the original error message suggests), the resulting error message is different
+            // When the value of "@version" is an object instead of a string (as the original error message suggests), the resulting error message is different
             it("fromT with version as object", function () {
                 const json = { "@type": "VersionedClass", "@version": { version: "2" }, propNew: "val" }
                 const obj = VersionedClassV2.fromT<VersionedClassV2>(json, VersionedClassV2)
