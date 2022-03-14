@@ -6,5 +6,5 @@ export interface ICoreSynchronizable extends ICoreSerializableAsync {
 }
 export abstract class CoreSynchronizable extends CoreSerializableAsync {
     public synchronizedKeys: string[] = []
-    abstract objectIdentifier(): string
+    public abstract objectIdentifier(): string
 }
