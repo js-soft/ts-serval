@@ -22,6 +22,7 @@ import { CoreTest } from "./usage/Core.test"
 import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
 import { ValidateGenericPropertyTest } from "./validate/ValidateGenericProperty.test"
 import { ValidatePropertyAnnotatedWithTypeTest } from "./validate/ValidatePropertyAnnotatedWithTypeTest.test"
+import { VersioningTest } from "./versioning.test"
 
 export class ServalTest {
     public static runSerializeAsync(): void {
@@ -58,6 +59,7 @@ export class ServalTest {
 
     public static runUsage(): void {
         CoreTest.init()
+        VersioningTest.init()
     }
 
     public static run(): void {
