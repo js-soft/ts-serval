@@ -17,6 +17,7 @@ import { SerializeGenericPropertyTest } from "./serialize/sync/SerializeGenericP
 import { SerializeMultiTypeTest } from "./serialize/sync/SerializeMultiType.test"
 import { SerializeOnlyTest } from "./serialize/sync/SerializeOnly.test"
 import { SerializeTypedArrayTest } from "./serialize/sync/SerializeTypedArray.test"
+import { SerializeUnionTypesTest } from "./serialize/sync/SerializeUnionTypes.test"
 import { SerializeWrapperTest } from "./serialize/sync/SerializeWrapper.test"
 import { CoreTest } from "./usage/Core.test"
 import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
@@ -48,6 +49,7 @@ export class ServalTest {
         SerializeAnyPropertyTest.init()
         ArrayInheritanceTest.init()
         SerializeTypedArrayTest.init()
+        SerializeUnionTypesTest.init()
         SerializeWrapperTest.init()
     }
 

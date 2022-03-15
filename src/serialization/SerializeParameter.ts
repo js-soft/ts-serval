@@ -9,6 +9,12 @@ export interface SerializeParameter {
     alias?: string
 
     /**
+     * If a property has more than one possible type, add all the possibilities here in order for
+     * (de)serialization to work properly
+     */
+    unionTypes?: Function[]
+
+    /**
      * Whether or not to allow subclasses of defined types
      * @default true - Subclasses are allowed
      */
