@@ -387,7 +387,10 @@ export abstract class Parser {
         }
         const classInfo: any = descriptor.typeInfo
         let thisObj: any = classInfo
-        if (value instanceof classInfo) {
+
+        if (descriptor.unionTypes?.some((t) => value instanceof t)) {
+            return await Promise.resolve(value)
+        } else if (!descriptor.unionTypes && value instanceof classInfo) {
             return await Promise.resolve(value)
         } else if ((typeof value === "string" && descriptor.deserializeStrings) || descriptor.enforceString) {
             return await Parser.parseStringObjectAsync(value, descriptor, className, caller)

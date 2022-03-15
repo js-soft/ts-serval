@@ -80,7 +80,7 @@ class UnionOption2 extends Serializable implements IUnionOption2 {
 
 @type("ClassWithUnionProperty")
 class ClassWithUnionProperty extends Serializable implements IClassWithUnionProperty {
-    @serialize({ parseUnknown: true, unionTypes: [UnionOption1, UnionOption2] })
+    @serialize({ unionTypes: [UnionOption1, UnionOption2] })
     @validate()
     public content: UnionOption1 | UnionOption2
 
