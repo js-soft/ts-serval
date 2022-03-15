@@ -5,6 +5,13 @@ export interface IReflectProperty {
      * The property's name
      */
     key: string
+
+    /**
+     * If a property has more than one possible type, add all the possibilities here in order for
+     * (de)serialization to work properly
+     */
+    unionTypes?: Function[]
+
     /**
      * The TypeScript type of the property (e.g. Classname)
      */
