@@ -18,21 +18,21 @@ class TestSerializableClass extends NewSerializable {
     }
 }
 
-interface IAcceptResponseItem extends ISerializableAsync {}
+interface IParentItem extends ISerializableAsync {}
 
-@type("AcceptResponseItem")
-class AcceptResponseItem extends SerializableAsync implements IAcceptResponseItem {
-    // public static async from(value: IAcceptResponseItem): Promise<AcceptResponseItem> {
-    //     return await super.fromT(value)
-    // }
+@type("ParentItem")
+class ParentItem extends SerializableAsync implements IParentItem {
+    public static async from(value: IParentItem): Promise<ParentItem> {
+        return await super.fromT(value)
+    }
 }
 
-interface ITestAcceptResponseItem extends IAcceptResponseItem {
+interface IChildItem extends IParentItem {
     test: string
 }
 
-@type("TestAcceptResponseItem")
-class TestAcceptResponseItem extends AcceptResponseItem implements ITestAcceptResponseItem {
+@type("ChildItem")
+class ChildItem extends ParentItem implements IChildItem {
     @serialize()
     @validate()
     public test: string
@@ -40,7 +40,7 @@ class TestAcceptResponseItem extends AcceptResponseItem implements ITestAcceptRe
 
 export class ParentConstructorTest {
     public static init(): void {
-        describe.only("querying the parent constructor in a static function", function () {
+        describe("querying the parent constructor in a static function", function () {
             it("should get the constructor of the class instead of the superclass", function () {
                 const child = TestSerializableClass.from<TestSerializableClass>()
 
@@ -48,32 +48,18 @@ export class ParentConstructorTest {
                 expect(child.getProperty()).to.equal("test")
             })
 
-            it("allows an inherited AcceptResponseItem in the items", async function () {
+            it("should create a ChildItem instead of a ParentItem when the ParentItem overrides the from method", async function () {
                 const responseJSON = {
-                    "@type": "TestAcceptResponseItem",
+                    "@type": "ChildItem",
                     test: "test"
                 } as any
 
                 const response = await SerializableAsync.fromUnknown(responseJSON)
 
-                expect(response).to.be.instanceOf(AcceptResponseItem)
-                expect(response).to.be.instanceOf(TestAcceptResponseItem)
+                expect(response).to.be.instanceOf(ParentItem)
+                expect(response).to.be.instanceOf(ChildItem)
 
-                expect((response as TestAcceptResponseItem).test).to.equal("test")
-            })
-
-            it("allows an inherited AcceptResponseItem in the items a", async function () {
-                const responseJSON = {
-                    "@type": "TestAcceptResponseItem",
-                    test: "test"
-                } as any
-
-                const response = await SerializableAsync.fromT<SerializableAsync>(responseJSON)
-
-                expect(response).to.be.instanceOf(AcceptResponseItem)
-                expect(response).to.be.instanceOf(TestAcceptResponseItem)
-
-                expect(response.test).to.equal("test")
+                expect((response as ChildItem).test).to.equal("test")
             })
         })
     }
