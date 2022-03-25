@@ -1,5 +1,5 @@
+import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
-import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "../src"
 
 class NewSerializable {
     public static from<T extends NewSerializable>(): T {
