@@ -9,7 +9,7 @@ class TokenSerializableAsyncContent extends SerializableAsync {
     public content: Serializable
 
     public static async from(value: Object): Promise<TokenSerializableAsyncContent> {
-        return await super.fromT(value, TokenSerializableAsyncContent)
+        return await super.fromT(value)
     }
 }
 
@@ -21,7 +21,7 @@ class TokenSerializableAsyncContentAsync extends SerializableAsync {
     public content: SerializableAsync
 
     public static async from(value: Object): Promise<TokenSerializableAsyncContentAsync> {
-        return await super.fromT(value, TokenSerializableAsyncContentAsync)
+        return await super.fromT(value)
     }
 }
 

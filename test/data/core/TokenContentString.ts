@@ -12,10 +12,10 @@ export class TokenContentString extends TokenContent {
     public content: string
 
     public static async from(value: ITokenContentString): Promise<TokenContentString> {
-        return await super.fromT(value, TokenContentString)
+        return await super.fromT(value)
     }
 
     public static async deserialize(value: string): Promise<TokenContentString> {
-        return await super.deserializeT(value, TokenContentString)
+        return await super.deserializeT(value)
     }
 }

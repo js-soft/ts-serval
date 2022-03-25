@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 import { ISerializable, Serializable, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
@@ -85,6 +85,6 @@ class ClassWithUnionProperty extends Serializable implements IClassWithUnionProp
     public content: UnionOption1 | UnionOption2
 
     public static from(value: IClassWithUnionProperty): ClassWithUnionProperty {
-        return Serializable.fromT<ClassWithUnionProperty>(value, ClassWithUnionProperty)
+        return super.fromT(value)
     }
 }

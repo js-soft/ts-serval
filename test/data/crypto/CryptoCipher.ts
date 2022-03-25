@@ -46,7 +46,7 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
     }
 
     public static async from(value: CryptoCipher | ICryptoCipher): Promise<CryptoCipher> {
-        return await super.fromT(value, CryptoCipher)
+        return await super.fromT(value)
     }
 
     public static async fromJSON(value: ICryptoCipherSerialized): Promise<CryptoCipher> {

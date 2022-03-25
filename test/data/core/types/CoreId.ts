@@ -24,9 +24,9 @@ export class CoreId extends CoreSerializable implements ICoreId {
 
     public static from(value: ICoreId | string): CoreId {
         if (typeof value === "string" || value instanceof String) {
-            return super.fromT({ id: value }, CoreId)
+            return super.fromT({ id: value })
         }
-        return super.fromT(value, CoreId)
+        return super.fromT(value)
     }
 
     public static deserialize(value: string): CoreId {

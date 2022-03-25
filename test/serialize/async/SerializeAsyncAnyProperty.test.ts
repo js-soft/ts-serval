@@ -9,7 +9,7 @@ class TokenSerializableAsyncContentAny extends SerializableAsync {
     public content: any
 
     public static async from(value: Object): Promise<TokenSerializableAsyncContentAny> {
-        return (await super.from(value, TokenSerializableAsyncContentAny)) as TokenSerializableAsyncContentAny
+        return await super.fromT(value)
     }
 }
 

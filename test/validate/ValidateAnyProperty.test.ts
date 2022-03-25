@@ -11,7 +11,7 @@ class ValidateTokenSerializableContentAny extends Serializable {
     public content: any
 
     public static from(value: Object): ValidateTokenSerializableContentAny {
-        return super.fromT(value, ValidateTokenSerializableContentAny)
+        return super.fromT(value)
     }
 }
 
@@ -24,7 +24,7 @@ class ValidateTokenSerializableContentAnyNullable extends Serializable {
     public content: any
 
     public static from(value: Object): ValidateTokenSerializableContentAnyNullable {
-        return super.fromT(value, ValidateTokenSerializableContentAnyNullable)
+        return super.fromT(value)
     }
 }
 

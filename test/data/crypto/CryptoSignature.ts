@@ -72,7 +72,7 @@ export class CryptoSignature extends CryptoSerializableAsync implements ICryptoS
     }
 
     public static async from(value: CryptoSignature | ICryptoSignature): Promise<CryptoSignature> {
-        return await super.fromT(value, CryptoSignature)
+        return await super.fromT(value)
     }
 
     public static async fromJSON(value: ICryptoSignatureSerialized): Promise<CryptoSignature> {

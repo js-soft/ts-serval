@@ -12,6 +12,6 @@ export class BetterAttribute extends Attribute implements IBetterAttribute {
     public validTo?: string
 
     public static from(value: IBetterAttribute): BetterAttribute {
-        return super.fromT(value, BetterAttribute)
+        return super.fromT(value)
     }
 }

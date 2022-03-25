@@ -17,11 +17,11 @@ class RelationshipTemplateArrayAsync extends SerializableAsync {
     public template: Object
 
     public static async deserialize(value: string): Promise<RelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, RelationshipTemplateArrayAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<RelationshipTemplateArrayAsync> {
-        return await super.fromT(value, RelationshipTemplateArrayAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -33,11 +33,11 @@ class TokenContentArrayAsync extends SerializableAsync {
     public title: string
 
     public static async deserialize(value: string): Promise<TokenContentArrayAsync> {
-        return await super.deserializeT(value, TokenContentArrayAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentArrayAsync> {
-        return await super.fromT(value, TokenContentArrayAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -50,11 +50,11 @@ class TokenContentRelationshipTemplateArrayAsync extends TokenContentArrayAsync 
     public optionalContent: string
 
     public static async deserialize(value: string): Promise<TokenContentRelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, TokenContentRelationshipTemplateArrayAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentRelationshipTemplateArrayAsync> {
-        return await super.fromT(value, TokenContentRelationshipTemplateArrayAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -64,11 +64,11 @@ class TokenRelationshipTemplateArrayAsync extends SerializableAsync {
     public templates: TokenContentRelationshipTemplateArrayAsync[]
 
     public static async deserialize(value: string): Promise<TokenRelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, TokenRelationshipTemplateArrayAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenRelationshipTemplateArrayAsync> {
-        return await super.fromT(value, TokenRelationshipTemplateArrayAsync)
+        return await super.fromT(value)
     }
 }
 

@@ -14,7 +14,7 @@ class TokenSerializeAttribute extends Serializable {
     public content: Attribute
 
     public static from(value: Object): TokenSerializeAttribute {
-        return super.fromT(value, TokenSerializeAttribute)
+        return super.fromT(value)
     }
 }
 

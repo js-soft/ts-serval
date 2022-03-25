@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
@@ -91,6 +91,6 @@ class AsyncClassWithUnionProperty extends SerializableAsync implements IClassWit
     public content: AsyncUnionOption1 | AsyncUnionOption2
 
     public static async from(value: IClassWithUnionProperty): Promise<AsyncClassWithUnionProperty> {
-        return await super.fromT<AsyncClassWithUnionProperty>(value, AsyncClassWithUnionProperty)
+        return await super.fromT(value)
     }
 }

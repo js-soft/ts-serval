@@ -7,11 +7,11 @@ class RelationshipTemplate extends Serializable {
     public template: Object
 
     public static deserialize(value: string): RelationshipTemplate {
-        return super.deserializeT<RelationshipTemplate>(value, RelationshipTemplate)
+        return super.deserializeT<RelationshipTemplate>(value)
     }
 
     public static from(value: Object): RelationshipTemplate {
-        return super.fromT<RelationshipTemplate>(value, RelationshipTemplate)
+        return super.fromT<RelationshipTemplate>(value)
     }
 }
 
@@ -23,11 +23,11 @@ class TokenContent extends Serializable {
     public title: string
 
     public static deserialize(value: string): TokenContent {
-        return super.deserializeT(value, TokenContent)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContent {
-        return super.fromT(value, TokenContent)
+        return super.fromT(value)
     }
 }
 
@@ -37,11 +37,11 @@ class TokenContentGeneric extends TokenContent {
     public content: any
 
     public static deserialize(value: string): TokenContentGeneric {
-        return super.deserializeT(value, TokenContentGeneric)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContentGeneric {
-        return super.fromT(value, TokenContentGeneric)
+        return super.fromT(value)
     }
 }
 
@@ -54,11 +54,11 @@ class TokenContentRelationshipTemplate extends TokenContent {
     public optionalContent: string
 
     public static deserialize(value: string): TokenContentRelationshipTemplate {
-        return super.deserializeT(value, TokenContentRelationshipTemplate)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContentRelationshipTemplate {
-        return super.fromT(value, TokenContentRelationshipTemplate)
+        return super.fromT(value)
     }
 }
 
@@ -68,11 +68,11 @@ class TokenContentString extends TokenContent {
     public content: String
 
     public static deserialize(value: string): TokenContentString {
-        return super.deserializeT(value, TokenContentString)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContentString {
-        return super.fromT(value, TokenContentString)
+        return super.fromT(value)
     }
 }
 
@@ -82,11 +82,11 @@ class TokenRelationshipTemplates extends Serializable {
     public templates: TokenContentRelationshipTemplate[]
 
     public static deserialize(value: string): TokenRelationshipTemplates {
-        return super.deserializeT(value, TokenRelationshipTemplates)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenRelationshipTemplates {
-        return super.fromT(value, TokenRelationshipTemplates)
+        return super.fromT(value)
     }
 }
 

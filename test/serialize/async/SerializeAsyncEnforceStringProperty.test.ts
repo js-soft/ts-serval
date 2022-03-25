@@ -10,7 +10,7 @@ class TokenSerializableAsyncEnforceString extends SerializableAsync {
     public content: Attribute
 
     public static async from(value: Object): Promise<TokenSerializableAsyncEnforceString> {
-        return await super.fromT<TokenSerializableAsyncEnforceString>(value, TokenSerializableAsyncEnforceString)
+        return await super.fromT(value)
     }
 }
 
@@ -58,10 +58,10 @@ export class SerializeAsyncEnforceStringPropertyTest {
             })
 
             it("should deserialize from string", async function () {
-                const deserializedToken = await TokenSerializableAsyncEnforceString.deserializeT(
-                    token.serialize(),
-                    TokenSerializableAsyncEnforceString
-                )
+                const deserializedToken =
+                    await TokenSerializableAsyncEnforceString.deserializeT<TokenSerializableAsyncEnforceString>(
+                        token.serialize()
+                    )
                 expect(deserializedToken).instanceOf(TokenSerializableAsyncEnforceString)
                 expect(deserializedToken.content).instanceOf(Attribute)
                 expect(deserializedToken.content.name).equals("firstname")

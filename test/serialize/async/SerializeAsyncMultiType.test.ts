@@ -15,7 +15,7 @@ class TokenContentMultiAsync extends SerializableAsync implements ITokenContentM
     public value: string | number | boolean
 
     public static async from(value: ITokenContentMultiAsync): Promise<TokenContentMultiAsync> {
-        return await super.fromT(value, TokenContentMultiAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -33,10 +33,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("string")
                 expect(object.value).equals("string")
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("string")
                 expect(object.value).equals("string")
@@ -63,10 +60,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("string")
                 expect(object.value).equals("")
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )!
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)!
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("string")
                 expect(object.value).equals("")
@@ -93,10 +87,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(true)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )!
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)!
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(true)
@@ -123,10 +114,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(false)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )!
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)!
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(false)
@@ -153,10 +141,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("number")
                 expect(object.value).equals(55.5)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )!
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)!
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("number")
                 expect(object.value).equals(55.5)
@@ -183,10 +168,7 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).be.a("number")
                 expect(object.value).equals(0)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(
-                    serialized2,
-                    TokenContentMultiAsync
-                )!
+                const parsed2: TokenContentMultiAsync = await TokenContentMultiAsync.deserializeT(serialized2)!
                 expect(parsed2).instanceOf(TokenContentMultiAsync)
                 expect(object.value).be.a("number")
                 expect(object.value).equals(0)

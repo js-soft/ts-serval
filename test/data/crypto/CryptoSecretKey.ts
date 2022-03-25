@@ -49,7 +49,7 @@ export class CryptoSecretKey extends CryptoSerializableAsync implements ICryptoS
     }
 
     public static async from(value: CryptoSecretKey | ICryptoSecretKey): Promise<CryptoSecretKey> {
-        return await super.fromT(value, CryptoSecretKey)
+        return await super.fromT(value)
     }
 
     public static async fromJSON(value: ICryptoSecretKeySerialized): Promise<CryptoSecretKey> {

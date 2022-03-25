@@ -12,11 +12,11 @@ export class JSONWrapper extends Serializable {
     public static from(value: any): JSONWrapper {
         delete value["@type"]
         const parsed = JSON.parse(JSON.stringify(value))
-        return this.fromT({ value: parsed }, JSONWrapper)
+        return this.fromT({ value: parsed })
     }
 
     public static deserialize(value: string): JSONWrapper {
         const parsed = JSON.parse(value)
-        return this.fromT({ value: parsed }, JSONWrapper)
+        return this.fromT({ value: parsed })
     }
 }

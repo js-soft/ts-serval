@@ -17,14 +17,14 @@ export class CoreAddress extends CoreSerializable {
 
     public static from(value: ICoreAddress | string): CoreAddress {
         if (typeof value === "string") {
-            return super.from({ address: value }, CoreAddress) as CoreAddress
+            return super.from({ address: value }) as CoreAddress
         }
-        return super.from(value, CoreAddress) as CoreAddress
+        return super.from(value) as CoreAddress
     }
 
     public static deserialize(value: string): CoreAddress {
         try {
-            return super.deserializeT<CoreAddress>(value, CoreAddress)
+            return super.deserializeT(value)
         } catch (e) {
             return this.from(value)
         }

@@ -1,3 +1,4 @@
+import { ParentConstructorTest } from "./ParentConstructor.test"
 import { ArrayInheritanceAsyncTest } from "./serialize/async/ArrayInheritanceAsync.test"
 import { InheritanceAsyncTest } from "./serialize/async/InheritanceAsync.test"
 import { SerializeAsyncAnyPropertyTest } from "./serialize/async/SerializeAsyncAnyProperty.test"
@@ -62,6 +63,7 @@ export class ServalTest {
 
     public static runUsage(): void {
         CoreTest.init()
+        ParentConstructorTest.init()
     }
 
     public static run(): void {

@@ -10,7 +10,7 @@ class TokenSerializableWrapperAsync extends SerializableAsync {
     public content: SerializableAsync
 
     public static async from(value: Object): Promise<TokenSerializableWrapperAsync> {
-        return await super.fromT(value, TokenSerializableWrapperAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -22,7 +22,7 @@ class TokenSerializableObjectWrapperAsync extends SerializableAsync {
     public content: Object
 
     public static async from(value: Object): Promise<TokenSerializableObjectWrapperAsync> {
-        return await super.fromT(value, TokenSerializableObjectWrapperAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -34,7 +34,7 @@ class TokenSerializableAnyWrapperAsync extends SerializableAsync {
     public content: any
 
     public static async from(value: Object): Promise<TokenSerializableAnyWrapperAsync> {
-        return await super.fromT(value, TokenSerializableAnyWrapperAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -80,23 +80,23 @@ export class SerializeAsyncWrapperTest {
             it("should deserialize unknown content to Wrapper", async function () {
                 wrapper = await JSONWrapperAsync.from({
                     attribute: {
-                        "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                        "@type": "Attribute",  
                         name: "Person.firstname",
                         value: "outerFirstname"
                     },
                     child: {
-                        "@type": "JSONWrapperAsync", // eslint-disable-line @typescript-eslint/naming-convention
+                        "@type": "JSONWrapperAsync",  
                         someProperty: {
                             boolean: true,
                             number: 5,
                             array: [
                                 {
-                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                                    "@type": "Attribute",  
                                     name: "Person.firstname",
                                     value: "innerFirstname"
                                 },
                                 {
-                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                                    "@type": "Attribute",  
                                     name: "Person.lastname",
                                     value: "innerLastname"
                                 }

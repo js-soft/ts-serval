@@ -28,7 +28,7 @@ export class Draft extends CoreSynchronizable implements IDraftSerialized {
     public content: SerializableAsync
 
     public static async from(value: IDraftSerialized | Draft): Promise<Draft> {
-        return await super.fromT(value, Draft)
+        return await super.fromT(value)
     }
 
     public objectIdentifier(): string {

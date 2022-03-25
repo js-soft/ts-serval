@@ -17,11 +17,11 @@ class RelationshipTemplateAsync extends SerializableAsync {
     public template: Object
 
     public static async deserialize(value: string): Promise<RelationshipTemplateAsync> {
-        return await super.deserializeT(value, RelationshipTemplateAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<RelationshipTemplateAsync> {
-        return await super.fromT(value, RelationshipTemplateAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -33,11 +33,11 @@ class TokenContentAsync extends SerializableAsync {
     public title: string
 
     public static async deserialize(value: string): Promise<TokenContentAsync> {
-        return await super.deserializeT(value, TokenContentAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentAsync> {
-        return await super.fromT(value, TokenContentAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -47,11 +47,11 @@ class TokenContentGenericAsync extends TokenContentAsync {
     public content: any
 
     public static async deserialize(value: string): Promise<TokenContentGenericAsync> {
-        return await super.deserializeT(value, TokenContentGenericAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentGenericAsync> {
-        return await super.fromT(value, TokenContentGenericAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -64,11 +64,11 @@ class TokenContentRelationshipTemplateAsync extends TokenContentAsync {
     public optionalContent: string
 
     public static async deserialize(value: string): Promise<TokenContentRelationshipTemplateAsync> {
-        return await super.deserializeT(value, TokenContentRelationshipTemplateAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentRelationshipTemplateAsync> {
-        return await super.fromT(value, TokenContentRelationshipTemplateAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -78,11 +78,11 @@ class TokenContentStringAsync extends TokenContentAsync {
     public content: String
 
     public static async deserialize(value: string): Promise<TokenContentStringAsync> {
-        return await super.deserializeT(value, TokenContentStringAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenContentStringAsync> {
-        return await super.fromT(value, TokenContentStringAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -92,11 +92,11 @@ class TokenRelationshipTemplatesAsync extends SerializableAsync {
     public templates: TokenContentRelationshipTemplateAsync[]
 
     public static async deserialize(value: string): Promise<TokenRelationshipTemplatesAsync> {
-        return await super.deserializeT(value, TokenRelationshipTemplatesAsync)
+        return await super.deserializeT(value)
     }
 
     public static async from(value: Object): Promise<TokenRelationshipTemplatesAsync> {
-        return await super.fromT(value, TokenRelationshipTemplatesAsync)
+        return await super.fromT(value)
     }
 }
 

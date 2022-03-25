@@ -14,7 +14,7 @@ class TokenSerializeAttributeAsync extends SerializableAsync {
     public content: Attribute
 
     public static async from(value: Object): Promise<TokenSerializeAttributeAsync> {
-        return await super.fromT(value, TokenSerializeAttributeAsync)
+        return await super.fromT(value)
     }
 }
 

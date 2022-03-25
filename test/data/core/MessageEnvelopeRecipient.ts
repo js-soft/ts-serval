@@ -19,6 +19,6 @@ export class MessageEnvelopeRecipient extends CoreSerializableAsync implements I
     public encryptedKey: CryptoCipher
 
     public static async from(value: IMessageEnvelopeRecipient): Promise<MessageEnvelopeRecipient> {
-        return await super.fromT(value, MessageEnvelopeRecipient)
+        return await super.fromT(value)
     }
 }

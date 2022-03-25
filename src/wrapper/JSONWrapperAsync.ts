@@ -12,11 +12,11 @@ export class JSONWrapperAsync extends SerializableAsync {
     public static async from(value: any): Promise<JSONWrapperAsync> {
         delete value["@type"]
         const parsed = JSON.parse(JSON.stringify(value))
-        return await this.fromT({ value: parsed }, JSONWrapperAsync)
+        return await this.fromT({ value: parsed })
     }
 
     public static async deserialize(value: string): Promise<JSONWrapperAsync> {
         const parsed = JSON.parse(value)
-        return await this.fromT({ value: parsed }, JSONWrapperAsync)
+        return await this.fromT({ value: parsed })
     }
 }

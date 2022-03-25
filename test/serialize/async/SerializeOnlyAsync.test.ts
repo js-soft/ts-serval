@@ -10,7 +10,7 @@ class TokenId extends SerializableAsync {
     public id: string
 
     public static async from(value: Object): Promise<TokenId> {
-        return await super.fromT(value, TokenId)
+        return await super.fromT(value)
     }
 }
 

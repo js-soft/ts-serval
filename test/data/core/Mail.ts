@@ -35,7 +35,7 @@ export class Mail extends MessageContent implements IMail {
             value.body = (value as any).content
             delete (value as any).content
         }
-        const obj: Mail = await super.fromT(value, Mail)
+        const obj: Mail = await super.fromT(value)
         return obj
     }
 }

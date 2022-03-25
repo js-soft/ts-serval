@@ -10,7 +10,7 @@ class TokenTypedArrayStringAsync extends SerializableAsync {
     public content: string[]
 
     public static async from(value: Object): Promise<TokenTypedArrayStringAsync> {
-        return await super.fromT<TokenTypedArrayStringAsync>(value, TokenTypedArrayStringAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -22,7 +22,7 @@ class TokenTypedArrayNumberAsync extends SerializableAsync {
     public content: number[]
 
     public static async from(value: Object): Promise<TokenTypedArrayNumberAsync> {
-        return await super.fromT<TokenTypedArrayNumberAsync>(value, TokenTypedArrayNumberAsync)
+        return await super.fromT(value)
     }
 }
 
@@ -34,7 +34,7 @@ class TokenTypedArrayBooleanAsync extends SerializableAsync {
     public content: boolean[]
 
     public static async from(value: Object): Promise<TokenTypedArrayBooleanAsync> {
-        return await super.fromT<TokenTypedArrayBooleanAsync>(value, TokenTypedArrayBooleanAsync)
+        return await super.fromT(value)
     }
 }
 

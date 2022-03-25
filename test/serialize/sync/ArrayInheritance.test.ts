@@ -17,11 +17,11 @@ class RelationshipTemplateArray extends Serializable {
     public template: Object
 
     public static deserialize(value: string): RelationshipTemplateArray {
-        return super.deserializeT(value, RelationshipTemplateArray)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): RelationshipTemplateArray {
-        return super.fromT(value, RelationshipTemplateArray)
+        return super.fromT(value)
     }
 }
 
@@ -33,11 +33,11 @@ class TokenContentArray extends Serializable {
     public title: string
 
     public static deserialize(value: string): TokenContentArray {
-        return super.deserializeT(value, TokenContentArray)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContentArray {
-        return super.fromT(value, TokenContentArray)
+        return super.fromT(value)
     }
 }
 
@@ -50,11 +50,11 @@ class TokenContentRelationshipTemplateArray extends TokenContentArray {
     public optionalContent: string
 
     public static deserialize(value: string): TokenContentRelationshipTemplateArray {
-        return super.deserializeT(value, TokenContentRelationshipTemplateArray)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenContentRelationshipTemplateArray {
-        return super.fromT(value, TokenContentRelationshipTemplateArray)
+        return super.fromT(value)
     }
 }
 
@@ -64,11 +64,11 @@ class TokenRelationshipTemplateArray extends Serializable {
     public templates: TokenContentRelationshipTemplateArray[]
 
     public static deserialize(value: string): TokenRelationshipTemplateArray {
-        return super.deserializeT(value, TokenRelationshipTemplateArray)
+        return super.deserializeT(value)
     }
 
     public static from(value: Object): TokenRelationshipTemplateArray {
-        return super.fromT(value, TokenRelationshipTemplateArray)
+        return super.fromT(value)
     }
 }
 

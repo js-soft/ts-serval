@@ -19,10 +19,10 @@ export class TokenContentRelationshipTemplate extends TokenContent implements IT
     public secretKey: CryptoSecretKey
 
     public static async from(value: ITokenContentRelationshipTemplate): Promise<TokenContentRelationshipTemplate> {
-        return await super.fromT(value, TokenContentRelationshipTemplate)
+        return await super.fromT(value)
     }
 
     public static async deserialize(value: string): Promise<TokenContentRelationshipTemplate> {
-        return await super.deserializeT(value, TokenContentRelationshipTemplate)
+        return await super.deserializeT(value)
     }
 }
