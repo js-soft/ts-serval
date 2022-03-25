@@ -1,4 +1,3 @@
- 
 import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 

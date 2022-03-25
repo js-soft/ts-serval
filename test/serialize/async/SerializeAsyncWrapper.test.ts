@@ -80,23 +80,23 @@ export class SerializeAsyncWrapperTest {
             it("should deserialize unknown content to Wrapper", async function () {
                 wrapper = await JSONWrapperAsync.from({
                     attribute: {
-                        "@type": "Attribute",  
+                        "@type": "Attribute",
                         name: "Person.firstname",
                         value: "outerFirstname"
                     },
                     child: {
-                        "@type": "JSONWrapperAsync",  
+                        "@type": "JSONWrapperAsync",
                         someProperty: {
                             boolean: true,
                             number: 5,
                             array: [
                                 {
-                                    "@type": "Attribute",  
+                                    "@type": "Attribute",
                                     name: "Person.firstname",
                                     value: "innerFirstname"
                                 },
                                 {
-                                    "@type": "Attribute",  
+                                    "@type": "Attribute",
                                     name: "Person.lastname",
                                     value: "innerLastname"
                                 }
