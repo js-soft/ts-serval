@@ -50,7 +50,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @param value The JSON string which should be parsed
      * @returns An object of the given type T
      */
-    protected static async deserializeT<T>(value: string): Promise<T> {
+    public static async deserializeT<T>(value: string): Promise<T> {
         const type = (this as any).prototype.constructor
 
         let obj

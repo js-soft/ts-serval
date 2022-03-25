@@ -39,7 +39,7 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @param value The JSON string which should be parsed
      * @returns An object of the given type T
      */
-    protected static deserializeT<T extends Serializable>(value: string): T {
+    public static deserializeT<T extends Serializable>(value: string): T {
         const type = (this as any).prototype.constructor
 
         let obj
