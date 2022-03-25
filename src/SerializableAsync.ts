@@ -1,5 +1,5 @@
 import { ServalError } from "./errors"
-import { Constructor, ISerializable, ISerializableAsync } from "./interfaces"
+import { Constructor, ISerializable } from "./interfaces"
 import { Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
 import { IReflectProperty } from "./reflection/ReflectProperty"
@@ -35,9 +35,11 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         return await this.fromUnknown(obj)
     }
 
-    public static async deserialize(value: string, type?: new () => SerializableAsync): Promise<SerializableAsync> {
-        if (type) {
-            return await this.deserializeT(value, type)
+    public static async deserialize(value: string): Promise<SerializableAsync> {
+        const type = (this as any).prototype.constructor
+
+        if (type.name !== "object") {
+            return await this.deserializeT(value)
         }
         return await this.deserializeUnknown(value)
     }
@@ -48,7 +50,9 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @param value The JSON string which should be parsed
      * @returns An object of the given type T
      */
-    public static async deserializeT<T>(value: string, type: new () => T): Promise<T> {
+    protected static async deserializeT<T>(value: string): Promise<T> {
+        const type = (this as any).prototype.constructor
+
         let obj
         try {
             obj = JSON.parse(value)
@@ -60,20 +64,19 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 e
             )
         }
-        return await this.fromT<T>(obj, type)
+        return await this.fromT<T>(obj)
     }
 
-    public static async from(
-        value: ISerializableAsync,
-        type?: new () => SerializableAsync
-    ): Promise<SerializableAsync> {
+    public static async from(value: any): Promise<SerializableAsync> {
+        const type = (this as any).prototype.constructor
+
         if (!type || type === SerializableAsync || type === Serializable) {
             if (!value["@type"]) {
                 value["@type"] = "JSONWrapperAsync"
             }
             return await this.fromUnknown(value)
         }
-        return await this.fromT(value, type)
+        return await this.fromT(value)
     }
 
     /**
@@ -85,7 +88,9 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @throws ParsingError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    public static async fromT<T>(value: any, type: new () => T): Promise<T> {
+    protected static async fromT<T>(value: any): Promise<T> {
+        const type = (this as any).prototype.constructor
+
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }

@@ -39,7 +39,9 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @param value The JSON string which should be parsed
      * @returns An object of the given type T
      */
-    public static deserializeT<T>(value: string, type: new () => T): T {
+    protected static deserializeT<T extends Serializable>(value: string): T {
+        const type = (this as any).prototype.constructor
+
         let obj
         try {
             obj = JSON.parse(value)
@@ -51,7 +53,7 @@ export class Serializable extends SerializableBase implements ISerializable {
                 e
             )
         }
-        return this.fromT<T>(obj, type)
+        return this.fromT<T>(obj)
     }
 
     /**
@@ -63,7 +65,9 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @throws DeserializationError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    public static fromT<T>(value: any, type: new () => T): T {
+    protected static fromT<T>(value: any): T {
+        const type = (this as any).prototype.constructor
+
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
@@ -95,20 +99,25 @@ export class Serializable extends SerializableBase implements ISerializable {
         return realObj
     }
 
-    public static deserialize(value: string, type?: new () => Serializable): Serializable {
+    public static deserialize(value: string): Serializable {
+        const type = (this as any).prototype.constructor
+
         if (type) {
-            return this.deserializeT(value, type)
+            return this.deserializeT(value)
         }
         return this.deserializeUnknown(value)
     }
 
-    public static from(value: ISerializable, type?: new () => Serializable): Serializable {
+    public static from(value: ISerializable): Serializable {
+        const type = (this as any).prototype.constructor
+
         if (!type || type === Serializable) {
             if (!value["@type"]) {
                 value["@type"] = "JSONWrapper"
             }
             return this.fromUnknown(value)
         }
-        return this.fromT(value, type)
+
+        return this.fromT(value)
     }
 }
