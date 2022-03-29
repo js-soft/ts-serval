@@ -26,55 +26,46 @@ import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
 import { ValidateGenericPropertyTest } from "./validate/ValidateGenericProperty.test"
 import { ValidatePropertyAnnotatedWithTypeTest } from "./validate/ValidatePropertyAnnotatedWithTypeTest.test"
 
-export class ServalTest {
-    public static runSerializeAsync(): void {
-        SerializeAsyncEnforceStringPropertyTest.init()
-        SerializeAsyncClassPropertyTest.init()
-        SerializeAsyncMultiTypeTest.init()
-        SerializeOnlyAsyncTest.init()
-        SerializeAsyncGenericPropertyTest.init()
-        SerializeAsyncAnyPropertyTest.init()
-        InheritanceAsyncTest.init()
-        ArrayInheritanceAsyncTest.init()
-        SerializeAsyncTypedArrayTest.init()
-        SerializeUnionTypesAsyncTest.init()
-        SerializeAsyncWrapperTest.init()
-    }
-
-    public static runSerializeSync(): void {
-        ValidatePropertyAnnotatedWithTypeTest.init()
-        SerializeEnforceStringPropertyTest.init()
-        SerializeClassPropertyTest.init()
-        SerializeMultiTypeTest.init()
-        SerializeOnlyTest.init()
-        InheritanceTest.init()
-        SerializeGenericPropertyTest.init()
-        SerializeAnyPropertyTest.init()
-        ArrayInheritanceTest.init()
-        SerializeTypedArrayTest.init()
-        SerializeUnionTypesTest.init()
-        SerializeWrapperTest.init()
-    }
-
-    public static runValidate(): void {
-        ValidateAnyPropertyTest.init()
-        ValidateGenericPropertyTest.init()
-    }
-
-    public static runUsage(): void {
-        CoreTest.init()
-        ParentConstructorTest.init()
-    }
-
-    public static run(): void {
-        this.runSerializeAsync()
-        this.runSerializeSync()
-        this.runValidate()
-        this.runUsage()
-    }
-
-    public static init(): void {
-        this.run()
-    }
+function runSerializeAsync() {
+    SerializeAsyncEnforceStringPropertyTest.init()
+    SerializeAsyncClassPropertyTest.init()
+    SerializeAsyncMultiTypeTest.init()
+    SerializeOnlyAsyncTest.init()
+    SerializeAsyncGenericPropertyTest.init()
+    SerializeAsyncAnyPropertyTest.init()
+    InheritanceAsyncTest.init()
+    ArrayInheritanceAsyncTest.init()
+    SerializeAsyncTypedArrayTest.init()
+    SerializeUnionTypesAsyncTest.init()
+    SerializeAsyncWrapperTest.init()
 }
-ServalTest.init()
+
+function runSerializeSync() {
+    ValidatePropertyAnnotatedWithTypeTest.init()
+    SerializeEnforceStringPropertyTest.init()
+    SerializeClassPropertyTest.init()
+    SerializeMultiTypeTest.init()
+    SerializeOnlyTest.init()
+    InheritanceTest.init()
+    SerializeGenericPropertyTest.init()
+    SerializeAnyPropertyTest.init()
+    ArrayInheritanceTest.init()
+    SerializeTypedArrayTest.init()
+    SerializeUnionTypesTest.init()
+    SerializeWrapperTest.init()
+}
+
+function runValidate() {
+    ValidateAnyPropertyTest.init()
+    ValidateGenericPropertyTest.init()
+}
+
+function runUsage() {
+    CoreTest.init()
+    ParentConstructorTest.init()
+}
+
+runSerializeAsync()
+runSerializeSync()
+runValidate()
+runUsage()
