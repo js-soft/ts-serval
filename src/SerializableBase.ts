@@ -11,7 +11,7 @@ export class SerializableBase {
         SerializableBase.__modules.push(syncModule)
     }
 
-    public static getModule(type: string, version = 1): any {
+    public static getModule(type: string, version: number): any {
         const typeAndVersion = `${type}@${version}`
         for (const module of SerializableBase.__modules) {
             const implementation = Reflect.getMetadata(typeAndVersion, module, "types")
@@ -148,10 +148,8 @@ export class SerializableBase {
                         obj[key] = info.value
                     }
                 } else if (key === "@version") {
-                    if (info.value !== 1) {
-                        if (verbose) {
-                            obj[key] = info.value
-                        }
+                    if (info.value !== 1 && verbose) {
+                        obj[key] = info.value
                     }
                 } else if (key === "@context") {
                     if (verbose) {

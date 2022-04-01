@@ -13,7 +13,6 @@ export class Serializable extends SerializableBase implements ISerializable {
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
-            type = `${obj["@type"]}`.trim()
         }
 
         let version = 1
@@ -27,10 +26,6 @@ export class Serializable extends SerializableBase implements ISerializable {
 
         if (!type) {
             return Serializable.from(value)
-        }
-
-        if (!type && version) {
-            throw new ServalError("Version is set for an unknown type.")
         }
 
         const result = SerializableBase.getModule(type, version)
