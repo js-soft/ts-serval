@@ -11,9 +11,10 @@ export class SerializableBase {
         SerializableBase.__modules.push(syncModule)
     }
 
-    public static getModule(type: string): any {
+    public static getModule(type: string, version = 1): any {
+        const typeAndVersion = `${type}@${version}`
         for (const module of SerializableBase.__modules) {
-            const implementation = Reflect.getMetadata(type, module, "types")
+            const implementation = Reflect.getMetadata(typeAndVersion, module, "types")
             if (implementation) return implementation
         }
         return null
@@ -43,7 +44,7 @@ export class SerializableBase {
         const currentDescriptors = SerializableBase.getDescriptor(name)
         if (currentDescriptors) {
             currentDescriptors.forEach((value, key) => {
-                if (key === "@type" || key === "@schema") return
+                if (key === "@type" || key === "@version" || key === "@context") return
                 storeInMap.set(key, value)
             })
         }
@@ -70,7 +71,13 @@ export class SerializableBase {
         const propertyMap = this.getDescriptor()
         if (propertyMap) {
             for (const [key, info] of propertyMap) {
-                if (key === "@type" || key === "@context" || key === "serializeProperty" || key === "serializeAs") {
+                if (
+                    key === "@type" ||
+                    key === "@version" ||
+                    key === "@context" ||
+                    key === "serializeProperty" ||
+                    key === "serializeAs"
+                ) {
                     continue
                 }
 
@@ -140,12 +147,16 @@ export class SerializableBase {
                     if (verbose) {
                         obj[key] = info.value
                     }
+                } else if (key === "@version") {
+                    if (info.value !== 1) {
+                        if (verbose) {
+                            obj[key] = info.value
+                        }
+                    }
                 } else if (key === "@context") {
                     if (verbose) {
                         obj[key] = info.value
                     }
-                } else if (key === "@version") {
-                    obj[key] = info.value
                 } else {
                     const jsonKey = info.alias ? info.alias : key
                     const value = this.serializeProperty(this[key], info, false, serializeAsString)
