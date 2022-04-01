@@ -13,6 +13,7 @@ export class Serializable extends SerializableBase implements ISerializable {
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
+            type = `${obj["@type"]}`
         }
 
         let version = 1
