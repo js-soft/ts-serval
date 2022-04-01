@@ -38,6 +38,8 @@ export class Serialize {
                     break
             }
 
+            prop.unionTypes = params?.unionTypes
+
             if (key) {
                 if (params?.type) {
                     prop.itemDescriptor = { key: key, type: params.type.name, typeInfo: params.type }

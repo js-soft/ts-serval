@@ -8,6 +8,7 @@ import { SerializeAsyncMultiTypeTest } from "./serialize/async/SerializeAsyncMul
 import { SerializeAsyncTypedArrayTest } from "./serialize/async/SerializeAsyncTypedArray.test"
 import { SerializeAsyncWrapperTest } from "./serialize/async/SerializeAsyncWrapper.test"
 import { SerializeOnlyAsyncTest } from "./serialize/async/SerializeOnlyAsync.test"
+import { SerializeUnionTypesAsyncTest } from "./serialize/async/SerializeUnionTypesAsync.test"
 import { VersioningAsyncTest } from "./serialize/async/VersioningAsync.test"
 import { ArrayInheritanceTest } from "./serialize/sync/ArrayInheritance.test"
 import { InheritanceTest } from "./serialize/sync/Inheritance.test"
@@ -18,6 +19,7 @@ import { SerializeGenericPropertyTest } from "./serialize/sync/SerializeGenericP
 import { SerializeMultiTypeTest } from "./serialize/sync/SerializeMultiType.test"
 import { SerializeOnlyTest } from "./serialize/sync/SerializeOnly.test"
 import { SerializeTypedArrayTest } from "./serialize/sync/SerializeTypedArray.test"
+import { SerializeUnionTypesTest } from "./serialize/sync/SerializeUnionTypes.test"
 import { SerializeWrapperTest } from "./serialize/sync/SerializeWrapper.test"
 import { VersioningTest } from "./serialize/sync/Versioning.test"
 import { CoreTest } from "./usage/Core.test"
@@ -36,6 +38,7 @@ export class ServalTest {
         InheritanceAsyncTest.init()
         ArrayInheritanceAsyncTest.init()
         SerializeAsyncTypedArrayTest.init()
+        SerializeUnionTypesAsyncTest.init()
         SerializeAsyncWrapperTest.init()
         VersioningAsyncTest.init()
     }
@@ -51,6 +54,7 @@ export class ServalTest {
         SerializeAnyPropertyTest.init()
         ArrayInheritanceTest.init()
         SerializeTypedArrayTest.init()
+        SerializeUnionTypesTest.init()
         SerializeWrapperTest.init()
         VersioningTest.init()
     }
