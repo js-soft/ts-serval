@@ -8,6 +8,7 @@ import { SerializeAsyncMultiTypeTest } from "./serialize/async/SerializeAsyncMul
 import { SerializeAsyncTypedArrayTest } from "./serialize/async/SerializeAsyncTypedArray.test"
 import { SerializeAsyncWrapperTest } from "./serialize/async/SerializeAsyncWrapper.test"
 import { SerializeOnlyAsyncTest } from "./serialize/async/SerializeOnlyAsync.test"
+import { VersioningAsyncTest } from "./serialize/async/VersioningAsync.test"
 import { ArrayInheritanceTest } from "./serialize/sync/ArrayInheritance.test"
 import { InheritanceTest } from "./serialize/sync/Inheritance.test"
 import { SerializeAnyPropertyTest } from "./serialize/sync/SerializeAnyProperty.test"
@@ -18,11 +19,11 @@ import { SerializeMultiTypeTest } from "./serialize/sync/SerializeMultiType.test
 import { SerializeOnlyTest } from "./serialize/sync/SerializeOnly.test"
 import { SerializeTypedArrayTest } from "./serialize/sync/SerializeTypedArray.test"
 import { SerializeWrapperTest } from "./serialize/sync/SerializeWrapper.test"
+import { VersioningTest } from "./serialize/sync/Versioning.test"
 import { CoreTest } from "./usage/Core.test"
 import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
 import { ValidateGenericPropertyTest } from "./validate/ValidateGenericProperty.test"
 import { ValidatePropertyAnnotatedWithTypeTest } from "./validate/ValidatePropertyAnnotatedWithTypeTest.test"
-import { VersioningTest } from "./versioning.test"
 
 export class ServalTest {
     public static runSerializeAsync(): void {
@@ -36,6 +37,7 @@ export class ServalTest {
         ArrayInheritanceAsyncTest.init()
         SerializeAsyncTypedArrayTest.init()
         SerializeAsyncWrapperTest.init()
+        VersioningAsyncTest.init()
     }
 
     public static runSerializeSync(): void {
@@ -50,6 +52,7 @@ export class ServalTest {
         ArrayInheritanceTest.init()
         SerializeTypedArrayTest.init()
         SerializeWrapperTest.init()
+        VersioningTest.init()
     }
 
     public static runValidate(): void {
@@ -59,7 +62,6 @@ export class ServalTest {
 
     public static runUsage(): void {
         CoreTest.init()
-        VersioningTest.init()
     }
 
     public static run(): void {

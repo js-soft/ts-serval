@@ -1,6 +1,6 @@
 import { Serializable, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
-import { expectThrows } from "./testUtil"
+import { expectThrows } from "../../testUtil"
 
 @type("VersionedClass")
 class VersionedClassV1 extends Serializable {
