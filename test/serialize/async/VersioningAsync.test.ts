@@ -27,7 +27,7 @@ class VersionedClassV2Async extends SerializableAsync {
 export class VersioningAsyncTest {
     public static init(): void {
         describe("VersionedClassV1Async", function () {
-            const json = { "@type": "VersionedClassAsync", propOld: "valOld" } // eslint-disable-line @typescript-eslint/naming-convention
+            const json = { "@type": "VersionedClassAsync", propOld: "valOld" }
 
             it("fromUnknown", async function () {
                 const obj = (await SerializableAsync.fromUnknown(json)) as VersionedClassV1Async
@@ -63,7 +63,7 @@ export class VersioningAsyncTest {
             })
 
             it("fromUnknown throwsErrorOnWrongVersion", async function () {
-                const wrongJSON = { "@type": "VersionedClassAsync", propNew: "valNew" } // eslint-disable-line @typescript-eslint/naming-convention
+                const wrongJSON = { "@type": "VersionedClassAsync", propNew: "valNew" }
 
                 await expectThrowsAsync(async () => {
                     ;(await SerializableAsync.fromUnknown(wrongJSON)) as VersionedClassV2Async
@@ -72,7 +72,7 @@ export class VersioningAsyncTest {
         })
 
         describe("VersionedClassV2Async", function () {
-            const json = { "@type": "VersionedClassAsync", "@version": 2, propNew: "valNew" } // eslint-disable-line @typescript-eslint/naming-convention
+            const json = { "@type": "VersionedClassAsync", "@version": 2, propNew: "valNew" }
 
             it("fromUnknown", async function () {
                 const obj = (await SerializableAsync.fromUnknown(json)) as VersionedClassV2Async
@@ -107,7 +107,7 @@ export class VersioningAsyncTest {
             })
 
             it("fromUnknown throwsErrorOnWrongVersion", async function () {
-                const wrongJSON = { "@type": "VersionedClassAsync", "@version": 2, propOld: "valOld" } // eslint-disable-line @typescript-eslint/naming-convention
+                const wrongJSON = { "@type": "VersionedClassAsync", "@version": 2, propOld: "valOld" }
 
                 await expectThrowsAsync(async () => {
                     ;(await SerializableAsync.fromUnknown(wrongJSON)) as VersionedClassV2Async

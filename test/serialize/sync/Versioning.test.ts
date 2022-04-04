@@ -27,7 +27,7 @@ class VersionedClassV2 extends Serializable {
 export class VersioningTest {
     public static init(): void {
         describe("VersionedClassV1", function () {
-            const json = { "@type": "VersionedClass", propOld: "valOld" } // eslint-disable-line @typescript-eslint/naming-convention
+            const json = { "@type": "VersionedClass", propOld: "valOld" }
 
             it("fromUnknown", function () {
                 const obj = Serializable.fromUnknown(json) as VersionedClassV1
@@ -63,7 +63,7 @@ export class VersioningTest {
             })
 
             it("fromUnknown throwsErrorOnWrongVersion", function () {
-                const wrongJSON = { "@type": "VersionedClass", propNew: "valNew" } // eslint-disable-line @typescript-eslint/naming-convention
+                const wrongJSON = { "@type": "VersionedClass", propNew: "valNew" }
 
                 expectThrows(() => {
                     Serializable.fromUnknown(wrongJSON) as VersionedClassV2
@@ -72,7 +72,7 @@ export class VersioningTest {
         })
 
         describe("VersionedClassV2", function () {
-            const json = { "@type": "VersionedClass", "@version": 2, propNew: "valNew" } // eslint-disable-line @typescript-eslint/naming-convention
+            const json = { "@type": "VersionedClass", "@version": 2, propNew: "valNew" }
 
             it("fromUnknown", function () {
                 const obj = Serializable.fromUnknown(json) as VersionedClassV2
@@ -107,7 +107,7 @@ export class VersioningTest {
             })
 
             it("fromUnknown throwsErrorOnWrongVersion", function () {
-                const wrongJSON = { "@type": "VersionedClass", "@version": 2, propOld: "valOld" } // eslint-disable-line @typescript-eslint/naming-convention
+                const wrongJSON = { "@type": "VersionedClass", "@version": 2, propOld: "valOld" }
 
                 expectThrows(() => {
                     Serializable.fromUnknown(wrongJSON) as VersionedClassV2
