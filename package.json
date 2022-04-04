@@ -1,6 +1,6 @@
 {
     "name": "@js-soft/ts-serval",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
