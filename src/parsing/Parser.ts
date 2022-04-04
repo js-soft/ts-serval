@@ -5,7 +5,7 @@ import { Validator } from "../validation/Validator"
 import { ParsingError } from "./ParsingError"
 
 export abstract class Parser {
-    public static parseProperty(value: any, descriptor: IReflectProperty, className: string, caller: any): any {
+    public static parseProperty(value: any, descriptor: IReflectProperty, className = "Unknown", caller: any): any {
         // *****CAUTION: Check Validator.checkProperty if you make changes here!*****
         let err: string | undefined
         if (!descriptor.optional) {
@@ -71,6 +71,7 @@ export abstract class Parser {
         className = "Unknown",
         caller: any
     ): Promise<any> {
+        // *****CAUTION: Check Validator.checkProperty if you make changes here!*****
         if (!descriptor.optional) {
             const err = Validator.checkDefined(value, descriptor)
             if (err) {
@@ -266,10 +267,16 @@ export abstract class Parser {
                 } else if (itemDescriptor.typeInfo === String) {
                     ar.push(this.parseString(currentElement, itemDescriptor, className))
                 } else {
-                    ar.push(this.parseObject(currentElement, itemDescriptor, itemDescriptor.typeInfo, caller))
+                    ar.push(this.parseObject(currentElement, itemDescriptor, className, caller))
                 }
             } catch (e) {
-                const type = descriptor.parseUnknown ? "fromUnknown" : `to a ${itemDescriptor.typeInfo.name}`
+                const type = descriptor.parseUnknown
+                    ? "fromUnknown"
+                    : `to a ${
+                          itemDescriptor.unionTypes
+                              ? `(${itemDescriptor.unionTypes.map((t) => t.name).join("|")})`
+                              : itemDescriptor.typeInfo.name
+                      }`
                 throw new ParsingError(
                     className,
                     descriptor.key,
@@ -309,7 +316,13 @@ export abstract class Parser {
                     ar.push(await this.parseObjectAsync(currentElement, itemDescriptor, className, caller))
                 }
             } catch (e) {
-                const type = descriptor.parseUnknown ? "fromUnknown" : `to a ${itemDescriptor.typeInfo.name}`
+                const type = descriptor.parseUnknown
+                    ? "fromUnknown"
+                    : `to a ${
+                          itemDescriptor.unionTypes
+                              ? `(${itemDescriptor.unionTypes.map((t) => t.name).join("|")})`
+                              : itemDescriptor.typeInfo.name
+                      }`
                 throw new ParsingError(
                     className,
                     descriptor.key,
@@ -329,6 +342,10 @@ export abstract class Parser {
         const classInfo: any = descriptor.typeInfo
         let thisObj: any = classInfo
 
+        const allowedTypes = descriptor.unionTypes
+            ? `(${descriptor.unionTypes.map((t) => t.name).join("|")})`
+            : descriptor.typeInfo.name
+
         if (!descriptor.unionTypes && value instanceof classInfo) {
             return value
         } else if (descriptor.unionTypes?.some((t) => value instanceof t)) {
@@ -341,16 +358,25 @@ export abstract class Parser {
         let fct: any
         const args: any[] = [value]
 
-        if ((descriptor.parseUnknown || descriptor.type === "Serializable") && value && value["@type"]) {
-            return caller.fromUnknown(value)
-        }
-
         if (
-            (typeof descriptor.allowSubclasses === "undefined" || descriptor.allowSubclasses) &&
-            value &&
-            value["@type"]
+            value?.["@type"] &&
+            (descriptor.parseUnknown ||
+                descriptor.type === "Serializable" ||
+                typeof descriptor.allowSubclasses === "undefined" ||
+                descriptor.allowSubclasses)
         ) {
-            return caller.fromUnknown(value)
+            const unknownInstance = caller.fromUnknown(value)
+
+            if (!descriptor.unionTypes && unknownInstance instanceof classInfo) {
+                return unknownInstance
+            } else if (descriptor.unionTypes?.some((t) => unknownInstance instanceof t)) {
+                return unknownInstance
+            }
+            throw new ParsingError(
+                className.toString(),
+                descriptor.key,
+                `Parsed object is not an instance of any allowed types ${allowedTypes}.`
+            )
         }
 
         if (descriptor.customParser) {
@@ -373,7 +399,18 @@ export abstract class Parser {
             args.push(caller)
         }
 
-        return fct.apply(thisObj, args)
+        const unknownInstance = fct.apply(thisObj, args)
+
+        if (!descriptor.unionTypes && unknownInstance instanceof classInfo) {
+            return unknownInstance
+        } else if (descriptor.unionTypes?.some((t) => unknownInstance instanceof t)) {
+            return unknownInstance
+        }
+        throw new ParsingError(
+            className.toString(),
+            descriptor.key,
+            `Parsed object is not an instance of any allowed types ${allowedTypes}.`
+        )
     }
 
     public static async parseObjectAsync(
@@ -388,6 +425,10 @@ export abstract class Parser {
         const classInfo: any = descriptor.typeInfo
         let thisObj: any = classInfo
 
+        const allowedTypes = descriptor.unionTypes
+            ? `(${descriptor.unionTypes.map((t) => t.name).join("|")})`
+            : descriptor.typeInfo.name
+
         if (!descriptor.unionTypes && value instanceof classInfo) {
             return await Promise.resolve(value)
         } else if (descriptor.unionTypes?.some((t) => value instanceof t)) {
@@ -401,23 +442,24 @@ export abstract class Parser {
         const args: any[] = [value]
 
         if (
+            value?.["@type"] &&
             (descriptor.parseUnknown ||
                 descriptor.type === "Serializable" ||
-                descriptor.type === "SerializableAsync") &&
-            value &&
-            value["@type"]
+                typeof descriptor.allowSubclasses === "undefined" ||
+                descriptor.allowSubclasses)
         ) {
-            // eslint-disable-next-line @typescript-eslint/return-await
-            return await caller.fromUnknown(value)
-        }
+            const unknownInstance = await caller.fromUnknown(value)
 
-        if (
-            (typeof descriptor.allowSubclasses === "undefined" || descriptor.allowSubclasses) &&
-            value &&
-            value["@type"]
-        ) {
-            // eslint-disable-next-line @typescript-eslint/return-await
-            return await caller.fromUnknown(value)
+            if (!descriptor.unionTypes && unknownInstance instanceof classInfo) {
+                return unknownInstance
+            } else if (descriptor.unionTypes?.some((t) => unknownInstance instanceof t)) {
+                return unknownInstance
+            }
+            throw new ParsingError(
+                className,
+                descriptor.key,
+                `Parsed object is not an instance of any allowed types ${allowedTypes}.`
+            )
         }
 
         if (descriptor.customParser) {
@@ -440,7 +482,19 @@ export abstract class Parser {
             args.push(caller)
         }
 
-        const ret = await fct.apply(thisObj, args)
-        return ret
+        const unknownInstance = await fct.apply(thisObj, args)
+
+        if (!descriptor.unionTypes && unknownInstance instanceof classInfo) {
+            return unknownInstance
+        } else if (descriptor.unionTypes?.some((t) => unknownInstance instanceof t)) {
+            console.log("UnionTypes", descriptor.unionTypes)
+            console.log("!!!!!", unknownInstance)
+            return unknownInstance
+        }
+        throw new ParsingError(
+            className,
+            descriptor.key,
+            `Parsed object is not an instance of any allowed types ${allowedTypes}.`
+        )
     }
 }
