@@ -487,8 +487,6 @@ export abstract class Parser {
         if (!descriptor.unionTypes && unknownInstance instanceof classInfo) {
             return unknownInstance
         } else if (descriptor.unionTypes?.some((t) => unknownInstance instanceof t)) {
-            console.log("UnionTypes", descriptor.unionTypes)
-            console.log("!!!!!", unknownInstance)
             return unknownInstance
         }
         throw new ParsingError(
