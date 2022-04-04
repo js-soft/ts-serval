@@ -1,5 +1,6 @@
 import { ISerializable, Serializable, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
+import { expectThrows } from "../../testUtil"
 
 export class SerializeUnionTypesTest {
     public static init(): void {
@@ -25,7 +26,22 @@ export class SerializeUnionTypesTest {
                     }
                 }
                 const obj = ClassWithUnionProperty.from(json)
+                expect(obj).to.be.instanceOf(ClassWithUnionProperty)
                 expect(obj.content).to.be.instanceOf(UnionOption2)
+            })
+
+            it("throws if invalid options are given (from JSON)", function () {
+                const json = {
+                    "@type": "ClassWithUnionProperty",
+                    content: {
+                        "@type": "InvalidUnionOption",
+                        p3: "val"
+                    } as any
+                }
+                expectThrows(() => {
+                    const obj = ClassWithUnionProperty.from(json)
+                    expect(obj.content).to.be.instanceOf(InvalidUnionOption)
+                }, "ClassWithUnionProperty.content :: Parsed object is not an instance of any allowed types \\(UnionOption1\\|UnionOption2\\)")
             })
 
             it("can parse first option (from Serializable object)", function () {
@@ -39,7 +55,7 @@ export class SerializeUnionTypesTest {
                 expect(obj.content).to.be.instanceOf(UnionOption1)
             })
 
-            it("can parse second option (from Seriazable object)", function () {
+            it("can parse second option (from Serializable object)", function () {
                 const json = {
                     "@type": "ClassWithUnionProperty",
                     content: UnionOption2.from({ "@type": "UnionOption2", p2: "val" }) as UnionOption2
@@ -48,6 +64,22 @@ export class SerializeUnionTypesTest {
                 const obj = ClassWithUnionProperty.from(json)
 
                 expect(obj.content).to.be.instanceOf(UnionOption2)
+            })
+
+            it("throws if invalid options are given (from Serializable object)", function () {
+                const json = {
+                    "@type": "AsyncClassWithUnionProperty",
+                    content: InvalidUnionOption.from({
+                        "@type": "InvalidUnionOption",
+                        p3: "val"
+                    }) as any
+                }
+
+                expectThrows(() => {
+                    const obj = ClassWithUnionProperty.from(json)
+                    expect(obj).to.be.instanceOf(ClassWithUnionProperty)
+                    expect(obj.content).to.be.instanceOf(InvalidUnionOption)
+                }, "ClassWithUnionProperty.content :: Parsed object is not an instance of any allowed types \\(UnionOption1\\|UnionOption2\\)")
             })
         })
     }
@@ -77,6 +109,12 @@ class UnionOption2 extends Serializable implements IUnionOption2 {
     public p2: string
 }
 
+@type("InvalidUnionOption")
+class InvalidUnionOption extends Serializable {
+    @serialize()
+    public p3: string
+}
+
 @type("ClassWithUnionProperty")
 class ClassWithUnionProperty extends Serializable implements IClassWithUnionProperty {
     @serialize({ unionTypes: [UnionOption1, UnionOption2] })
@@ -84,6 +122,6 @@ class ClassWithUnionProperty extends Serializable implements IClassWithUnionProp
     public content: UnionOption1 | UnionOption2
 
     public static from(value: IClassWithUnionProperty): ClassWithUnionProperty {
-        return Serializable.fromT<ClassWithUnionProperty>(value, ClassWithUnionProperty)
+        return super.fromT(value, ClassWithUnionProperty)
     }
 }
