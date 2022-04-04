@@ -38,14 +38,21 @@ export class Serialize {
                     break
             }
 
-            prop.unionTypes = params?.unionTypes
-
             if (key) {
-                if (params?.type) {
-                    prop.itemDescriptor = { key: key, type: params.type.name, typeInfo: params.type }
+                if (params?.unionTypes) {
+                    prop.unionTypes = params.unionTypes
+                    prop.itemDescriptor = {
+                        key: `${propertyKey}${key}`,
+                        type: "SerializableAsync",
+                        typeInfo: SerializableAsync,
+                        unionTypes: params.unionTypes,
+                        parseUnknown: true
+                    }
+                } else if (params?.type) {
+                    prop.itemDescriptor = { key: `${propertyKey}${key}`, type: params.type.name, typeInfo: params.type }
                 } else {
                     prop.itemDescriptor = {
-                        key: key,
+                        key: `${propertyKey}${key}`,
                         type: "SerializableAsync",
                         typeInfo: SerializableAsync,
                         parseUnknown: true
