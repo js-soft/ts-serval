@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
@@ -29,7 +28,7 @@ export class SerializeUnionTypesAsyncTest {
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption2)
             })
 
-            it("can parse first option (from Seriazable object)", async function () {
+            it("can parse first option (from Serializable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
                     content: (await AsyncUnionOption1.from({
