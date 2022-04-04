@@ -8,19 +8,37 @@ import { SerializableBase } from "./SerializableBase"
 export class Serializable extends SerializableBase implements ISerializable {
     public static fromUnknown(value: any): Serializable {
         const obj: any = value
+        let type
         if (obj["@type"]) {
-            const result = SerializableBase.getModule(obj["@type"])
-            if (!result) {
-                throw new ServalError(
-                    `Type '${obj["@type"]}' was not found within reflection classes. You might have to install a module first.`
-                )
+            if (typeof obj["@type"] !== "string") {
+                throw new ServalError("Type is not a string.")
             }
-            if (typeof result.fromJSON === "function") {
-                return result.fromJSON(value)
-            }
-            return result.from(value, result)
+            type = `${obj["@type"]}`
         }
-        return Serializable.from(value)
+
+        let version = 1
+        if (obj["@version"]) {
+            try {
+                version = parseInt(obj["@version"])
+            } catch (e) {
+                throw new ServalError("Version is not a number.")
+            }
+        }
+
+        if (!type) {
+            return Serializable.from(value)
+        }
+
+        const result = SerializableBase.getModule(type, version)
+        if (!result) {
+            throw new ServalError(
+                `Type '${type}' with version ${version} was not found within reflection classes. You might have to install a module first.`
+            )
+        }
+        if (typeof result.fromJSON === "function") {
+            return result.fromJSON(value)
+        }
+        return result.from(value, result)
     }
 
     public static deserializeUnknown(value: string): Serializable {
@@ -72,7 +90,13 @@ export class Serializable extends SerializableBase implements ISerializable {
         const propertyMap = SerializableBase.getDescriptor(type.name)
         if (propertyMap) {
             propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (key === "@type" || key === "@context" || key === "serializeProperty" || key === "serializeAs") {
+                if (
+                    key === "@type" ||
+                    key === "@context" ||
+                    key === "@version" ||
+                    key === "serializeProperty" ||
+                    key === "serializeAs"
+                ) {
                     return
                 }
 
@@ -106,6 +130,9 @@ export class Serializable extends SerializableBase implements ISerializable {
         if (!type || type === Serializable) {
             if (!value["@type"]) {
                 value["@type"] = "JSONWrapper"
+            }
+            if (!value["@version"]) {
+                value["@version"] = 1
             }
             return this.fromUnknown(value)
         }

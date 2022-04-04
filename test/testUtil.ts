@@ -9,9 +9,10 @@ export function expectThrows(method: Function, errorMessage = ""): void {
     } catch (err) {
         error = err
     }
+    expect(error, "No Error was thrown!").to.exist
     expect(error).to.be.an("Error")
     if (errorMessage) {
-        expect(error!.message.startsWith(errorMessage)).to.be.true
+        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(`^${errorMessage}`))
     }
 }
 
@@ -26,8 +27,9 @@ export async function expectThrowsAsync(method: Function | Promise<any>, errorMe
     } catch (err) {
         error = err
     }
+    expect(error, "No Error was thrown!").to.exist
     expect(error).to.be.an("Error")
     if (errorMessage) {
-        expect(error!.message).to.match(new RegExp(`^${errorMessage}`))
+        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(`^${errorMessage}`))
     }
 }
