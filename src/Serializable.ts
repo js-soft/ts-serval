@@ -18,19 +18,18 @@ export class Serializable extends SerializableBase implements ISerializable {
             if (typeof result.fromJSON === "function") {
                 return result.fromJSON(value)
             }
-            return result.from(value, result)
+            return result.fromAny(value, result)
         }
-        return Serializable.from(value)
+        return this.fromAny(value)
     }
 
     public static deserializeUnknown(value: string): Serializable {
-        let obj
         try {
-            obj = JSON.parse(value)
+            const object = JSON.parse(value)
+            return this.fromUnknown(object)
         } catch (e) {
             throw new ServalError(`DeserializationError ${e}`)
         }
-        return this.fromUnknown(obj)
     }
 
     /**
@@ -39,12 +38,15 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @param value The JSON string which should be parsed
      * @returns An object of the given type T
      */
-    public static deserializeT<T extends Serializable>(value: string): T {
+    public static deserialize<T extends Serializable>(this: Constructor<T>, value: string): T {
         const type = (this as any).prototype.constructor
 
-        let obj
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof Serializable
+
+        let object
         try {
-            obj = JSON.parse(value)
+            object = JSON.parse(value)
         } catch (e) {
             throw new ParsingError(
                 type.name,
@@ -53,7 +55,34 @@ export class Serializable extends SerializableBase implements ISerializable {
                 e
             )
         }
-        return this.fromT<T>(obj)
+
+        object = that.preDeserialize(object)
+
+        const deserialized = that.fromT<T>(object)
+
+        return that.postDeserialize(deserialized)
+    }
+
+    protected static preDeserialize(value: any): any {
+        return value
+    }
+
+    protected static postDeserialize<T extends Serializable>(value: T): T {
+        return value
+    }
+
+    public static fromAny<T extends Serializable>(this: Constructor<T>, value: any): T {
+        const type = (this as any).prototype.constructor
+
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof Serializable
+
+        // TODO: should we really run an explicit JSONWrapper serialization here?
+        if (!type || type === Serializable) {
+            return that.fromUnknown({ "@type": "JSONWrapper", ...value }) as T
+        }
+
+        return that.fromT(value)
     }
 
     /**
@@ -65,14 +94,16 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @throws DeserializationError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    protected static fromT<T>(value: any): T {
-        const type = (this as any).prototype.constructor
+    private static fromT<T extends Serializable>(value: any): T {
+        const type = (this as any).prototype.constructor as Constructor<T>
+
+        value = this.preFrom(value)
 
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        const realObj: T = new (<Constructor<T>>type)()
+        const realObj: T = new type()
         const propertyMap = SerializableBase.getDescriptor(type.name)
         if (propertyMap) {
             propertyMap.forEach((info: IReflectProperty, key: string) => {
@@ -96,28 +127,15 @@ export class Serializable extends SerializableBase implements ISerializable {
                 }
             })
         }
-        return realObj
+
+        return this.postFrom(realObj)
     }
 
-    public static deserialize(value: string): Serializable {
-        const type = (this as any).prototype.constructor
-
-        if (type) {
-            return this.deserializeT(value)
-        }
-        return this.deserializeUnknown(value)
+    protected static preFrom(value: any): Promise<any> | any {
+        return value
     }
 
-    public static from(value: ISerializable): Serializable {
-        const type = (this as any).prototype.constructor
-
-        if (!type || type === Serializable) {
-            if (!value["@type"]) {
-                value["@type"] = "JSONWrapper"
-            }
-            return this.fromUnknown(value)
-        }
-
-        return this.fromT(value)
+    protected static postFrom<T extends Serializable>(value: T): T {
+        return value
     }
 }

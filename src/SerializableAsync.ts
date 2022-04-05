@@ -20,42 +20,29 @@ export class SerializableAsync extends SerializableBase implements ISerializable
             if (typeof result.fromJSON === "function") {
                 return result.fromJSON(value)
             }
-            return result.from(value, result)
+            return result.fromAny(value)
         }
-        return await this.from(value)
+        return await this.fromAny(value)
     }
 
     public static async deserializeUnknown(value: string): Promise<SerializableAsync> {
-        let obj
         try {
-            obj = JSON.parse(value)
+            const object = JSON.parse(value)
+            return await this.fromUnknown(object)
         } catch (e) {
             throw new ServalError(`ParsingError ${e}`)
         }
-        return await this.fromUnknown(obj)
     }
 
-    public static async deserialize(value: string): Promise<SerializableAsync> {
+    public static async deserialize<T extends SerializableAsync>(this: Constructor<T>, value: string): Promise<T> {
         const type = (this as any).prototype.constructor
 
-        if (type.name !== "object") {
-            return await this.deserializeT(value)
-        }
-        return await this.deserializeUnknown(value)
-    }
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof SerializableAsync
 
-    /**
-     * Deserializes the given string to the current class.
-     *
-     * @param value The JSON string which should be parsed
-     * @returns An object of the given type T
-     */
-    public static async deserializeT<T>(value: string): Promise<T> {
-        const type = (this as any).prototype.constructor
-
-        let obj
+        let object
         try {
-            obj = JSON.parse(value)
+            object = JSON.parse(value)
         } catch (e) {
             throw new ParsingError(
                 type.name,
@@ -64,19 +51,34 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 e
             )
         }
-        return await this.fromT<T>(obj)
+
+        object = await that.preDeserialize(object)
+
+        const deserialized = await that.fromT<T>(object)
+
+        return await that.postDeserialize(deserialized)
     }
 
-    public static async from(value: any): Promise<SerializableAsync> {
+    protected static preDeserialize(value: any): Promise<any> | any {
+        return value
+    }
+
+    protected static postDeserialize<T extends SerializableAsync>(value: T): Promise<T> | T {
+        return value
+    }
+
+    public static async fromAny<T extends SerializableAsync>(this: Constructor<T>, value: any): Promise<T> {
         const type = (this as any).prototype.constructor
 
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof SerializableAsync
+
+        // TODO: should we really run an explicit JSONWrapper serialization here?
         if (!type || type === SerializableAsync || type === Serializable) {
-            if (!value["@type"]) {
-                value["@type"] = "JSONWrapperAsync"
-            }
-            return await this.fromUnknown(value)
+            return (await that.fromUnknown({ "@type": "JSONWrapperAsync", ...value })) as T
         }
-        return await this.fromT(value)
+
+        return await that.fromT(value)
     }
 
     /**
@@ -88,14 +90,16 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @throws ParsingError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    protected static async fromT<T>(value: any): Promise<T> {
-        const type = (this as any).prototype.constructor
+    private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
+        const type = (this as any).prototype.constructor as Constructor<T>
+
+        value = this.preFrom(value)
 
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        const realObj: T = new (<Constructor<T>>type)()
+        const realObj: T = new type()
         const propertyMap = SerializableBase.getDescriptor(type.name)
         if (propertyMap) {
             for (const [key, info] of propertyMap.entries()) {
@@ -119,7 +123,16 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 }
             }
         }
-        return realObj
+
+        return await this.postFrom(realObj)
+    }
+
+    protected static preFrom(value: any): Promise<any> | any {
+        return value
+    }
+
+    protected static postFrom<T extends SerializableAsync>(value: T): Promise<T> | T {
+        return value
     }
 
     public validateProperty(key: string, descriptor?: IReflectProperty): string | undefined {

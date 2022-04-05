@@ -9,14 +9,19 @@ export class JSONWrapperAsync extends SerializableAsync {
     @validate()
     public value: any
 
-    public static async from(value: any): Promise<JSONWrapperAsync> {
-        delete value["@type"]
+    public static preFrom(value: any): any {
         const parsed = JSON.parse(JSON.stringify(value))
-        return await this.fromT({ value: parsed })
+        delete parsed["@type"]
+        return { value: parsed }
     }
 
-    public static async deserialize(value: string): Promise<JSONWrapperAsync> {
-        const parsed = JSON.parse(value)
-        return await this.fromT({ value: parsed })
+    public static async from(value: any): Promise<JSONWrapperAsync> {
+        return await this.fromAny(value)
     }
+
+    // TODO: This is not the right way to do this.
+    // public static async deserialize(value: string): Promise<JSONWrapperAsync> {
+    //     const parsed = JSON.parse(value)
+    //     return await this.fromT({ value: parsed })
+    // }
 }
