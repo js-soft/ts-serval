@@ -62,7 +62,7 @@ class SyncChildItem extends SyncParentItem implements IChildItem {
 
 export class ParentConstructorTest {
     public static init(): void {
-        describe("querying the parent constructor in a static function", function () {
+        describe("ParentConstructor", function () {
             it("should get the constructor of the class instead of the superclass", function () {
                 const child = TestSerializableClass.from<TestSerializableClass>()
 
