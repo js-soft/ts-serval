@@ -7,7 +7,7 @@ export interface ISerializable {}
 export interface ISerializableAsync {}
 
 export interface ISerialized {
-    "@context"?: string // eslint-disable-line @typescript-eslint/naming-convention
+    "@context"?: string
     "@type"?: string
     "@version"?: string
 }

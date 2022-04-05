@@ -8,19 +8,39 @@ import { SerializableBase } from "./SerializableBase"
 export class Serializable extends SerializableBase implements ISerializable {
     public static fromUnknown(value: any): Serializable {
         const obj: any = value
+        let type
         if (obj["@type"]) {
-            const result = SerializableBase.getModule(obj["@type"])
-            if (!result) {
-                throw new ServalError(
-                    `Type '${obj["@type"]}' was not found within reflection classes. You might have to install a module first.`
-                )
+            if (typeof obj["@type"] !== "string") {
+                throw new ServalError("Type is not a string.")
             }
-            if (typeof result.fromJSON === "function") {
-                return result.fromJSON(value)
-            }
-            return result.fromAny(value, result)
+            type = `${obj["@type"]}`
         }
-        return this.fromAny(value)
+
+        let version = 1
+        if (obj["@version"]) {
+            try {
+                version = parseInt(obj["@version"])
+            } catch (e) {
+                throw new ServalError("Version is not a number.")
+            }
+        }
+
+        if (!type) {
+            return this.fromT(value)
+        }
+
+        const result = SerializableBase.getModule(type, version)
+        if (!result) {
+            throw new ServalError(
+                `Type '${type}' with version ${version} was not found within reflection classes. You might have to install a module first.`
+            )
+        }
+
+        if (typeof result.fromJSON === "function") {
+            return result.fromJSON(value)
+        }
+
+        return result.fromAny(value, result)
     }
 
     public static deserializeUnknown(value: string): Serializable {
@@ -79,7 +99,16 @@ export class Serializable extends SerializableBase implements ISerializable {
 
         // TODO: should we really run an explicit JSONWrapper serialization here?
         if (!type || type === Serializable) {
-            return that.fromUnknown({ "@type": "JSONWrapper", ...value }) as T
+            const newValue: any = {}
+
+            if (!value["@type"]) {
+                newValue["@type"] = "JSONWrapperAsync"
+            }
+            if (!value["@version"]) {
+                newValue["@version"] = 1
+            }
+
+            return that.fromUnknown({ ...newValue, ...value }) as T
         }
 
         return that.fromT(value)

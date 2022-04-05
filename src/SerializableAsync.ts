@@ -10,19 +10,39 @@ import { Validator } from "./validation/Validator"
 export class SerializableAsync extends SerializableBase implements ISerializable {
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
         const obj: any = value
+        let type
         if (obj["@type"]) {
-            const result = SerializableBase.getModule(obj["@type"])
-            if (!result) {
-                throw new ServalError(
-                    `Type '${obj["@type"]}' was not found within reflection classes. You might have to install a module first.`
-                )
+            if (typeof obj["@type"] !== "string") {
+                throw new ServalError("Type is not a string.")
             }
-            if (typeof result.fromJSON === "function") {
-                return result.fromJSON(value)
-            }
-            return result.fromAny(value)
+            type = `${obj["@type"]}`
         }
-        return await this.fromAny(value)
+
+        let version = 1
+        if (obj["@version"]) {
+            try {
+                version = parseInt(obj["@version"])
+            } catch (e) {
+                throw new ServalError("Version is not a number.")
+            }
+        }
+
+        if (!type) {
+            return await this.fromT(value)
+        }
+
+        const result = SerializableBase.getModule(type, version)
+        if (!result) {
+            throw new ServalError(
+                `Type '${type}' with version ${version} was not found within reflection classes. You might have to install a module first.`
+            )
+        }
+
+        if (typeof result.fromJSON === "function") {
+            return result.fromJSON(value)
+        }
+
+        return await (result.fromAny(value, result) as Promise<SerializableAsync>)
     }
 
     public static async deserializeUnknown(value: string): Promise<SerializableAsync> {
@@ -75,7 +95,16 @@ export class SerializableAsync extends SerializableBase implements ISerializable
 
         // TODO: should we really run an explicit JSONWrapper serialization here?
         if (!type || type === SerializableAsync || type === Serializable) {
-            return (await that.fromUnknown({ "@type": "JSONWrapperAsync", ...value })) as T
+            const newValue: any = {}
+
+            if (!value["@type"]) {
+                newValue["@type"] = "JSONWrapperAsync"
+            }
+            if (!value["@version"]) {
+                newValue["@version"] = 1
+            }
+
+            return (await that.fromUnknown({ ...newValue, ...value })) as T
         }
 
         return await that.fromT(value)
@@ -103,7 +132,13 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         const propertyMap = SerializableBase.getDescriptor(type.name)
         if (propertyMap) {
             for (const [key, info] of propertyMap.entries()) {
-                if (key === "@type" || key === "@context" || key === "serializeProperty" || key === "serializeAs") {
+                if (
+                    key === "@type" ||
+                    key === "@context" ||
+                    key === "@version" ||
+                    key === "serializeProperty" ||
+                    key === "serializeAs"
+                ) {
                     continue
                 }
 

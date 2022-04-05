@@ -38,14 +38,21 @@ export class Serialize {
                     break
             }
 
-            prop.unionTypes = params?.unionTypes
-
             if (key) {
-                if (params?.type) {
-                    prop.itemDescriptor = { key: key, type: params.type.name, typeInfo: params.type }
+                if (params?.unionTypes) {
+                    prop.unionTypes = params.unionTypes
+                    prop.itemDescriptor = {
+                        key: `${propertyKey}${key}`,
+                        type: "SerializableAsync",
+                        typeInfo: SerializableAsync,
+                        unionTypes: params.unionTypes,
+                        parseUnknown: true
+                    }
+                } else if (params?.type) {
+                    prop.itemDescriptor = { key: `${propertyKey}${key}`, type: params.type.name, typeInfo: params.type }
                 } else {
                     prop.itemDescriptor = {
-                        key: key,
+                        key: `${propertyKey}${key}`,
                         type: "SerializableAsync",
                         typeInfo: SerializableAsync,
                         parseUnknown: true
@@ -90,12 +97,19 @@ export class Serialize {
     }
 }
 
-export function schema(context: string, type?: string, version?: string) {
+export interface ISchemaParameters {
+    version?: number
+}
+
+export function schema(context: string, type?: string, parameters: ISchemaParameters = { version: 1 }) {
     return (target: any): void => {
+        const version = parameters.version ? parameters.version : 1
         Reflect.defineMetadata("design:type", String, target, "@context")
         Reflect.defineMetadata("design:type", String, target, "@type")
         Reflect.defineMetadata("design:type", String, target, "@version")
-        Reflect.defineMetadata(type ? type : target.constructor.name, target, SerializableBase, "types")
+        type = type ? type : target.constructor.name
+        const typeAndVersion = `${type}@${version}`
+        Reflect.defineMetadata(typeAndVersion, target, SerializableBase, "types")
 
         const propContext = getReflectProperty(target, "@context")
         propContext.value = context
@@ -112,12 +126,18 @@ export function schema(context: string, type?: string, version?: string) {
     }
 }
 
-export function type(type: string, version?: string) {
+export interface ITypeParameters {
+    version?: number
+}
+
+export function type(type: string, parameters: ITypeParameters = { version: 1 }) {
     return (target: any): void => {
+        const version = parameters.version ? parameters.version : 1
         Reflect.defineMetadata("design:type", String, target, "@context")
         Reflect.defineMetadata("design:type", String, target, "@type")
         Reflect.defineMetadata("design:type", String, target, "@version")
-        Reflect.defineMetadata(type, target, SerializableBase, "types")
+        const typeAndVersion = `${type}@${version}`
+        Reflect.defineMetadata(typeAndVersion, target, SerializableBase, "types")
 
         const propType = getReflectProperty(target, "@type")
         propType.value = type
@@ -129,12 +149,13 @@ export function type(type: string, version?: string) {
     }
 }
 
-export function version(version: string) {
+export function version(version: number) {
     return (target: any): void => {
         Reflect.defineMetadata("design:type", String, target, "@context")
         Reflect.defineMetadata("design:type", String, target, "@type")
         Reflect.defineMetadata("design:type", String, target, "@version")
-        Reflect.defineMetadata(type, target, SerializableBase, "types")
+        const typeAndVersion = `${type}@${version}`
+        Reflect.defineMetadata(typeAndVersion, target, SerializableBase, "types")
 
         const propVersion = getReflectProperty(target, "@version")
         propVersion.value = version
