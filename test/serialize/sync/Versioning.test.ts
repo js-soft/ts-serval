@@ -9,7 +9,7 @@ class VersionedClassV1 extends Serializable {
     public propOld: string
 
     public static from(value: any): VersionedClassV1 {
-        return Serializable.fromT<VersionedClassV1>(value, VersionedClassV1)
+        return this.fromAny(value)
     }
 }
 
@@ -20,7 +20,7 @@ class VersionedClassV2 extends Serializable {
     public propNew: string
 
     public static from(value: any): VersionedClassV2 {
-        return Serializable.fromT<VersionedClassV2>(value, VersionedClassV2)
+        return this.fromAny(value)
     }
 }
 
@@ -37,7 +37,7 @@ export class VersioningTest {
             })
 
             it("fromT", function () {
-                const obj = VersionedClassV1.fromT<VersionedClassV1>(json, VersionedClassV1)
+                const obj = VersionedClassV1.fromAny(json)
                 expect(obj).instanceOf(VersionedClassV1)
                 expect(obj.propOld).to.equal("valOld")
                 expect((obj.toJSON() as any)["@version"]).to.be.undefined
@@ -58,7 +58,7 @@ export class VersioningTest {
 
             it("fromT throwsErrorOnWrongVersion", function () {
                 expectThrows(() => {
-                    VersionedClassV2.fromT<VersionedClassV2>(json, VersionedClassV2)
+                    VersionedClassV2.fromAny(json)
                 }, "VersionedClassV2.propNew :: Value is not defined")
             })
 
@@ -81,7 +81,7 @@ export class VersioningTest {
             })
 
             it("fromT", function () {
-                const obj = VersionedClassV2.fromT<VersionedClassV2>(json, VersionedClassV2)
+                const obj = VersionedClassV2.fromAny(json)
                 expect(obj).instanceOf(VersionedClassV2)
                 expect(obj.propNew).to.equal("valNew")
                 expect((obj.toJSON() as any)["@version"]).to.equal(2)
@@ -102,7 +102,7 @@ export class VersioningTest {
 
             it("fromT throwsErrorOnWrongVersion", function () {
                 expectThrows(() => {
-                    VersionedClassV1.fromT<VersionedClassV1>(json, VersionedClassV1)
+                    VersionedClassV1.fromAny(json)
                 }, "VersionedClassV1.propOld :: Value is not defined")
             })
 
