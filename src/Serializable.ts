@@ -102,7 +102,7 @@ export class Serializable extends SerializableBase implements ISerializable {
             const newValue: any = {}
 
             if (!value["@type"]) {
-                newValue["@type"] = "JSONWrapperAsync"
+                newValue["@type"] = "JSONWrapper"
             }
             if (!value["@version"]) {
                 newValue["@version"] = 1
