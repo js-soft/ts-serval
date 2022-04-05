@@ -373,7 +373,7 @@ export abstract class Parser {
                 return unknownInstance
             }
             throw new ParsingError(
-                className.toString(),
+                className,
                 descriptor.key,
                 `Parsed object is not an instance of any allowed types ${allowedTypes}.`
             )
@@ -407,7 +407,7 @@ export abstract class Parser {
             return unknownInstance
         }
         throw new ParsingError(
-            className.toString(),
+            className,
             descriptor.key,
             `Parsed object is not an instance of any allowed types ${allowedTypes}.`
         )
