@@ -5,7 +5,12 @@ import { Validator } from "../validation/Validator"
 import { ParsingError } from "./ParsingError"
 
 export abstract class Parser {
-    public static parseProperty(value: any, descriptor: IReflectProperty, className = "Unknown", caller: any): any {
+    public static parseProperty(
+        value: any,
+        descriptor: IReflectProperty,
+        className = "*Unknown Class*",
+        caller: any
+    ): any {
         // *****CAUTION: Check Validator.checkProperty if you make changes here!*****
         let err: string | undefined
         if (!descriptor.optional) {
@@ -68,7 +73,7 @@ export abstract class Parser {
     public static async parsePropertyAsync(
         value: any,
         descriptor: IReflectProperty,
-        className = "Unknown",
+        className = "*Unknown Class*",
         caller: any
     ): Promise<any> {
         // *****CAUTION: Check Validator.checkProperty if you make changes here!*****
