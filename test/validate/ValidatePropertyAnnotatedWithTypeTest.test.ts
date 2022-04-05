@@ -17,7 +17,7 @@ class AClass extends Serializable {
     public referenceToAnotherClass?: AnotherClass
 
     public static from(value: IAClass): AClass {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 

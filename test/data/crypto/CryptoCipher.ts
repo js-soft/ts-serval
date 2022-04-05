@@ -45,10 +45,6 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
         return obj
     }
 
-    public static async from(value: CryptoCipher | ICryptoCipher): Promise<CryptoCipher> {
-        return await super.fromT(value)
-    }
-
     public static async fromJSON(value: ICryptoCipherSerialized): Promise<CryptoCipher> {
         let nonceBuffer: CoreBuffer | undefined = undefined
         let counter: number | undefined = undefined
@@ -61,7 +57,7 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
         }
 
         const cipherBuffer = CoreBuffer.deserialize(value.cph)
-        return await this.from({
+        return await this.fromAny({
             algorithm: value.alg,
             cipher: cipherBuffer,
             nonce: nonceBuffer,
@@ -69,8 +65,24 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
         })
     }
 
-    public static async deserialize(value: string): Promise<CryptoCipher> {
-        const obj = JSON.parse(value)
-        return await this.fromJSON(obj)
+    public static preDeserialize(value: any): any {
+        let nonceBuffer: CoreBuffer | undefined = undefined
+        let counter: number | undefined = undefined
+        if (typeof value.nnc !== "undefined") {
+            nonceBuffer = CoreBuffer.deserialize(value.nnc)
+        }
+
+        if (typeof value.cnt !== "undefined") {
+            counter = value.cnt
+        }
+
+        const cipherBuffer = CoreBuffer.deserialize(value.cph)
+
+        return {
+            algorithm: value.alg,
+            cipher: cipherBuffer,
+            nonce: nonceBuffer,
+            counter: counter
+        }
     }
 }

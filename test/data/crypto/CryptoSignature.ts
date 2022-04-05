@@ -71,23 +71,22 @@ export class CryptoSignature extends CryptoSerializableAsync implements ICryptoS
         return obj
     }
 
-    public static async from(value: CryptoSignature | ICryptoSignature): Promise<CryptoSignature> {
-        return await super.fromT(value)
-    }
-
     public static async fromJSON(value: ICryptoSignatureSerialized): Promise<CryptoSignature> {
         const error = CryptoSignature.checkHashAlgorithm(value.alg)
         if (error) throw error
 
         const buffer = CoreBuffer.from(value.sig)
-        return await this.from({
+        return await this.fromAny({
             signature: buffer,
             algorithm: value.alg
         })
     }
 
-    public static async deserialize(value: string): Promise<CryptoSignature> {
-        const obj = JSON.parse(value)
-        return await this.fromJSON(obj)
+    public static preDeserialize(value: any): any {
+        const buffer = CoreBuffer.from(value.sig)
+        return {
+            signature: buffer,
+            algorithm: value.alg
+        }
     }
 }

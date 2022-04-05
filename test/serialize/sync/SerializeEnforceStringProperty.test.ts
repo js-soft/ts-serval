@@ -10,7 +10,7 @@ class TokenSerializableEnforceString extends Serializable {
     public content: Attribute
 
     public static from(value: Object): TokenSerializableEnforceString {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 
@@ -58,8 +58,7 @@ export class SerializeEnforceStringPropertyTest {
             })
 
             it("should deserialize from string", function () {
-                const tokenAfterDeserialize =
-                    TokenSerializableEnforceString.deserializeT<TokenSerializableEnforceString>(token.serialize())
+                const tokenAfterDeserialize = TokenSerializableEnforceString.deserialize(token.serialize())
 
                 expect(tokenAfterDeserialize).instanceOf(TokenSerializableEnforceString)
                 expect(tokenAfterDeserialize.content).instanceOf(Attribute)

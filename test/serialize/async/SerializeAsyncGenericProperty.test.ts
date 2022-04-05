@@ -7,10 +7,6 @@ class TokenSerializableAsyncContent extends SerializableAsync {
 
     @serialize()
     public content: Serializable
-
-    public static async from(value: Object): Promise<TokenSerializableAsyncContent> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenSerializableAsyncContentAsync")
@@ -19,10 +15,6 @@ class TokenSerializableAsyncContentAsync extends SerializableAsync {
 
     @serialize()
     public content: SerializableAsync
-
-    public static async from(value: Object): Promise<TokenSerializableAsyncContentAsync> {
-        return await super.fromT(value)
-    }
 }
 
 export class SerializeAsyncGenericPropertyTest {
@@ -30,7 +22,7 @@ export class SerializeAsyncGenericPropertyTest {
         describe("SerializeAsyncGenericProperty", function () {
             describe("SerializableAsyncContent", function () {
                 it("should deserialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContent.from({
+                    const token: any = await TokenSerializableAsyncContent.fromAny({
                         content: { someProperty: "someValue" }
                     })
                     expect(token).to.instanceOf(TokenSerializableAsyncContent)
@@ -41,7 +33,7 @@ export class SerializeAsyncGenericPropertyTest {
                 })
 
                 it("should serialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContent.from({
+                    const token: any = await TokenSerializableAsyncContent.fromAny({
                         content: { someProperty: "someValue" }
                     })
                     const object: any = token.toJSON()
@@ -54,7 +46,7 @@ export class SerializeAsyncGenericPropertyTest {
 
             describe("SerializableAsyncContentAsync", function () {
                 it("should deserialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContentAsync.from({
+                    const token: any = await TokenSerializableAsyncContentAsync.fromUnknown({
                         content: { someProperty: "someValue" }
                     })
                     expect(token).to.instanceOf(TokenSerializableAsyncContentAsync)
@@ -65,7 +57,7 @@ export class SerializeAsyncGenericPropertyTest {
                 })
 
                 it("should serialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContentAsync.from({
+                    const token: any = await TokenSerializableAsyncContentAsync.fromAny({
                         content: { someProperty: "someValue" }
                     })
                     const object: any = token.toJSON()

@@ -10,7 +10,7 @@ class TokenId extends Serializable {
     public id: string
 
     public static from(value: Object): TokenId {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 

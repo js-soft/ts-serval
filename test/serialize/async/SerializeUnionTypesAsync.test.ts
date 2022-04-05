@@ -12,7 +12,7 @@ export class SerializeUnionTypesAsyncTest {
                         p1: "val"
                     }
                 }
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption1)
             })
 
@@ -24,20 +24,20 @@ export class SerializeUnionTypesAsyncTest {
                         p2: "val"
                     }
                 }
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption2)
             })
 
             it("can parse first option (from Seriazable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: (await AsyncUnionOption1.from({
+                    content: await AsyncUnionOption1.fromAny({
                         "@type": "AsyncUnionOption1",
                         p1: "val"
-                    })) as AsyncUnionOption1
+                    })
                 }
 
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
 
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption1)
             })
@@ -45,13 +45,13 @@ export class SerializeUnionTypesAsyncTest {
             it("can parse second option (from Seriazable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: (await AsyncUnionOption2.from({
+                    content: await AsyncUnionOption2.fromAny({
                         "@type": "AsyncUnionOption2",
                         p2: "val"
-                    })) as AsyncUnionOption2
+                    })
                 }
 
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
 
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption2)
             })
@@ -88,8 +88,4 @@ class AsyncClassWithUnionProperty extends SerializableAsync implements IClassWit
     @serialize({ unionTypes: [AsyncUnionOption1, AsyncUnionOption2] })
     @validate()
     public content: AsyncUnionOption1 | AsyncUnionOption2
-
-    public static async from(value: IClassWithUnionProperty): Promise<AsyncClassWithUnionProperty> {
-        return await super.fromT(value)
-    }
 }

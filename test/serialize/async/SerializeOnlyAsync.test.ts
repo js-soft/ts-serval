@@ -8,10 +8,6 @@ class TokenId extends SerializableAsync {
 
     @serialize()
     public id: string
-
-    public static async from(value: Object): Promise<TokenId> {
-        return await super.fromT(value)
-    }
 }
 
 export class SerializeOnlyAsyncTest {
@@ -19,7 +15,7 @@ export class SerializeOnlyAsyncTest {
         describe("SerializeOnlyAsync", function () {
             describe("TokenId", function () {
                 it("should only serialize the given property", async function () {
-                    const token: any = await TokenId.from({ id: "someId" })
+                    const token: any = await TokenId.fromAny({ id: "someId" })
                     const object: any = token.toJSON()
                     expect(object).equals("someId")
                 })

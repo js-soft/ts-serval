@@ -12,10 +12,6 @@ class TokenSerializeAttributeAsync extends SerializableAsync {
 
     @serialize()
     public content: Attribute
-
-    public static async from(value: Object): Promise<TokenSerializeAttributeAsync> {
-        return await super.fromT(value)
-    }
 }
 
 export class SerializeAsyncClassPropertyTest {
@@ -26,7 +22,9 @@ export class SerializeAsyncClassPropertyTest {
             let object: any
 
             it("should parse correct arbitrary content", async function () {
-                token = await TokenSerializeAttributeAsync.from({ content: { name: "firstname", value: "aFirstname" } })
+                token = await TokenSerializeAttributeAsync.fromAny({
+                    content: { name: "firstname", value: "aFirstname" }
+                })
                 expect(token).instanceOf(SerializableAsync)
                 expect(token).instanceOf(TokenSerializeAttributeAsync)
                 expect(token.content).instanceOf(Serializable)
@@ -67,7 +65,7 @@ export class SerializeAsyncClassPropertyTest {
 
             it("should parse correct instantiated content", async function () {
                 attr = Attribute.from({ name: "firstname", value: "aFirstname" })
-                token = await TokenSerializeAttributeAsync.from({ content: attr })
+                token = await TokenSerializeAttributeAsync.fromAny({ content: attr })
                 expect(token).to.exist
                 expect(token).instanceOf(SerializableAsync)
                 expect(token).instanceOf(TokenSerializeAttributeAsync)
@@ -95,7 +93,7 @@ export class SerializeAsyncClassPropertyTest {
 
             it("should parse correct instantiated content (subclass)", async function () {
                 attr = BetterAttribute.from({ name: "firstname", value: "aFirstname" })
-                token = await TokenSerializeAttributeAsync.from({ content: attr })
+                token = await TokenSerializeAttributeAsync.fromAny({ content: attr })
                 expect(token).to.exist
                 expect(token).instanceOf(SerializableAsync)
                 expect(token).instanceOf(TokenSerializeAttributeAsync)
@@ -124,7 +122,7 @@ export class SerializeAsyncClassPropertyTest {
             })
 
             it("should parse correct serialized content again (subclass)", async function () {
-                token = await TokenSerializeAttributeAsync.from(object)
+                token = await TokenSerializeAttributeAsync.fromAny(object)
                 expect(token).to.exist
                 expect(token).instanceOf(SerializableAsync)
                 expect(token).instanceOf(TokenSerializeAttributeAsync)
@@ -152,7 +150,7 @@ export class SerializeAsyncClassPropertyTest {
             })
 
             it("should not parse additional arbitrary content", async function () {
-                token = await TokenSerializeAttributeAsync.from({
+                token = await TokenSerializeAttributeAsync.fromAny({
                     content: { name: "firstname", value: "aFirstname", anotherProp: "anotherPropValue" },
                     anotherProp: "anotherPropValue"
                 })
@@ -204,7 +202,7 @@ export class SerializeAsyncClassPropertyTest {
             it("should not parse additional instantiated content", async function () {
                 attr = Attribute.from({ name: "firstname", value: "aFirstname" })
                 attr.anotherProp = "anotherPropValue"
-                token = await TokenSerializeAttributeAsync.from({
+                token = await TokenSerializeAttributeAsync.fromAny({
                     content: attr,
                     anotherProp: "anotherPropValue"
                 })
@@ -296,14 +294,14 @@ export class SerializeAsyncClassPropertyTest {
                 const id = CoreId.from("Test")
                 await expectThrowsAsync(
                     async () =>
-                        await TokenSerializeAttributeAsync.from({
+                        await TokenSerializeAttributeAsync.fromAny({
                             content: id
                         })
                 )
 
                 await expectThrowsAsync(
                     async () =>
-                        await TokenSerializeAttributeAsync.from({
+                        await TokenSerializeAttributeAsync.fromAny({
                             conten: id
                         })
                 )
@@ -312,14 +310,14 @@ export class SerializeAsyncClassPropertyTest {
             it("should not parse incorrect arbitrary content", async function () {
                 await expectThrowsAsync(
                     async () =>
-                        await TokenSerializeAttributeAsync.from({
+                        await TokenSerializeAttributeAsync.fromAny({
                             content: { nam: "firstname", value: "aFirstname" }
                         })
                 )
 
                 await expectThrowsAsync(
                     async () =>
-                        await TokenSerializeAttributeAsync.from({
+                        await TokenSerializeAttributeAsync.fromAny({
                             conten: { name: "firstname", value: "aFirstname" }
                         })
                 )

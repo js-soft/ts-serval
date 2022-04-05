@@ -15,7 +15,7 @@ export class CoreTest {
                             alg: 2
                         }
                     }
-                    const cert = await Certificate.from(certObject)
+                    const cert = await Certificate.fromAny(certObject)
                     expect(cert).instanceOf(Certificate)
                     expect(cert.content).to.be.a("string")
                     expect(cert.signature).instanceOf(CryptoSignature)

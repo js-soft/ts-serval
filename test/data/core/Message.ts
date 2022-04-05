@@ -51,10 +51,6 @@ export class Message extends CoreSerializableAsync implements IMessage {
         })
     }
 
-    public static async from(value: IMessage): Promise<Message> {
-        return await super.fromT(value)
-    }
-
     public clearCache(): this {
         this.cache = undefined
         this.cachedAt = undefined

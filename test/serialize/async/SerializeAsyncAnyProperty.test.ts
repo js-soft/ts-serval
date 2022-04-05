@@ -7,10 +7,6 @@ class TokenSerializableAsyncContentAny extends SerializableAsync {
 
     @serialize({ any: true })
     public content: any
-
-    public static async from(value: Object): Promise<TokenSerializableAsyncContentAny> {
-        return await super.fromT(value)
-    }
 }
 
 export class SerializeAsyncAnyPropertyTest {
@@ -18,7 +14,9 @@ export class SerializeAsyncAnyPropertyTest {
         describe("SerializeAsyncAnyProperty", function () {
             describe("SerializableAsyncContent", function () {
                 it("should deserialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContentAny.from({ content: { myprop: "someValue" } })
+                    const token: any = await TokenSerializableAsyncContentAny.fromAny({
+                        content: { myprop: "someValue" }
+                    })
                     expect(token).instanceOf(TokenSerializableAsyncContentAny)
                     expect(token.content, "Content doesnt exist").to.exist
                     expect(token.content.myprop, "Property doesnt exist").to.exist
@@ -26,7 +24,9 @@ export class SerializeAsyncAnyPropertyTest {
                 })
 
                 it("should serialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContentAny.from({ content: { myprop: "someValue" } })
+                    const token: any = await TokenSerializableAsyncContentAny.fromAny({
+                        content: { myprop: "someValue" }
+                    })
                     const object: any = token.toJSON()
                     expect(object).to.exist
                     expect(object.content, "Content doesnt exist").to.exist

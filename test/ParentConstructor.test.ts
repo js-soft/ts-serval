@@ -1,4 +1,4 @@
-import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
+import { Constructor, ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
 class NewSerializable {
@@ -20,10 +20,14 @@ class TestSerializableClass extends NewSerializable {
 
 interface IParentItem extends ISerializableAsync {}
 
-@type("ParentItem")
-class ParentItem extends SerializableAsync implements IParentItem {
-    public static async from(value: IParentItem): Promise<ParentItem> {
-        return await super.fromT(value)
+@type("AsyncParentItem")
+class AsyncParentItem extends SerializableAsync implements IParentItem {
+    public static from(value: IParentItem): Promise<AsyncParentItem> {
+        return this.fromAny(value)
+    }
+
+    public static async fromAny<T extends AsyncParentItem>(this: Constructor<T>, value: IParentItem): Promise<T> {
+        return await ((this as any).fromT(value) as Promise<T>)
     }
 }
 
@@ -31,8 +35,26 @@ interface IChildItem extends IParentItem {
     test: string
 }
 
-@type("ChildItem")
-class ChildItem extends ParentItem implements IChildItem {
+@type("AsyncChildItem")
+class AsyncChildItem extends AsyncParentItem implements IChildItem {
+    @serialize()
+    @validate()
+    public test: string
+
+    public static from(value: IChildItem): Promise<AsyncChildItem> {
+        return this.fromAny(value)
+    }
+
+    // public static async fromAny<T extends AsyncParentItem>(this: Constructor<T>, value: IChildItem): Promise<T> {
+    //     return await ((this as any).fromT(value) as Promise<T>)
+    // }
+}
+
+@type("SyncParentItem")
+class SyncParentItem extends SerializableAsync implements IParentItem {}
+
+@type("SyncChildItem")
+class SyncChildItem extends SyncParentItem implements IChildItem {
     @serialize()
     @validate()
     public test: string
@@ -48,18 +70,60 @@ export class ParentConstructorTest {
                 expect(child.getProperty()).to.equal("test")
             })
 
-            it("should create a ChildItem instead of a ParentItem when the ParentItem overrides the from method", async function () {
+            it("should create a AsyncChildItem instead of a ParentItem when the AsyncParentItem overrides the from method", async function () {
                 const responseJSON = {
-                    "@type": "ChildItem",
+                    "@type": "AsyncChildItem",
                     test: "test"
                 } as any
 
                 const response = await SerializableAsync.fromUnknown(responseJSON)
 
-                expect(response).to.be.instanceOf(ParentItem)
-                expect(response).to.be.instanceOf(ChildItem)
+                expect(response).to.be.instanceOf(AsyncParentItem)
+                expect(response).to.be.instanceOf(AsyncChildItem)
 
-                expect((response as ChildItem).test).to.equal("test")
+                expect((response as AsyncChildItem).test).to.equal("test")
+            })
+
+            it("should create 2a AsyncChildItem instead of a AsyncParentItem when the AsyncParentItem overrides the from method", async function () {
+                const responseJSON = {
+                    "@type": "AsyncChildItem",
+                    test: "test"
+                } as any
+
+                const response = await AsyncChildItem.from(responseJSON)
+
+                expect(response).to.be.instanceOf(AsyncParentItem)
+                expect(response).to.be.instanceOf(AsyncChildItem)
+
+                expect(response.test).to.equal("test")
+            })
+
+            it("should create a SyncChildItem instead of a SyncParentItem when the SyncParentItem overrides the from method", async function () {
+                const responseJSON = {
+                    "@type": "SyncChildItem",
+                    test: "test"
+                } as any
+
+                const response = await SerializableAsync.fromUnknown(responseJSON)
+
+                expect(response).to.be.instanceOf(SyncParentItem)
+                expect(response).to.be.instanceOf(SyncChildItem)
+
+                expect((response as SyncChildItem).test).to.equal("test")
+            })
+
+            it("should create 2a SyncChildItem instead of a SyncParentItem when the SyncParentItem overrides the from method", async function () {
+                const responseJSON = {
+                    "@type": "SyncChildItem",
+                    test: "test"
+                } as any
+
+                const response = await SyncChildItem.fromAny(responseJSON)
+
+                expect(response).to.be.instanceOf(SyncParentItem)
+                expect(response).to.be.instanceOf(SyncChildItem)
+
+                expect(response.test).to.equal("test")
             })
         })
     }

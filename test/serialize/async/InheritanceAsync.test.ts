@@ -15,14 +15,6 @@ import { expect } from "chai"
 class RelationshipTemplateAsync extends SerializableAsync {
     @serialize({ deserializeStrings: true })
     public template: Object
-
-    public static async deserialize(value: string): Promise<RelationshipTemplateAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<RelationshipTemplateAsync> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentAsync")
@@ -31,28 +23,12 @@ class TokenContentAsync extends SerializableAsync {
 
     @serialize()
     public title: string
-
-    public static async deserialize(value: string): Promise<TokenContentAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<TokenContentAsync> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentGenericAsync")
 class TokenContentGenericAsync extends TokenContentAsync {
     @serialize({ any: true, deserializeStrings: true })
     public content: any
-
-    public static async deserialize(value: string): Promise<TokenContentGenericAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<TokenContentGenericAsync> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentRelationshipTemplateAsync")
@@ -62,42 +38,18 @@ class TokenContentRelationshipTemplateAsync extends TokenContentAsync {
 
     @serialize({ optional: true })
     public optionalContent: string
-
-    public static async deserialize(value: string): Promise<TokenContentRelationshipTemplateAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<TokenContentRelationshipTemplateAsync> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentStringAsync")
 class TokenContentStringAsync extends TokenContentAsync {
     @serialize()
     public content: String
-
-    public static async deserialize(value: string): Promise<TokenContentStringAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<TokenContentStringAsync> {
-        return await super.fromT(value)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenRelationshipTemplatesAsync")
 class TokenRelationshipTemplatesAsync extends SerializableAsync {
     @serialize({ type: TokenContentRelationshipTemplateAsync })
     public templates: TokenContentRelationshipTemplateAsync[]
-
-    public static async deserialize(value: string): Promise<TokenRelationshipTemplatesAsync> {
-        return await super.deserializeT(value)
-    }
-
-    public static async from(value: Object): Promise<TokenRelationshipTemplatesAsync> {
-        return await super.fromT(value)
-    }
 }
 
 export class InheritanceAsyncTest {
@@ -105,7 +57,7 @@ export class InheritanceAsyncTest {
         describe("InheritanceAsync", function () {
             describe("TokenContentString", function () {
                 it("from() creates instance from given interface", async function () {
-                    const token: any = await TokenContentStringAsync.from({
+                    const token: any = await TokenContentStringAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
@@ -124,11 +76,11 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given instance", async function () {
-                    const useToken: any = await TokenContentStringAsync.from({
+                    const useToken: any = await TokenContentStringAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
-                    const token: any = await TokenContentStringAsync.from(useToken)
+                    const token: any = await TokenContentStringAsync.fromAny(useToken)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -144,12 +96,12 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given object", async function () {
-                    const useToken: any = await TokenContentStringAsync.from({
+                    const useToken: any = await TokenContentStringAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
                     const object: Object = useToken.toJSON()
-                    const token: any = await TokenContentStringAsync.from(object)
+                    const token: any = await TokenContentStringAsync.fromAny(object)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -209,17 +161,17 @@ export class InheritanceAsyncTest {
 
             describe("TokenRelationshipTemplatesAsync", function () {
                 it("from() creates instance from given interface (all objects)", async function () {
-                    const token: any = await TokenRelationshipTemplatesAsync.from({
+                    const token: any = await TokenRelationshipTemplatesAsync.fromAny({
                         templates: [
-                            await TokenContentRelationshipTemplateAsync.from({
+                            await TokenContentRelationshipTemplateAsync.fromAny({
                                 title: "Test",
-                                content: await RelationshipTemplateAsync.from({
+                                content: await RelationshipTemplateAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 })
                             }),
-                            await TokenContentRelationshipTemplateAsync.from({
+                            await TokenContentRelationshipTemplateAsync.fromAny({
                                 title: "Test 2",
-                                content: await RelationshipTemplateAsync.from({
+                                content: await RelationshipTemplateAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 }),
                                 optionalContent: "someOptionalContent"
@@ -262,9 +214,9 @@ export class InheritanceAsyncTest {
 
             describe("TokenContentRelationshipTemplateAsync", function () {
                 it("from() creates instance from given interface (all objects)", async function () {
-                    const token: any = await TokenContentRelationshipTemplateAsync.from({
+                    const token: any = await TokenContentRelationshipTemplateAsync.fromAny({
                         title: "Test",
-                        content: await RelationshipTemplateAsync.from({
+                        content: await RelationshipTemplateAsync.fromAny({
                             template: { myprop: "myvalue" }
                         })
                     })
@@ -286,9 +238,9 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given interface (all objects, optional content)", async function () {
-                    const token: any = await TokenContentRelationshipTemplateAsync.from({
+                    const token: any = await TokenContentRelationshipTemplateAsync.fromAny({
                         title: "Test",
-                        content: await RelationshipTemplateAsync.from({
+                        content: await RelationshipTemplateAsync.fromAny({
                             template: { myprop: "myvalue" }
                         }),
                         optionalContent: "Testing"
@@ -312,7 +264,7 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given interface (with strings to deserialize)", async function () {
-                    const token: any = await TokenContentRelationshipTemplateAsync.from({
+                    const token: any = await TokenContentRelationshipTemplateAsync.fromAny({
                         title: "Test",
                         content: '{"template":"{\\"myprop\\":\\"myvalue\\"}"}'
                     })
@@ -334,11 +286,11 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given instance", async function () {
-                    const useToken: any = await TokenContentRelationshipTemplateAsync.from({
+                    const useToken: any = await TokenContentRelationshipTemplateAsync.fromAny({
                         title: "Test",
                         content: '{"template":"{\\"myprop\\":\\"myvalue\\"}"}'
                     })
-                    const token: any = await TokenContentRelationshipTemplateAsync.from(useToken)
+                    const token: any = await TokenContentRelationshipTemplateAsync.fromAny(useToken)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -357,7 +309,7 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given object", async function () {
-                    const useToken: any = await TokenContentRelationshipTemplateAsync.from({
+                    const useToken: any = await TokenContentRelationshipTemplateAsync.fromAny({
                         title: "Test",
                         content: '{"template":"{\\"myprop\\":\\"myvalue\\"}"}'
                     })
@@ -370,7 +322,7 @@ export class InheritanceAsyncTest {
                     expect(object.content.template).to.exist
                     expect(object.content["@type"]).to.not.exist
                     expect(object.content["@context"]).to.not.exist
-                    const token: any = await TokenContentRelationshipTemplateAsync.from(object)
+                    const token: any = await TokenContentRelationshipTemplateAsync.fromAny(object)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -435,7 +387,7 @@ export class InheritanceAsyncTest {
 
             describe("TokenContentGenericAsync", function () {
                 it("from() creates instance from given interface", async function () {
-                    const token: any = await TokenContentGenericAsync.from({
+                    const token: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
@@ -455,7 +407,7 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given interface (1)", async function () {
-                    const token: any = await TokenContentGenericAsync.from({
+                    const token: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: true
                     })
@@ -475,7 +427,7 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given interface (2)", async function () {
-                    const token: any = await TokenContentGenericAsync.from({
+                    const token: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: 5
                     })
@@ -495,12 +447,12 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given instance (1)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
 
-                    const token: any = await TokenContentGenericAsync.from(useToken)
+                    const token: any = await TokenContentGenericAsync.fromAny(useToken)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -517,12 +469,12 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given instance (2)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: true
                     })
 
-                    const token: any = await TokenContentGenericAsync.from(useToken)
+                    const token: any = await TokenContentGenericAsync.fromAny(useToken)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -539,12 +491,12 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given instance (3)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: 5
                     })
 
-                    const token: any = await TokenContentGenericAsync.from(useToken)
+                    const token: any = await TokenContentGenericAsync.fromAny(useToken)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -561,14 +513,14 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given object (1)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: "someContent"
                     })
 
                     const object: Object = useToken.toJSON()
 
-                    const token: any = await TokenContentGenericAsync.from(object)
+                    const token: any = await TokenContentGenericAsync.fromAny(object)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -585,14 +537,14 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given object (2)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: true
                     })
 
                     const object: Object = useToken.toJSON()
 
-                    const token: any = await TokenContentGenericAsync.from(object)
+                    const token: any = await TokenContentGenericAsync.fromAny(object)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)
@@ -609,14 +561,14 @@ export class InheritanceAsyncTest {
                 })
 
                 it("from() creates instance from given object (3)", async function () {
-                    const useToken: any = await TokenContentGenericAsync.from({
+                    const useToken: any = await TokenContentGenericAsync.fromAny({
                         title: "Test",
                         content: 5
                     })
 
                     const object: Object = useToken.toJSON()
 
-                    const token: any = await TokenContentGenericAsync.from(object)
+                    const token: any = await TokenContentGenericAsync.fromAny(object)
 
                     expect(token).to.be.instanceOf(SerializableAsync)
                     expect(token).to.be.instanceOf(TokenContentAsync)

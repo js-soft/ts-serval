@@ -10,7 +10,7 @@ class ValidateTokenSerializableGeneric extends Serializable {
     public content: Serializable
 
     public static from(value: Object): ValidateTokenSerializableGeneric {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 

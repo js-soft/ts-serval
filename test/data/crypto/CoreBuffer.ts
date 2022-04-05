@@ -10,21 +10,6 @@ export interface ICoreBuffer extends ISerializable {
 export class CoreBuffer extends Serializable implements ICoreBuffer {
     private readonly _buffer: Uint8Array
 
-    public constructor(value: any = []) {
-        super()
-        if (value instanceof ArrayBuffer) {
-            this._buffer = new Uint8Array(value, 0, value.byteLength)
-        } else if (value instanceof Uint8Array) {
-            this._buffer = value
-        } else if (value instanceof Array) {
-            this._buffer = Uint8Array.from(value)
-        } else if (value instanceof CoreBuffer) {
-            this._buffer = value.buffer
-        } else if (typeof value === "string") {
-            this._buffer = Buffer.from(value, "base64")
-        }
-    }
-
     public get buffer(): Uint8Array {
         return this._buffer
     }
@@ -41,11 +26,28 @@ export class CoreBuffer extends Serializable implements ICoreBuffer {
         return Buffer.from(this._buffer).toString("base64")
     }
 
-    public static deserialize(value: string): CoreBuffer {
-        return CoreBuffer.from(value)
+    // TODO: ??
+    // public static deserialize(value: string): CoreBuffer {
+    //     return CoreBuffer.from(value)
+    // }
+
+    protected static preFrom(value: any): any {
+        if (value instanceof ArrayBuffer) {
+            return new Uint8Array(value, 0, value.byteLength)
+        } else if (value instanceof Uint8Array) {
+            return value
+        } else if (value instanceof Array) {
+            return Uint8Array.from(value)
+        } else if (value instanceof CoreBuffer) {
+            return value.buffer
+        } else if (typeof value === "string") {
+            return Buffer.from(value, "base64")
+        }
+
+        return value
     }
 
     public static from(value: any): CoreBuffer {
-        return new CoreBuffer(value)
+        return this.fromAny(value)
     }
 }

@@ -37,26 +37,31 @@ export class CoreDate extends CoreSerializable implements ICoreDate {
         return this.dateTime.toISOString()
     }
 
-    public static from(value: ICoreDate | string | number): CoreDate {
+    protected static preFrom(value: any): any {
         if (typeof value === "object") {
             if (typeof value.date === "undefined") {
-                if (typeof (value as any).toISOString === "function") {
-                    const iso = (value as any).toISOString()
-                    return new CoreDate(new Date(iso))
+                if (typeof value.toISOString === "function") {
+                    const iso = value.toISOString()
+                    return new Date(iso)
                 }
             } else {
-                return new CoreDate(new Date(value.date))
+                return new Date(value.date)
             }
         }
 
         if (typeof value === "number") {
-            return new CoreDate(new Date(value))
+            return new Date(value)
         }
 
-        return new CoreDate(new Date(value as string))
+        return new Date(value as string)
     }
 
-    public static deserialize(isoString: string): CoreDate {
-        return this.from(isoString)
+    public static from(value: ICoreDate | string | number): CoreDate {
+        return this.fromAny(value)
     }
+
+    // TODO: ??
+    // public static deserialize(isoString: string): CoreDate {
+    //     return this.from(isoString)
+    // }
 }

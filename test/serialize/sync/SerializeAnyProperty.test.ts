@@ -9,7 +9,7 @@ class TokenSerializableContentAny extends Serializable {
     public content: any
 
     public static from(value: Object): TokenSerializableContentAny {
-        return super.from(value) as TokenSerializableContentAny
+        return this.fromAny(value)
     }
 }
 

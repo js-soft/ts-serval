@@ -22,15 +22,16 @@ export class CoreId extends CoreSerializable implements ICoreId {
         return this.id === id.toString()
     }
 
-    public static from(value: ICoreId | string): CoreId {
-        if (typeof value === "string" || value instanceof String) {
-            return super.fromT({ id: value })
+    protected static preFrom(value: any): any {
+        if (typeof value === "string") {
+            return { id: value }
         }
-        return super.fromT(value)
+
+        return value
     }
 
-    public static deserialize(value: string): CoreId {
-        return this.from(value)
+    public static from(value: ICoreId | string): CoreId {
+        return this.fromAny(value)
     }
 
     public serialize(): string {

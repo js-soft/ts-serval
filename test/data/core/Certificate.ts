@@ -33,12 +33,4 @@ export class Certificate extends CoreSerializableAsync {
     @validate()
     @serialize()
     public signature: CryptoSignature
-
-    public static async from(value: ICertificate): Promise<Certificate> {
-        return await super.fromT(value)
-    }
-
-    public static async deserialize(value: string): Promise<Certificate> {
-        return await super.deserializeT(value)
-    }
 }

@@ -8,10 +8,6 @@ class TokenSerializableAsyncEnforceString extends SerializableAsync {
 
     @serialize({ enforceString: true })
     public content: Attribute
-
-    public static async from(value: Object): Promise<TokenSerializableAsyncEnforceString> {
-        return await super.fromT(value)
-    }
 }
 
 export class SerializeAsyncEnforceStringPropertyTest {
@@ -21,7 +17,7 @@ export class SerializeAsyncEnforceStringPropertyTest {
             it("should create from object", async function () {
                 const attribute = Attribute.from({ name: "firstname", value: "test" })
                 const serialized = attribute.serialize()
-                token = await TokenSerializableAsyncEnforceString.from({ content: serialized })
+                token = await TokenSerializableAsyncEnforceString.fromAny({ content: serialized })
                 expect(token).instanceOf(TokenSerializableAsyncEnforceString)
                 expect(token.content).instanceOf(Attribute)
                 expect(token.content.name).equals("firstname")
@@ -40,7 +36,7 @@ export class SerializeAsyncEnforceStringPropertyTest {
             })
 
             it("should deserialize from object (as string)", async function () {
-                token = await TokenSerializableAsyncEnforceString.from(token.toJSON())
+                token = await TokenSerializableAsyncEnforceString.fromAny(token.toJSON())
                 expect(token).instanceOf(TokenSerializableAsyncEnforceString)
                 expect(token.content).instanceOf(Attribute)
                 expect(token.content.name).equals("firstname")
@@ -58,10 +54,7 @@ export class SerializeAsyncEnforceStringPropertyTest {
             })
 
             it("should deserialize from string", async function () {
-                const deserializedToken =
-                    await TokenSerializableAsyncEnforceString.deserializeT<TokenSerializableAsyncEnforceString>(
-                        token.serialize()
-                    )
+                const deserializedToken = await TokenSerializableAsyncEnforceString.deserialize(token.serialize())
                 expect(deserializedToken).instanceOf(TokenSerializableAsyncEnforceString)
                 expect(deserializedToken.content).instanceOf(Attribute)
                 expect(deserializedToken.content.name).equals("firstname")

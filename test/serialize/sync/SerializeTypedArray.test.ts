@@ -10,7 +10,7 @@ class TokenTypedArrayString extends Serializable {
     public content: string[]
 
     public static from(value: Object): TokenTypedArrayString {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 
@@ -22,7 +22,7 @@ class TokenTypedArrayNumber extends Serializable {
     public content: number[]
 
     public static from(value: Object): TokenTypedArrayNumber {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 
@@ -34,7 +34,7 @@ class TokenTypedArrayBoolean extends Serializable {
     public content: boolean[]
 
     public static from(value: Object): TokenTypedArrayBoolean {
-        return super.fromT(value)
+        return this.fromAny(value)
     }
 }
 
