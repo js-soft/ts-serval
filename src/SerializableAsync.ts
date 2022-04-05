@@ -1,6 +1,6 @@
 import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
-import { Parser } from "./parsing/Parser"
+import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
 import { IReflectProperty } from "./reflection/ReflectProperty"
 import { Serializable } from "./Serializable"
@@ -122,25 +122,26 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
         const type = (this as any).prototype.constructor as Constructor<T>
 
-        value = this.preFrom(value)
+        value = await this.preFrom(value)
+
+        const propertyMap = SerializableBase.getDescriptor(type.name)
+        const nonReservedKeys = propertyMap
+            ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
+            : undefined
 
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
-            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+            if (nonReservedKeys?.length !== 0) {
+                throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+            }
+
+            return new type(value)
         }
 
         const realObj: T = new type()
-        const propertyMap = SerializableBase.getDescriptor(type.name)
+
         if (propertyMap) {
             for (const [key, info] of propertyMap.entries()) {
-                if (
-                    key === "@type" ||
-                    key === "@context" ||
-                    key === "@version" ||
-                    key === "serializeProperty" ||
-                    key === "serializeAs"
-                ) {
-                    continue
-                }
+                if (METADATA_FIELDS.includes(key)) continue
 
                 let jsonKey = key
                 if (typeof value[jsonKey] === "undefined" && info.alias) {

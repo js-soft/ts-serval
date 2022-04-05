@@ -4,6 +4,8 @@ import { PrimitiveType } from "../validation/ValidateInterfaces"
 import { Validator } from "../validation/Validator"
 import { ParsingError } from "./ParsingError"
 
+export const METADATA_FIELDS = ["@type", "@context", "@version", "serializeProperty", "serializeAs"]
+
 export abstract class Parser {
     public static parseProperty(
         value: any,

@@ -1,6 +1,6 @@
 import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
-import { Parser } from "./parsing/Parser"
+import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
 import { IReflectProperty } from "./reflection/ReflectProperty"
 import { SerializableBase } from "./SerializableBase"
@@ -128,23 +128,24 @@ export class Serializable extends SerializableBase implements ISerializable {
 
         value = this.preFrom(value)
 
+        const propertyMap = SerializableBase.getDescriptor(type.name)
+        const nonReservedKeys = propertyMap
+            ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
+            : undefined
+
         if (typeof value === "undefined" || value === null || typeof value !== "object") {
-            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+            if (nonReservedKeys?.length !== 0) {
+                throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+            }
+
+            return new type(value)
         }
 
         const realObj: T = new type()
-        const propertyMap = SerializableBase.getDescriptor(type.name)
+
         if (propertyMap) {
             propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (
-                    key === "@type" ||
-                    key === "@context" ||
-                    key === "@version" ||
-                    key === "serializeProperty" ||
-                    key === "serializeAs"
-                ) {
-                    return
-                }
+                if (METADATA_FIELDS.includes(key)) return
 
                 let jsonKey = key
                 if (typeof value[jsonKey] === "undefined" && info.alias) {
