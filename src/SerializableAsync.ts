@@ -28,7 +28,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         }
 
         if (!type) {
-            return await this.fromT(value)
+            return await SerializableAsync.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
@@ -42,7 +42,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
             return result.fromJSON(value)
         }
 
-        return await (result.fromAny(value, result) as Promise<SerializableAsync>)
+        return await (result.fromAny(value) as Promise<SerializableAsync>)
     }
 
     public static async deserializeUnknown(value: string): Promise<SerializableAsync> {

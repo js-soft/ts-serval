@@ -26,7 +26,7 @@ export class Serializable extends SerializableBase implements ISerializable {
         }
 
         if (!type) {
-            return this.fromT(value)
+            return Serializable.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
@@ -40,7 +40,7 @@ export class Serializable extends SerializableBase implements ISerializable {
             return result.fromJSON(value)
         }
 
-        return result.fromAny(value, result)
+        return result.fromAny(value)
     }
 
     public static deserializeUnknown(value: string): Serializable {
@@ -136,7 +136,13 @@ export class Serializable extends SerializableBase implements ISerializable {
         const propertyMap = SerializableBase.getDescriptor(type.name)
         if (propertyMap) {
             propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (key === "@type" || key === "@context" || key === "serializeProperty" || key === "serializeAs") {
+                if (
+                    key === "@type" ||
+                    key === "@context" ||
+                    key === "@version" ||
+                    key === "serializeProperty" ||
+                    key === "serializeAs"
+                ) {
                     return
                 }
 
