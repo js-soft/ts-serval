@@ -81,23 +81,23 @@ export class SerializeWrapperTest {
             it("should deserialize unknown content to Wrapper", function () {
                 wrapper = JSONWrapper.from({
                     attribute: {
-                        "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                        "@type": "Attribute",
                         name: "Person.firstname",
                         value: "outerFirstname"
                     },
                     child: {
-                        "@type": "JSONWrapper", // eslint-disable-line @typescript-eslint/naming-convention
+                        "@type": "JSONWrapper",
                         someProperty: {
                             boolean: true,
                             number: 5,
                             array: [
                                 {
-                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                                    "@type": "Attribute",
                                     name: "Person.firstname",
                                     value: "innerFirstname"
                                 },
                                 {
-                                    "@type": "Attribute", // eslint-disable-line @typescript-eslint/naming-convention
+                                    "@type": "Attribute",
                                     name: "Person.lastname",
                                     value: "innerLastname"
                                 }

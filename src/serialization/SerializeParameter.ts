@@ -1,18 +1,12 @@
 import { SerializableBase } from "../SerializableBase"
 
-export interface SerializeParameter {
+export interface SerializeParameterBase {
     /**
      * The serialization alias for this property. Serialization and deserialization will
      * only work with the alias if set
      * @default undefined - no alias is set
      */
     alias?: string
-
-    /**
-     * If a property has more than one possible type, add all the possibilities here in order for
-     * (de)serialization to work properly
-     */
-    unionTypes?: Function[]
 
     /**
      * Whether or not to allow subclasses of defined types
@@ -74,15 +68,6 @@ export interface SerializeParameter {
     optional?: boolean
 
     /**
-     * The type information of the given property. This can be fetched automatically be the source
-     * code - with following exceptions:
-     * - `type` needs to be set for Arrays
-     *
-     * @default undefined - no type is set, type will be used from the reflection
-     */
-    type?: Function
-
-    /**
      * Whether or not the property's value should be parsed as unknown. This is only done if the value
      * and its @type property is set.
      *
@@ -91,3 +76,27 @@ export interface SerializeParameter {
      */
     parseUnknown?: boolean
 }
+
+export interface SerializeParameterUnionTypes extends SerializeParameterBase {
+    /**
+     * If a property has more than one possible type, add all the possibilities here in order for
+     * (de)serialization to work properly
+     */
+    unionTypes?: (new (...args: unknown[]) => unknown)[]
+
+    type?: void
+}
+export interface SerializeParameterSingleType extends SerializeParameterBase {
+    /**
+     * The type information of the given property. This can be fetched automatically be the source
+     * code - with following exceptions:
+     * - `type` needs to be set for Arrays
+     *
+     * @default undefined - no type is set, type will be used from the reflection
+     */
+    type?: new (...args: unknown[]) => unknown
+
+    unionTypes?: void
+}
+
+export type SerializeParameter = SerializeParameterSingleType | SerializeParameterUnionTypes

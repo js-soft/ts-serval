@@ -28,7 +28,7 @@ export async function expectThrowsAsync(method: Function | Promise<any>, errorMe
         error = err
     }
     expect(error, "No Error was thrown!").to.exist
-    expect(error).to.be.an("Error")
+    expect(error, `'${error}' is not an error`).to.be.an("Error")
     if (errorMessage) {
         expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(`^${errorMessage}`))
     }
