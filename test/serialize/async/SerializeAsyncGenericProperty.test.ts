@@ -1,7 +1,7 @@
-import { JSONWrapper, JSONWrapperAsync, schema, Serializable, SerializableAsync, serialize } from "@js-soft/ts-serval"
+import { JSONWrapper, JSONWrapperAsync, Serializable, SerializableAsync, serialize, type } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
-@schema("https://schema.local.corp", "TokenSerializableAsyncContent")
+@type("TokenSerializableAsyncContent")
 class TokenSerializableAsyncContent extends SerializableAsync {
     public notToBeSerialized = "avalue"
 
@@ -9,7 +9,7 @@ class TokenSerializableAsyncContent extends SerializableAsync {
     public content: Serializable
 }
 
-@schema("https://schema.local.corp", "TokenSerializableAsyncContentAsync")
+@type("TokenSerializableAsyncContentAsync")
 class TokenSerializableAsyncContentAsync extends SerializableAsync {
     public notToBeSerialized = "avalue"
 
@@ -46,7 +46,7 @@ export class SerializeAsyncGenericPropertyTest {
 
             describe("SerializableAsyncContentAsync", function () {
                 it("should deserialize arbitrary content", async function () {
-                    const token: any = await TokenSerializableAsyncContentAsync.fromUnknown({
+                    const token: any = await TokenSerializableAsyncContentAsync.fromAny({
                         content: { someProperty: "someValue" }
                     })
                     expect(token).to.instanceOf(TokenSerializableAsyncContentAsync)
