@@ -82,7 +82,7 @@ export interface SerializeParameterUnionTypes extends SerializeParameterBase {
      * If a property has more than one possible type, add all the possibilities here in order for
      * (de)serialization to work properly
      */
-    unionTypes?: Function[]
+    unionTypes?: (new (...args: unknown[]) => unknown)[]
 
     type?: void
 }
@@ -94,7 +94,7 @@ export interface SerializeParameterSingleType extends SerializeParameterBase {
      *
      * @default undefined - no type is set, type will be used from the reflection
      */
-    type?: Function
+    type?: new (...args: unknown[]) => unknown
 
     unionTypes?: void
 }
