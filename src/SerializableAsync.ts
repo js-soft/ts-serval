@@ -2,10 +2,8 @@ import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
 import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
-import { IReflectProperty } from "./reflection/ReflectProperty"
 import { Serializable } from "./Serializable"
 import { SerializableBase } from "./SerializableBase"
-import { Validator } from "./validation/Validator"
 
 export class SerializableAsync extends SerializableBase implements ISerializable {
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
@@ -169,32 +167,5 @@ export class SerializableAsync extends SerializableBase implements ISerializable
 
     protected static postFrom<T extends SerializableAsync>(value: T): Promise<T> | T {
         return value
-    }
-
-    public validateProperty(key: string, descriptor?: IReflectProperty): string | undefined {
-        if (!descriptor) {
-            const propertyMap = this.getDescriptor()
-            if (!propertyMap) {
-                return `No descriptor available for key ${key} (propertyMap is missing)`
-            }
-            descriptor = propertyMap.get(key)
-        }
-        if (!descriptor) {
-            return `No descriptor available for key ${key}`
-        }
-
-        return Validator.checkProperty(this[key], descriptor)
-    }
-
-    public static checkProperty(value: any, key: string, className: string): string | undefined {
-        const propertyMap = Serializable.getDescriptor(className)
-        if (!propertyMap) {
-            return `No descriptor available for key ${key} (propertyMap is missing)`
-        }
-        const descriptor = propertyMap.get(key)
-        if (!descriptor) {
-            return `No descriptor available for key ${key}`
-        }
-        return Validator.checkProperty(value, descriptor)
     }
 }
