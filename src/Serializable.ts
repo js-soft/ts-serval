@@ -97,7 +97,6 @@ export class Serializable extends SerializableBase implements ISerializable {
         // recreating the this context of this function using `that`
         const that = this as unknown as typeof Serializable
 
-        // TODO: should we really run an explicit JSONWrapper serialization here?
         if (!type || type === Serializable) {
             const newValue: any = {}
 
