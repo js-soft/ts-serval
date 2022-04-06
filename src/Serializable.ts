@@ -131,11 +131,13 @@ export class Serializable extends SerializableBase implements ISerializable {
             ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
             : undefined
 
-        if (typeof value === "undefined" || value === null || typeof value !== "object") {
-            if (nonReservedKeys?.length !== 0) {
-                throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
-            }
+        if (typeof value === "undefined" || value === null) {
+            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+        }
 
+        if (typeof value !== "object" && nonReservedKeys?.length !== 0) {
+            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+        } else if (typeof value !== "object") {
             return new type(value)
         }
 
