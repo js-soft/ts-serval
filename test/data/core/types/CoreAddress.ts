@@ -27,15 +27,6 @@ export class CoreAddress extends CoreSerializable {
         return this.fromAny(value)
     }
 
-    // TODO: ??
-    // public static deserialize(value: string): CoreAddress {
-    //     try {
-    //         return super.deserializeT(value)
-    //     } catch (e) {
-    //         return this.from(value)
-    //     }
-    // }
-
     public equals(address: CoreAddress): boolean {
         return this.address === address.toString()
     }
