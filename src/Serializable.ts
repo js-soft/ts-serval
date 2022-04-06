@@ -2,7 +2,6 @@ import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
 import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
-import { IReflectProperty } from "./reflection/ReflectProperty"
 import { SerializableBase } from "./SerializableBase"
 
 export class Serializable extends SerializableBase implements ISerializable {
@@ -143,8 +142,8 @@ export class Serializable extends SerializableBase implements ISerializable {
         const realObj: T = new type()
 
         if (propertyMap) {
-            propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (METADATA_FIELDS.includes(key)) return
+            for (const [key, info] of propertyMap.entries()) {
+                if (METADATA_FIELDS.includes(key)) continue
 
                 let jsonKey = key
                 if (typeof value[jsonKey] === "undefined" && info.alias) {
@@ -160,7 +159,7 @@ export class Serializable extends SerializableBase implements ISerializable {
                 if (typeof propertyValue !== "undefined") {
                     realObj[info.key] = propertyValue
                 }
-            })
+            }
         }
 
         return this.postFrom(realObj)
