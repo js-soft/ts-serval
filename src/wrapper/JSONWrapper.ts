@@ -12,16 +12,11 @@ export class JSONWrapper extends Serializable {
     public static preFrom(value: any): any {
         const parsed = JSON.parse(JSON.stringify(value))
         delete parsed["@type"]
+        delete parsed["@version"]
         return { value: parsed }
     }
 
     public static from(value: any): JSONWrapper {
         return this.fromAny(value)
     }
-
-    // TODO: This is not the right way to do this.
-    // public static deserialize(value: string): JSONWrapper {
-    //     const parsed = JSON.parse(value)
-    //     return this.fromT({ value: parsed })
-    // }
 }
