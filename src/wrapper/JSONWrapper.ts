@@ -9,7 +9,7 @@ export class JSONWrapper extends Serializable {
     @validate()
     public value: any
 
-    public static preFrom(value: any): any {
+    public static override preFrom(value: any): any {
         const parsed = JSON.parse(JSON.stringify(value))
         delete parsed["@type"]
         delete parsed["@version"]

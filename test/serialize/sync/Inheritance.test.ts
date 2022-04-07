@@ -28,7 +28,7 @@ class TokenContentGeneric extends TokenContent {
     @serialize({ any: true, deserializeStrings: true })
     public content: any
 
-    public static from(value: Object): TokenContentGeneric {
+    public static override from(value: Object): TokenContentGeneric {
         return this.fromAny(value)
     }
 }
@@ -41,7 +41,7 @@ class TokenContentRelationshipTemplate extends TokenContent {
     @serialize({ optional: true })
     public optionalContent: string
 
-    public static from(value: Object): TokenContentRelationshipTemplate {
+    public static override from(value: Object): TokenContentRelationshipTemplate {
         return this.fromAny(value)
     }
 }
@@ -51,7 +51,7 @@ class TokenContentString extends TokenContent {
     @serialize()
     public content: String
 
-    public static from(value: Object): TokenContentString {
+    public static override from(value: Object): TokenContentString {
         return this.fromAny(value)
     }
 }

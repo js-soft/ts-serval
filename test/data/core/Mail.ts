@@ -27,7 +27,7 @@ export class Mail extends SerializableAsync implements IMail {
     @serialize()
     public body: string
 
-    public static preFrom(value: IMail): any {
+    public static override preFrom(value: IMail): any {
         if (typeof value.cc === "undefined") {
             value.cc = []
         }

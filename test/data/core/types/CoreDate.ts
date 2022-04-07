@@ -25,7 +25,7 @@ export class CoreDate extends CoreSerializable implements ICoreDate {
     /**
      * Creates an ISO String.
      */
-    public toString(): string {
+    public override toString(): string {
         return this.dateTime.toISOString()
     }
 
@@ -33,11 +33,11 @@ export class CoreDate extends CoreSerializable implements ICoreDate {
         return this.dateTime.toISOString()
     }
 
-    public serialize(): string {
+    public override serialize(): string {
         return this.dateTime.toISOString()
     }
 
-    protected static preFrom(value: any): any {
+    protected static override preFrom(value: any): any {
         if (typeof value === "object") {
             if (typeof value.date === "undefined") {
                 if (typeof value.toISOString === "function") {

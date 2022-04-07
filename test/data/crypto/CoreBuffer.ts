@@ -33,11 +33,11 @@ export class CoreBuffer extends Serializable implements ICoreBuffer {
         return this._buffer.length
     }
 
-    public toJSON(): Object {
+    public override toJSON(): Object {
         return this.serialize()
     }
 
-    public serialize(): string {
+    public override serialize(): string {
         return Buffer.from(this._buffer).toString("base64")
     }
 

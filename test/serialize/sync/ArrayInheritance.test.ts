@@ -41,7 +41,7 @@ class TokenContentRelationshipTemplateArray extends TokenContentArray {
     @serialize({ optional: true })
     public optionalContent: string
 
-    public static from(value: Object): TokenContentRelationshipTemplateArray {
+    public static override from(value: Object): TokenContentRelationshipTemplateArray {
         return this.fromAny(value)
     }
 }

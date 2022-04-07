@@ -37,7 +37,7 @@ class AsyncChildItem extends AsyncParentItem implements IChildItem {
     @validate()
     public test: string
 
-    public static from(value: IChildItem): Promise<AsyncChildItem> {
+    public static override from(value: IChildItem): Promise<AsyncChildItem> {
         return this.fromAny(value)
     }
 }

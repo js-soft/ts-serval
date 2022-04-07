@@ -27,7 +27,7 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
     public readonly counter?: number
     public readonly nonce?: CoreBuffer
 
-    public toJSON(verbose = true): ICryptoCipherSerialized {
+    public override toJSON(verbose = true): ICryptoCipherSerialized {
         const obj: ICryptoCipherSerialized = {
             cph: this.cipher.serialize(),
             alg: this.algorithm
@@ -65,7 +65,7 @@ export class CryptoCipher extends CryptoSerializableAsync implements ICryptoCiph
         })
     }
 
-    public static preDeserialize(value: any): any {
+    public static override preDeserialize(value: any): any {
         let nonceBuffer: CoreBuffer | undefined = undefined
         let counter: number | undefined = undefined
         if (typeof value.nnc !== "undefined") {

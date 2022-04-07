@@ -11,7 +11,7 @@ export class BetterAttribute extends Attribute implements IBetterAttribute {
     @serialize()
     public validTo?: string
 
-    public static from(value: IBetterAttribute): BetterAttribute {
+    public static override from(value: IBetterAttribute): BetterAttribute {
         return this.fromAny(value)
     }
 }

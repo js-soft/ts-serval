@@ -59,7 +59,7 @@ export class CryptoSignature extends CryptoSerializableAsync implements ICryptoS
         return error
     }
 
-    public toJSON(verbose = true): ICryptoSignatureSerialized {
+    public override toJSON(verbose = true): ICryptoSignatureSerialized {
         const obj: ICryptoSignatureSerialized = {
             sig: this.signature.serialize(),
             alg: this.algorithm
@@ -82,7 +82,7 @@ export class CryptoSignature extends CryptoSerializableAsync implements ICryptoS
         })
     }
 
-    public static preDeserialize(value: any): any {
+    public static override preDeserialize(value: any): any {
         const buffer = CoreBuffer.from(value.sig)
         return {
             signature: buffer,

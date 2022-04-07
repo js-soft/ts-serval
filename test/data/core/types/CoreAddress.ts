@@ -15,7 +15,7 @@ export class CoreAddress extends CoreSerializable {
     @serialize()
     public address: string
 
-    protected static preFrom(value: any): any {
+    protected static override preFrom(value: any): any {
         if (typeof value === "string") {
             return { address: value }
         }
@@ -31,11 +31,11 @@ export class CoreAddress extends CoreSerializable {
         return this.address === address.toString()
     }
 
-    public toString(): string {
+    public override toString(): string {
         return this.address
     }
 
-    public serialize(): string {
+    public override serialize(): string {
         return this.address
     }
 }
