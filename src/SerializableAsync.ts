@@ -6,6 +6,12 @@ import { Serializable } from "./Serializable"
 import { SerializableBase } from "./SerializableBase"
 
 export class SerializableAsync extends SerializableBase implements ISerializable {
+    /**
+     * Parses the given object to the class defined in `@type`.
+     *
+     * @param value the object to deserialize
+     * @returns a promise that resolves in the parsed object of the class defined in `@type`
+     */
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
         const obj: any = value
         let type
@@ -13,7 +19,8 @@ export class SerializableAsync extends SerializableBase implements ISerializable
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
-            type = `${obj["@type"]}`
+
+            type = obj["@type"]
         }
 
         let version = 1
@@ -43,15 +50,31 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         return await (result.fromAny(value) as Promise<SerializableAsync>)
     }
 
+    /**
+     * Parses the given string to the class defined in `@type`.
+     *
+     * @param value the string to deserialize
+     * @returns a promise that resolves in the deserialized and parsed object of the class defined in `@type`
+     */
     public static async deserializeUnknown(value: string): Promise<SerializableAsync> {
+        let object: any
         try {
-            const object = JSON.parse(value)
-            return await this.fromUnknown(object)
+            object = JSON.parse(value)
         } catch (e) {
-            throw new ServalError(`ParsingError ${e}`)
+            throw new ServalError(`DeserializationError ${e}`)
         }
+
+        return await this.fromUnknown(object)
     }
 
+    /**
+     * Deserializes the given string to the current class. This method can not be overwritten.
+     * The alternative method for changing the deserialization logic is to overwrite the `{@link preDeserialize}` and `{@link postDeserialize}` methods.
+     *
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns a promise that resolves in the deserialized and parsed object of the class T
+     */
     public static async deserialize<T extends SerializableAsync>(this: Constructor<T>, value: string): Promise<T> {
         const type = (this as any).prototype.constructor
 
@@ -77,14 +100,47 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         return await that.postDeserialize(deserialized)
     }
 
+    /**
+     * `preDeserialize` can be overwritten to manipulate the value before the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run before the {@link preFrom} method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
     protected static preDeserialize(value: any): Promise<any> | any {
         return value
     }
 
+    /**
+     * `postDeserialize` can be overwritten to manipulate the value after the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run after the {@link postFrom} method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns  tht manipulated object or a promise that resolves in the manipulated object
+     */
     protected static postDeserialize<T extends SerializableAsync>(value: T): Promise<T> | T {
         return value
     }
 
+    /**
+     * The main entrypoint of the parsing. This method be overwritten but the this context also has to be in the method signature.
+     * The recommended method for changing the parsing logic is to overwrite the `{@link preFrom}` and `{@link postFrom}` methods.
+     *
+     * This is an example on how to overwrite it:
+     * ```ts
+     * public static async fromAny<T extends ClassThatExtendsSerializableAsync>(this: Constructor<T>, value: IClassThatExtendsSerializableAsync): Promise<T> {
+     *   return await ((this as any).fromT(value) as Promise<T>)
+     * }
+     * ```
+     *
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns a Promise that resolves in the parsed object of the class T
+     */
     public static async fromAny<T extends SerializableAsync>(this: Constructor<T>, value: any): Promise<T> {
         const type = (this as any).prototype.constructor
 
@@ -162,10 +218,24 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         return await this.postFrom(realObj)
     }
 
+    /**
+     * `preFrom` can be overwritten to manipulate the value before the parsing.
+     * This allows to add logic to the deserialization without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
     protected static preFrom(value: any): Promise<any> | any {
         return value
     }
 
+    /**
+     * `postFrom` can be overwritten to manipulate the value after the parsing.
+     * This allows to add logic to the deserialization without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
     protected static postFrom<T extends SerializableAsync>(value: T): Promise<T> | T {
         return value
     }

@@ -5,6 +5,12 @@ import { ParsingError } from "./parsing/ParsingError"
 import { SerializableBase } from "./SerializableBase"
 
 export class Serializable extends SerializableBase implements ISerializable {
+    /**
+     * Parses the given object to the class defined in `@type`.
+     *
+     * @param value the object to deserialize
+     * @returns the parsed object of the class defined in `@type`
+     */
     public static fromUnknown(value: any): Serializable {
         const obj: any = value
         let type
@@ -12,7 +18,8 @@ export class Serializable extends SerializableBase implements ISerializable {
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
-            type = `${obj["@type"]}`
+
+            type = obj["@type"]
         }
 
         let version = 1
@@ -42,20 +49,30 @@ export class Serializable extends SerializableBase implements ISerializable {
         return result.fromAny(value)
     }
 
+    /**
+     * Parses the given string to the class defined in `@type`.
+     *
+     * @param value the string to deserialize
+     * @returns the deserialized and parsed object of the class defined in `@type`
+     */
     public static deserializeUnknown(value: string): Serializable {
+        let object: any
         try {
-            const object = JSON.parse(value)
-            return this.fromUnknown(object)
+            object = JSON.parse(value)
         } catch (e) {
             throw new ServalError(`DeserializationError ${e}`)
         }
+
+        return this.fromUnknown(object)
     }
 
     /**
-     * Deserializes the given string to the current class.
+     * Deserializes the given string to the current class. This method can not be overwritten.
+     * The alternative method for changing the deserialization logic is to overwrite the `{@link preDeserialize}` and `{@link postDeserialize}` methods.
      *
-     * @param value The JSON string which should be parsed
-     * @returns An object of the given type T
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns the deserialized and parsed object of the class T
      */
     public static deserialize<T extends Serializable>(this: Constructor<T>, value: string): T {
         const type = (this as any).prototype.constructor
@@ -82,14 +99,47 @@ export class Serializable extends SerializableBase implements ISerializable {
         return that.postDeserialize(deserialized)
     }
 
+    /**
+     * `preDeserialize` can be overwritten to manipulate the value before the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run before the {@link preFrom} method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns the manipulated object
+     */
     protected static preDeserialize(value: any): any {
         return value
     }
 
+    /**
+     * `postDeserialize` can be overwritten to manipulate the value after the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run after the {@link postFrom} method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns the manipulated object
+     */
     protected static postDeserialize<T extends Serializable>(value: T): T {
         return value
     }
 
+    /**
+     * The main entrypoint of the parsing. This method be overwritten but the this context also has to be in the method signature.
+     * The recommended method for changing the parsing logic is to overwrite the `{@link preFrom}` and `{@link postFrom}` methods.
+     *
+     * This is an example on how to overwrite it:
+     * ```ts
+     * public static fromAny<T extends ClassThatExtendsSerializable>(this: Constructor<T>, value: IClassThatExtendsSerializable): T {
+     *   return (this as any).fromT(value)
+     * }
+     * ```
+     *
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns the parsed object of the class T
+     */
     public static fromAny<T extends Serializable>(this: Constructor<T>, value: any): T {
         const type = (this as any).prototype.constructor
 
@@ -118,7 +168,7 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @param value The object which should be parsed
      * @returns An object of the given type T
      *
-     * @throws DeserializationError when the deserialization failed (structure is not correct)
+     * @throws ParsingError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
     private static fromT<T extends Serializable>(value: any): T {
@@ -167,10 +217,24 @@ export class Serializable extends SerializableBase implements ISerializable {
         return this.postFrom(realObj)
     }
 
+    /**
+     * `preFrom` can be overwritten to manipulate the value before the parsing.
+     * This allows to add logic to the deserialization without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns the manipulated object
+     */
     protected static preFrom(value: any): Promise<any> | any {
         return value
     }
 
+    /**
+     * `postFrom` can be overwritten to manipulate the value after the parsing.
+     * This allows to add logic to the deserialization without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns the manipulated object
+     */
     protected static postFrom<T extends Serializable>(value: T): T {
         return value
     }
