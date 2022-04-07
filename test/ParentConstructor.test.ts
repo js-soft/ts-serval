@@ -1,4 +1,4 @@
-import { Constructor, ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
+import { ISerializableAsync, SerializableAsync, serialize, type, validate } from "@js-soft/ts-serval"
 import { expect } from "chai"
 
 class NewSerializable {
@@ -25,10 +25,6 @@ class AsyncParentItem extends SerializableAsync implements IParentItem {
     public static from(value: IParentItem): Promise<AsyncParentItem> {
         return this.fromAny(value)
     }
-
-    public static async fromAny<T extends AsyncParentItem>(this: Constructor<T>, value: IParentItem): Promise<T> {
-        return await ((this as any).fromT(value) as Promise<T>)
-    }
 }
 
 interface IChildItem extends IParentItem {
@@ -44,10 +40,6 @@ class AsyncChildItem extends AsyncParentItem implements IChildItem {
     public static from(value: IChildItem): Promise<AsyncChildItem> {
         return this.fromAny(value)
     }
-
-    // public static async fromAny<T extends AsyncParentItem>(this: Constructor<T>, value: IChildItem): Promise<T> {
-    //     return await ((this as any).fromT(value) as Promise<T>)
-    // }
 }
 
 @type("SyncParentItem")
