@@ -9,7 +9,8 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     /**
      * Parses the given object to the class defined in `@type`.
      *
-     * @param value the object to deserialize
+     * @param value The JSON object to parse. The object must have the `@type` property set in order to be parsed, in addition to possible `@context` and `@version` properties.
+     * @returns the parsed object of the class defined in `@type`
      * @returns a promise that resolves in the parsed object of the class defined in `@type`
      */
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
@@ -127,7 +128,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     }
 
     /**
-     * The main entrypoint of the parsing. This method be overwritten but the this context also has to be in the method signature.
+     * The main entrypoint of the parsing. This method may be overwritten but the this context also has to be in the method signature.
      * The recommended method for changing the parsing logic is to overwrite the `{@link preFrom}` and `{@link postFrom}` methods.
      *
      * This is an example on how to overwrite it:
@@ -137,7 +138,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * }
      * ```
      *
-     * @param this tells typescript that the context of this method is the current class
+     * @param this tells typescript that the context of this method is the current class instance, which may be a subclass of SerializableAsync
      * @param value the object which should be parsed
      * @returns a Promise that resolves in the parsed object of the class T
      */
@@ -220,7 +221,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
 
     /**
      * `preFrom` can be overwritten to manipulate the value before the parsing.
-     * This allows to add logic to the deserialization without having to override the fromAny method.
+     * This allows to add logic to the parsing without having to override the fromAny method.
      *
      * @param value the object that will be manipulated before the actual parsing.
      * @returns tht manipulated object or a promise that resolves in the manipulated object
@@ -231,7 +232,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
 
     /**
      * `postFrom` can be overwritten to manipulate the value after the parsing.
-     * This allows to add logic to the deserialization without having to override the fromAny method.
+     * This allows to add logic to the parsing without having to override the fromAny method.
      *
      * @param value the object that will be manipulated after the actual parsing.
      * @returns tht manipulated object or a promise that resolves in the manipulated object
