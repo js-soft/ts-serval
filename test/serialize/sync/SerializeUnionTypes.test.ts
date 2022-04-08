@@ -47,7 +47,7 @@ export class SerializeUnionTypesTest {
             it("can parse first option (from Serializable object)", function () {
                 const json = {
                     "@type": "ClassWithUnionProperty",
-                    content: UnionOption1.from({ "@type": "UnionOption1", p1: "val" }) as UnionOption1
+                    content: UnionOption1.from({ p1: "val" })
                 }
 
                 const obj = ClassWithUnionProperty.from(json)
@@ -58,7 +58,7 @@ export class SerializeUnionTypesTest {
             it("can parse second option (from Serializable object)", function () {
                 const json = {
                     "@type": "ClassWithUnionProperty",
-                    content: UnionOption2.from({ "@type": "UnionOption2", p2: "val" }) as UnionOption2
+                    content: UnionOption2.from({ p2: "val" })
                 }
 
                 const obj = ClassWithUnionProperty.from(json)
@@ -69,7 +69,7 @@ export class SerializeUnionTypesTest {
             it("throws if invalid options are given (from Serializable object)", function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: InvalidUnionOption.from({
+                    content: InvalidUnionOption.fromAny({
                         "@type": "InvalidUnionOption",
                         p3: "val"
                     }) as any
@@ -101,12 +101,20 @@ interface IUnionOption2 extends ISerializable {
 class UnionOption1 extends Serializable implements IUnionOption1 {
     @serialize()
     public p1: string
+
+    public static from(value: IUnionOption1): UnionOption1 {
+        return this.fromAny(value)
+    }
 }
 
 @type("UnionOption2")
 class UnionOption2 extends Serializable implements IUnionOption2 {
     @serialize()
     public p2: string
+
+    public static from(value: IUnionOption2): UnionOption2 {
+        return this.fromAny(value)
+    }
 }
 
 @type("InvalidUnionOption")
@@ -122,6 +130,6 @@ class ClassWithUnionProperty extends Serializable implements IClassWithUnionProp
     public content: UnionOption1 | UnionOption2
 
     public static from(value: IClassWithUnionProperty): ClassWithUnionProperty {
-        return super.fromT(value, ClassWithUnionProperty)
+        return this.fromAny(value)
     }
 }

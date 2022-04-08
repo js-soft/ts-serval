@@ -10,7 +10,7 @@ class TokenSerializableContentGenericProperty extends Serializable {
     public content: Serializable
 
     public static from(value: Object): TokenSerializableContentGenericProperty {
-        return super.fromT(value, TokenSerializableContentGenericProperty)
+        return this.fromAny(value)
     }
 }
 

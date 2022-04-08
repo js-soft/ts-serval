@@ -1,5 +1,5 @@
-import { schema, serialize, validate } from "@js-soft/ts-serval"
-import { IMessageContent, MessageContent } from "./MessageContent"
+import { schema, SerializableAsync, serialize, validate } from "@js-soft/ts-serval"
+import { IMessageContent } from "./MessageContent"
 import { CoreAddress, ICoreAddress } from "./types/CoreAddress"
 
 export interface IMail extends IMessageContent {
@@ -10,7 +10,7 @@ export interface IMail extends IMessageContent {
 }
 
 @schema("https://schema.corp", "Mail")
-export class Mail extends MessageContent implements IMail {
+export class Mail extends SerializableAsync implements IMail {
     @validate()
     @serialize({ type: CoreAddress })
     public to: CoreAddress[]
@@ -27,15 +27,20 @@ export class Mail extends MessageContent implements IMail {
     @serialize()
     public body: string
 
-    public static async from(value: IMail): Promise<Mail> {
+    public static override preFrom(value: IMail): any {
         if (typeof value.cc === "undefined") {
             value.cc = []
         }
+
         if (typeof value.body === "undefined" && (value as any).content) {
             value.body = (value as any).content
             delete (value as any).content
         }
-        const obj: Mail = await super.fromT(value, Mail)
-        return obj
+
+        return value
+    }
+
+    public static from(value: IMail): Promise<Mail> {
+        return this.fromAny(value)
     }
 }

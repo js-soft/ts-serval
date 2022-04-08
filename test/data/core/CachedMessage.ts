@@ -44,8 +44,4 @@ export class CachedMessage extends CoreSerializableAsync implements ICachedMessa
     @validate()
     @serialize()
     public content: MessageContent
-
-    public static async from(value: ICachedMessage): Promise<CachedMessage> {
-        return await super.fromT(value, CachedMessage)
-    }
 }

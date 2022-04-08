@@ -13,7 +13,7 @@ export class SerializeUnionTypesAsyncTest {
                         p1: "val"
                     }
                 }
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption1)
             })
 
@@ -25,7 +25,7 @@ export class SerializeUnionTypesAsyncTest {
                         p2: "val"
                     }
                 }
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption2)
             })
 
@@ -38,7 +38,7 @@ export class SerializeUnionTypesAsyncTest {
                     } as any
                 }
                 await expectThrowsAsync(async () => {
-                    const obj = await AsyncClassWithUnionProperty.from(json)
+                    const obj = await AsyncClassWithUnionProperty.fromAny(json)
                     expect(obj.content).to.be.instanceOf(AsyncInvalidUnionOption)
                 }, "AsyncClassWithUnionProperty.content :: Parsed object is not an instance of any allowed types \\(AsyncUnionOption1\\|AsyncUnionOption2\\)")
             })
@@ -46,13 +46,13 @@ export class SerializeUnionTypesAsyncTest {
             it("can parse first option (from Serializable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: (await AsyncUnionOption1.from({
+                    content: await AsyncUnionOption1.fromAny({
                         "@type": "AsyncUnionOption1",
                         p1: "val"
-                    })) as AsyncUnionOption1
+                    })
                 }
 
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
 
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption1)
             })
@@ -60,13 +60,13 @@ export class SerializeUnionTypesAsyncTest {
             it("can parse second option (from Serializable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: (await AsyncUnionOption2.from({
+                    content: await AsyncUnionOption2.fromAny({
                         "@type": "AsyncUnionOption2",
                         p2: "val"
-                    })) as AsyncUnionOption2
+                    })
                 }
 
-                const obj = await AsyncClassWithUnionProperty.from(json)
+                const obj = await AsyncClassWithUnionProperty.fromAny(json)
 
                 expect(obj.content).to.be.instanceOf(AsyncUnionOption2)
             })
@@ -74,14 +74,14 @@ export class SerializeUnionTypesAsyncTest {
             it("throws if invalid options are given (from Serializable object)", async function () {
                 const json = {
                     "@type": "AsyncClassWithUnionProperty",
-                    content: (await AsyncInvalidUnionOption.from({
+                    content: (await AsyncInvalidUnionOption.fromAny({
                         "@type": "AsyncInvalidUnionOption",
                         p3: "val"
                     })) as any
                 }
 
                 await expectThrowsAsync(async () => {
-                    const obj = await AsyncClassWithUnionProperty.from(json)
+                    const obj = await AsyncClassWithUnionProperty.fromAny(json)
                     expect(obj).to.be.instanceOf(AsyncClassWithUnionProperty)
                     expect(obj.content).to.be.instanceOf(AsyncInvalidUnionOption)
                 }, "AsyncClassWithUnionProperty.content :: Parsed object is not an instance of any allowed types \\(AsyncUnionOption1\\|AsyncUnionOption2\\)")
@@ -127,6 +127,6 @@ class AsyncClassWithUnionProperty extends SerializableAsync implements IClassWit
     public content: AsyncUnionOption1 | AsyncUnionOption2
 
     public static async from(value: IClassWithUnionProperty): Promise<AsyncClassWithUnionProperty> {
-        return await super.fromT(value, AsyncClassWithUnionProperty)
+        return await this.fromAny(value)
     }
 }

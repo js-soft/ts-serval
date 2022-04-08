@@ -15,14 +15,6 @@ import { expect } from "chai"
 class RelationshipTemplateArrayAsync extends SerializableAsync {
     @serialize()
     public template: Object
-
-    public static async deserialize(value: string): Promise<RelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, RelationshipTemplateArrayAsync)
-    }
-
-    public static async from(value: Object): Promise<RelationshipTemplateArrayAsync> {
-        return await super.fromT(value, RelationshipTemplateArrayAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentArrayAsync")
@@ -31,14 +23,6 @@ class TokenContentArrayAsync extends SerializableAsync {
 
     @serialize()
     public title: string
-
-    public static async deserialize(value: string): Promise<TokenContentArrayAsync> {
-        return await super.deserializeT(value, TokenContentArrayAsync)
-    }
-
-    public static async from(value: Object): Promise<TokenContentArrayAsync> {
-        return await super.fromT(value, TokenContentArrayAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenContentRelationshipTemplateArrayAsync")
@@ -48,28 +32,12 @@ class TokenContentRelationshipTemplateArrayAsync extends TokenContentArrayAsync 
 
     @serialize({ optional: true })
     public optionalContent: string
-
-    public static async deserialize(value: string): Promise<TokenContentRelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, TokenContentRelationshipTemplateArrayAsync)
-    }
-
-    public static async from(value: Object): Promise<TokenContentRelationshipTemplateArrayAsync> {
-        return await super.fromT(value, TokenContentRelationshipTemplateArrayAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenRelationshipTemplateArrayAsync")
 class TokenRelationshipTemplateArrayAsync extends SerializableAsync {
     @serialize({ deserializeStrings: true, type: TokenContentRelationshipTemplateArrayAsync })
     public templates: TokenContentRelationshipTemplateArrayAsync[]
-
-    public static async deserialize(value: string): Promise<TokenRelationshipTemplateArrayAsync> {
-        return await super.deserializeT(value, TokenRelationshipTemplateArrayAsync)
-    }
-
-    public static async from(value: Object): Promise<TokenRelationshipTemplateArrayAsync> {
-        return await super.fromT(value, TokenRelationshipTemplateArrayAsync)
-    }
 }
 
 export class ArrayInheritanceAsyncTest {
@@ -109,17 +77,17 @@ export class ArrayInheritanceAsyncTest {
         describe("ArrayInheritanceAsync", function () {
             describe("TokenRelationshipTemplateArrayAsync", function () {
                 it("from() creates instance from given interface (all objects)", async function () {
-                    const token: any = await TokenRelationshipTemplateArrayAsync.from({
+                    const token: any = await TokenRelationshipTemplateArrayAsync.fromAny({
                         templates: [
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 })
                             }),
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test 2",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 }),
                                 optionalContent: "someOptionalContent"
@@ -131,17 +99,17 @@ export class ArrayInheritanceAsyncTest {
                 })
 
                 it("should toJSON() correctly", async function () {
-                    const token: any = await TokenRelationshipTemplateArrayAsync.from({
+                    const token: any = await TokenRelationshipTemplateArrayAsync.fromAny({
                         templates: [
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 })
                             }),
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test 2",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 }),
                                 optionalContent: "someOptionalContent"
@@ -156,17 +124,17 @@ export class ArrayInheritanceAsyncTest {
                 })
 
                 it("should serialize correctly", async function () {
-                    const token: any = await TokenRelationshipTemplateArrayAsync.from({
+                    const token: any = await TokenRelationshipTemplateArrayAsync.fromAny({
                         templates: [
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 })
                             }),
-                            await TokenContentRelationshipTemplateArrayAsync.from({
+                            await TokenContentRelationshipTemplateArrayAsync.fromAny({
                                 title: "Test 2",
-                                content: await RelationshipTemplateArrayAsync.from({
+                                content: await RelationshipTemplateArrayAsync.fromAny({
                                     template: { myprop: "myvalue" }
                                 }),
                                 optionalContent: "someOptionalContent"

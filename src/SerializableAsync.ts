@@ -1,13 +1,18 @@
 import { ServalError } from "./errors"
-import { Constructor, ISerializable, ISerializableAsync } from "./interfaces"
-import { Parser } from "./parsing/Parser"
+import { Constructor, ISerializable } from "./interfaces"
+import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
-import { IReflectProperty } from "./reflection/ReflectProperty"
 import { Serializable } from "./Serializable"
 import { SerializableBase } from "./SerializableBase"
-import { Validator } from "./validation/Validator"
 
 export class SerializableAsync extends SerializableBase implements ISerializable {
+    /**
+     * Parses the given object to the class defined in `@type`.
+     *
+     * @param value The JSON object to parse. The object must have the `@type` property set in order to be parsed, in addition to possible `@context` and `@version` properties.
+     * @returns the parsed object of the class defined in `@type`
+     * @returns a promise that resolves in the parsed object of the class defined in `@type`
+     */
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
         const obj: any = value
         let type
@@ -15,7 +20,8 @@ export class SerializableAsync extends SerializableBase implements ISerializable
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
-            type = `${obj["@type"]}`
+
+            type = obj["@type"]
         }
 
         let version = 1
@@ -28,7 +34,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         }
 
         if (!type) {
-            return await this.from(value)
+            return await SerializableAsync.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
@@ -37,39 +43,48 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 `Type '${type}' with version ${version} was not found within reflection classes. You might have to install a module first.`
             )
         }
+
         if (typeof result.fromJSON === "function") {
             return result.fromJSON(value)
         }
-        return result.from(value, result)
-    }
 
-    public static async deserializeUnknown(value: string): Promise<SerializableAsync> {
-        let obj
-        try {
-            obj = JSON.parse(value)
-        } catch (e) {
-            throw new ServalError(`ParsingError ${e}`)
-        }
-        return await this.fromUnknown(obj)
-    }
-
-    public static async deserialize(value: string, type?: new () => SerializableAsync): Promise<SerializableAsync> {
-        if (type) {
-            return await this.deserializeT(value, type)
-        }
-        return await this.deserializeUnknown(value)
+        return await (result.fromAny(value) as Promise<SerializableAsync>)
     }
 
     /**
-     * Deserializes the given string to the current class.
+     * Parses the given string to the class defined in `@type`.
      *
-     * @param value The JSON string which should be parsed
-     * @returns An object of the given type T
+     * @param value the string to deserialize
+     * @returns a promise that resolves in the deserialized and parsed object of the class defined in `@type`
      */
-    public static async deserializeT<T>(value: string, type: new () => T): Promise<T> {
-        let obj
+    public static async deserializeUnknown(value: string): Promise<SerializableAsync> {
+        let object: any
         try {
-            obj = JSON.parse(value)
+            object = JSON.parse(value)
+        } catch (e) {
+            throw new ServalError(`DeserializationError ${e}`)
+        }
+
+        return await this.fromUnknown(object)
+    }
+
+    /**
+     * Deserializes the given string to the current class. This method can not be overwritten.
+     * The alternative method for changing the deserialization logic is to overwrite the `{@link preDeserialize}` and `{@link postDeserialize}` methods.
+     *
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns a promise that resolves in the deserialized and parsed object of the class T
+     */
+    public static async deserialize<T extends SerializableAsync>(this: Constructor<T>, value: string): Promise<T> {
+        const type = (this as any).prototype.constructor
+
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof SerializableAsync
+
+        let object
+        try {
+            object = JSON.parse(value)
         } catch (e) {
             throw new ParsingError(
                 type.name,
@@ -78,23 +93,75 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 e
             )
         }
-        return await this.fromT<T>(obj, type)
+
+        object = await that.preDeserialize(object)
+
+        const deserialized = await that.fromT<T>(object)
+
+        return await that.postDeserialize(deserialized)
     }
 
-    public static async from(
-        value: ISerializableAsync,
-        type?: new () => SerializableAsync
-    ): Promise<SerializableAsync> {
+    /**
+     * `preDeserialize` can be overwritten to manipulate the value before the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run before the {@link preFrom} method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
+    protected static preDeserialize(value: any): Promise<any> | any {
+        return value
+    }
+
+    /**
+     * `postDeserialize` can be overwritten to manipulate the value after the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run after the {@link postFrom} method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns  tht manipulated object or a promise that resolves in the manipulated object
+     */
+    protected static postDeserialize<T extends SerializableAsync>(value: T): Promise<T> | T {
+        return value
+    }
+
+    /**
+     * The main entrypoint of the parsing. This method may be overwritten but the this context also has to be in the method signature.
+     * The recommended method for changing the parsing logic is to overwrite the `{@link preFrom}` and `{@link postFrom}` methods.
+     *
+     * This is an example on how to overwrite it:
+     * ```ts
+     * public static async fromAny<T extends ClassThatExtendsSerializableAsync>(this: Constructor<T>, value: IClassThatExtendsSerializableAsync): Promise<T> {
+     *   return await ((this as any).fromT(value) as Promise<T>)
+     * }
+     * ```
+     *
+     * @param this tells typescript that the context of this method is the current class instance, which may be a subclass of SerializableAsync
+     * @param value the object which should be parsed
+     * @returns a Promise that resolves in the parsed object of the class T
+     */
+    public static async fromAny<T extends SerializableAsync>(this: Constructor<T>, value: any): Promise<T> {
+        const type = (this as any).prototype.constructor
+
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof SerializableAsync
+
         if (!type || type === SerializableAsync || type === Serializable) {
+            const newValue: any = {}
+
             if (!value["@type"]) {
-                value["@type"] = "JSONWrapperAsync"
+                newValue["@type"] = "JSONWrapperAsync"
             }
             if (!value["@version"]) {
-                value["@version"] = 1
+                newValue["@version"] = 1
             }
-            return await this.fromUnknown(value)
+
+            return (await that.fromUnknown({ ...newValue, ...value })) as T
         }
-        return await this.fromT(value, type)
+
+        return await that.fromT(value)
     }
 
     /**
@@ -106,24 +173,31 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @throws ParsingError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    public static async fromT<T>(value: any, type: new () => T): Promise<T> {
-        if (typeof value === "undefined" || value === null || typeof value !== "object") {
+    private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
+        const type = (this as any).prototype.constructor as Constructor<T>
+
+        value = await this.preFrom(value)
+
+        const propertyMap = SerializableBase.getDescriptor(type.name)
+        const nonReservedKeys = propertyMap
+            ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
+            : undefined
+
+        if (typeof value === "undefined" || value === null) {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        const realObj: T = new (<Constructor<T>>type)()
-        const propertyMap = SerializableBase.getDescriptor(type.name)
+        if (typeof value !== "object" && nonReservedKeys?.length !== 0) {
+            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+        } else if (typeof value !== "object") {
+            return new type(value)
+        }
+
+        const realObj: T = new type()
+
         if (propertyMap) {
             for (const [key, info] of propertyMap.entries()) {
-                if (
-                    key === "@type" ||
-                    key === "@context" ||
-                    key === "@version" ||
-                    key === "serializeProperty" ||
-                    key === "serializeAs"
-                ) {
-                    continue
-                }
+                if (METADATA_FIELDS.includes(key)) continue
 
                 let jsonKey = key
                 if (typeof value[jsonKey] === "undefined" && info.alias) {
@@ -141,33 +215,29 @@ export class SerializableAsync extends SerializableBase implements ISerializable
                 }
             }
         }
-        return realObj
+
+        return await this.postFrom(realObj)
     }
 
-    public validateProperty(key: string, descriptor?: IReflectProperty): string | undefined {
-        if (!descriptor) {
-            const propertyMap = this.getDescriptor()
-            if (!propertyMap) {
-                return `No descriptor available for key ${key} (propertyMap is missing)`
-            }
-            descriptor = propertyMap.get(key)
-        }
-        if (!descriptor) {
-            return `No descriptor available for key ${key}`
-        }
-
-        return Validator.checkProperty(this[key], descriptor)
+    /**
+     * `preFrom` can be overwritten to manipulate the value before the parsing.
+     * This allows to add logic to the parsing without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
+    protected static preFrom(value: any): Promise<any> | any {
+        return value
     }
 
-    public static checkProperty(value: any, key: string, className: string): string | undefined {
-        const propertyMap = Serializable.getDescriptor(className)
-        if (!propertyMap) {
-            return `No descriptor available for key ${key} (propertyMap is missing)`
-        }
-        const descriptor = propertyMap.get(key)
-        if (!descriptor) {
-            return `No descriptor available for key ${key}`
-        }
-        return Validator.checkProperty(value, descriptor)
+    /**
+     * `postFrom` can be overwritten to manipulate the value after the parsing.
+     * This allows to add logic to the parsing without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns tht manipulated object or a promise that resolves in the manipulated object
+     */
+    protected static postFrom<T extends SerializableAsync>(value: T): Promise<T> | T {
+        return value
     }
 }

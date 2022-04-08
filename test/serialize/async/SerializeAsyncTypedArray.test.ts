@@ -8,10 +8,6 @@ class TokenTypedArrayStringAsync extends SerializableAsync {
 
     @serialize({ type: String })
     public content: string[]
-
-    public static async from(value: Object): Promise<TokenTypedArrayStringAsync> {
-        return await super.fromT<TokenTypedArrayStringAsync>(value, TokenTypedArrayStringAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenTypedArrayNumberAsync")
@@ -20,10 +16,6 @@ class TokenTypedArrayNumberAsync extends SerializableAsync {
 
     @serialize({ type: Number })
     public content: number[]
-
-    public static async from(value: Object): Promise<TokenTypedArrayNumberAsync> {
-        return await super.fromT<TokenTypedArrayNumberAsync>(value, TokenTypedArrayNumberAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenTypedArrayBooleanAsync")
@@ -32,10 +24,6 @@ class TokenTypedArrayBooleanAsync extends SerializableAsync {
 
     @serialize({ type: Boolean })
     public content: boolean[]
-
-    public static async from(value: Object): Promise<TokenTypedArrayBooleanAsync> {
-        return await super.fromT<TokenTypedArrayBooleanAsync>(value, TokenTypedArrayBooleanAsync)
-    }
 }
 
 export class SerializeAsyncTypedArrayTest {
@@ -44,7 +32,7 @@ export class SerializeAsyncTypedArrayTest {
             describe("TokenTypedArrayStringAsync", function () {
                 let token: TokenTypedArrayStringAsync
                 it("should deserialize string arrays", async function () {
-                    token = await TokenTypedArrayStringAsync.from({ content: ["Test1", "Test2", ""] })
+                    token = await TokenTypedArrayStringAsync.fromAny({ content: ["Test1", "Test2", ""] })
                     expect(token).to.be.instanceOf(TokenTypedArrayStringAsync)
                     expect(token.content).to.be.an("array")
                     expect(token.content[0]).equals("Test1")
@@ -64,11 +52,11 @@ export class SerializeAsyncTypedArrayTest {
 
                 it("should not deserialize non-string arrays", async function () {
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayStringAsync.from({ content: [true, "Test2", "Test3"] })
+                        async () => await TokenTypedArrayStringAsync.fromAny({ content: [true, "Test2", "Test3"] })
                     )
 
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayStringAsync.from({ content: [null, "Test2", "Test3"] })
+                        async () => await TokenTypedArrayStringAsync.fromAny({ content: [null, "Test2", "Test3"] })
                     )
                 })
             })
@@ -76,7 +64,7 @@ export class SerializeAsyncTypedArrayTest {
             describe("TokenTypedArrayNumberAsync", function () {
                 let token: TokenTypedArrayNumberAsync
                 it("should deserialize number arrays", async function () {
-                    token = await TokenTypedArrayNumberAsync.from({ content: [5, -1.5, 0] })
+                    token = await TokenTypedArrayNumberAsync.fromAny({ content: [5, -1.5, 0] })
                     expect(token).to.be.instanceOf(TokenTypedArrayNumberAsync)
                     expect(token.content).to.be.an("array")
                     expect(token.content[0]).equals(5)
@@ -96,11 +84,11 @@ export class SerializeAsyncTypedArrayTest {
 
                 it("should not deserialize non-number arrays", async function () {
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayNumberAsync.from({ content: [true, -1.5, "Test3"] })
+                        async () => await TokenTypedArrayNumberAsync.fromAny({ content: [true, -1.5, "Test3"] })
                     )
 
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayNumberAsync.from({ content: [null, -1.5, "Test3"] })
+                        async () => await TokenTypedArrayNumberAsync.fromAny({ content: [null, -1.5, "Test3"] })
                     )
                 })
             })
@@ -108,7 +96,7 @@ export class SerializeAsyncTypedArrayTest {
             describe("TokenTypedArrayBooleanAsync", function () {
                 let token: TokenTypedArrayBooleanAsync
                 it("should deserialize boolean arrays", async function () {
-                    token = await TokenTypedArrayBooleanAsync.from({ content: [true, false, true] })
+                    token = await TokenTypedArrayBooleanAsync.fromAny({ content: [true, false, true] })
                     expect(token).to.be.instanceOf(TokenTypedArrayBooleanAsync)
                     expect(token.content).to.be.an("array")
                     expect(token.content[0]).equals(true)
@@ -128,11 +116,11 @@ export class SerializeAsyncTypedArrayTest {
 
                 it("should not deserialize non-boolean arrays", async function () {
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayBooleanAsync.from({ content: [0, false, true] })
+                        async () => await TokenTypedArrayBooleanAsync.fromAny({ content: [0, false, true] })
                     )
 
                     await expectThrowsAsync(
-                        async () => await TokenTypedArrayBooleanAsync.from({ content: [null, false, true] })
+                        async () => await TokenTypedArrayBooleanAsync.fromAny({ content: [null, false, true] })
                     )
                 })
             })

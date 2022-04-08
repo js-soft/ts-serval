@@ -10,12 +10,4 @@ export class TokenContentGeneric extends TokenContent {
     @validate()
     @serialize()
     public content: SerializableAsync
-
-    public static async from(value: ITokenContentGeneric): Promise<TokenContentGeneric> {
-        return await super.fromT(value, TokenContentGeneric)
-    }
-
-    public static async deserialize(value: string): Promise<TokenContentGeneric> {
-        return await super.deserializeT(value, TokenContentGeneric)
-    }
 }

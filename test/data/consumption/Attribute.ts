@@ -21,6 +21,6 @@ export class Attribute extends CoreSerializable implements IAttribute {
     public validFrom?: string
 
     public static from(value: IAttribute): Attribute {
-        return super.fromT(value, Attribute)
+        return this.fromAny(value)
     }
 }

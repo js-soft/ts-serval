@@ -8,10 +8,6 @@ class TokenSerializableWrapperAsync extends SerializableAsync {
 
     @serialize()
     public content: SerializableAsync
-
-    public static async from(value: Object): Promise<TokenSerializableWrapperAsync> {
-        return await super.fromT(value, TokenSerializableWrapperAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenSerializableObjectWrapperAsync")
@@ -20,10 +16,6 @@ class TokenSerializableObjectWrapperAsync extends SerializableAsync {
 
     @serialize()
     public content: Object
-
-    public static async from(value: Object): Promise<TokenSerializableObjectWrapperAsync> {
-        return await super.fromT(value, TokenSerializableObjectWrapperAsync)
-    }
 }
 
 @schema("https://schema.local.corp", "TokenSerializableAnyWrapperAsync")
@@ -32,10 +24,6 @@ class TokenSerializableAnyWrapperAsync extends SerializableAsync {
 
     @serialize()
     public content: any
-
-    public static async from(value: Object): Promise<TokenSerializableAnyWrapperAsync> {
-        return await super.fromT(value, TokenSerializableAnyWrapperAsync)
-    }
 }
 
 export class SerializeAsyncWrapperTest {
@@ -44,7 +32,7 @@ export class SerializeAsyncWrapperTest {
             let wrapper: JSONWrapperAsync
             let serialized: string
             it("should deserialize unknown content to Wrapper", async function () {
-                wrapper = await JSONWrapperAsync.from({
+                wrapper = await JSONWrapperAsync.fromAny({
                     someProperty: "someValue",
                     content: "someContent"
                 })
@@ -78,7 +66,7 @@ export class SerializeAsyncWrapperTest {
             let wrapper: JSONWrapperAsync
             let serialized: string
             it("should deserialize unknown content to Wrapper", async function () {
-                wrapper = await JSONWrapperAsync.from({
+                wrapper = await JSONWrapperAsync.fromAny({
                     attribute: {
                         "@type": "Attribute",
                         name: "Person.firstname",
@@ -162,12 +150,12 @@ export class SerializeAsyncWrapperTest {
             let token: TokenSerializableWrapperAsync
             let serialized: string
             it("should deserialize unknown wrapper content in token", async function () {
-                wrapper = await JSONWrapperAsync.from({
+                wrapper = await JSONWrapperAsync.fromAny({
                     someProperty: "someValue",
                     content: "someContent"
                 })
 
-                token = await TokenSerializableWrapperAsync.from({ content: wrapper })
+                token = await TokenSerializableWrapperAsync.fromAny({ content: wrapper })
                 expect(token).instanceOf(TokenSerializableWrapperAsync)
                 expect(token.content).instanceOf(JSONWrapperAsync)
                 const anyContent = token.content as any
@@ -193,7 +181,7 @@ export class SerializeAsyncWrapperTest {
             })
 
             it("should deserialize Token content from string", async function () {
-                token = (await TokenSerializableWrapperAsync.deserialize(serialized)) as TokenSerializableWrapperAsync
+                token = await TokenSerializableWrapperAsync.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableWrapperAsync)
                 expect(token.content).instanceOf(JSONWrapperAsync)
                 const anyContent = token.content as any
@@ -207,7 +195,7 @@ export class SerializeAsyncWrapperTest {
             let token: TokenSerializableObjectWrapperAsync
             let serialized: string
             it("should deserialize unknown wrapper content in token", async function () {
-                token = await TokenSerializableObjectWrapperAsync.from({ content: { an: "object" } })
+                token = await TokenSerializableObjectWrapperAsync.fromAny({ content: { an: "object" } })
                 expect(token).instanceOf(TokenSerializableObjectWrapperAsync)
                 expect(token.content).not.instanceOf(JSONWrapperAsync)
                 const anyContent = token.content as any
@@ -231,9 +219,7 @@ export class SerializeAsyncWrapperTest {
             })
 
             it("should deserialize Token content from string", async function () {
-                token = (await TokenSerializableObjectWrapperAsync.deserialize(
-                    serialized
-                )) as TokenSerializableObjectWrapperAsync
+                token = await TokenSerializableObjectWrapperAsync.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableObjectWrapperAsync)
                 expect(token.content).not.instanceOf(JSONWrapperAsync)
                 const anyContent = token.content as any
@@ -246,7 +232,7 @@ export class SerializeAsyncWrapperTest {
             let token: TokenSerializableAnyWrapperAsync
             let serialized: string
             it("should deserialize unknown wrapper content in token", async function () {
-                token = await TokenSerializableAnyWrapperAsync.from({ content: { an: "object" } })
+                token = await TokenSerializableAnyWrapperAsync.fromAny({ content: { an: "object" } })
                 expect(token).instanceOf(TokenSerializableAnyWrapperAsync)
                 expect(token.content).not.instanceOf(JSONWrapperAsync)
                 const anyContent = token.content
@@ -270,9 +256,7 @@ export class SerializeAsyncWrapperTest {
             })
 
             it("should deserialize Token content from string", async function () {
-                token = (await TokenSerializableAnyWrapperAsync.deserialize(
-                    serialized
-                )) as TokenSerializableAnyWrapperAsync
+                token = await TokenSerializableAnyWrapperAsync.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableAnyWrapperAsync)
                 expect(token.content).not.instanceOf(JSONWrapperAsync)
                 const anyContent = token.content

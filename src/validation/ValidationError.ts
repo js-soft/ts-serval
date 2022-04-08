@@ -17,7 +17,7 @@ export class ValidationError extends ServalError {
         this.cause = cause
     }
 
-    public toString(): string {
+    public override toString(): string {
         if (this.cause) {
             return `${this.type}.${this.property} :: ${this.reason}\n\n${this.cause.stack}`
         }

@@ -36,7 +36,7 @@ export class CryptoSecretKey extends CryptoSerializableAsync implements ICryptoS
     public readonly secretKey: CoreBuffer
     public readonly algorithm: CryptoEncryptionAlgorithm
 
-    public toJSON(verbose = true): ICryptoSecretKeySerialized {
+    public override toJSON(verbose = true): ICryptoSecretKeySerialized {
         const obj: ICryptoSecretKeySerialized = {
             key: this.secretKey.serialize(),
             alg: this.algorithm
@@ -48,20 +48,19 @@ export class CryptoSecretKey extends CryptoSerializableAsync implements ICryptoS
         return obj
     }
 
-    public static async from(value: CryptoSecretKey | ICryptoSecretKey): Promise<CryptoSecretKey> {
-        return await super.fromT(value, CryptoSecretKey)
-    }
-
     public static async fromJSON(value: ICryptoSecretKeySerialized): Promise<CryptoSecretKey> {
         const buffer = CoreBuffer.deserialize(value.key)
-        return await this.from({
+        return await this.fromAny({
             algorithm: value.alg as CryptoEncryptionAlgorithm,
             secretKey: buffer
         })
     }
 
-    public static async deserialize(value: string): Promise<CryptoSecretKey> {
-        const obj = JSON.parse(value)
-        return await this.fromJSON(obj)
+    public static override preDeserialize(value: any): any {
+        const buffer = CoreBuffer.from(value.key)
+        return {
+            signature: buffer,
+            algorithm: value.alg
+        }
     }
 }

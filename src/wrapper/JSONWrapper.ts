@@ -9,14 +9,14 @@ export class JSONWrapper extends Serializable {
     @validate()
     public value: any
 
-    public static from(value: any): JSONWrapper {
-        delete value["@type"]
+    public static override preFrom(value: any): any {
         const parsed = JSON.parse(JSON.stringify(value))
-        return this.fromT({ value: parsed }, JSONWrapper)
+        delete parsed["@type"]
+        delete parsed["@version"]
+        return { value: parsed }
     }
 
-    public static deserialize(value: string): JSONWrapper {
-        const parsed = JSON.parse(value)
-        return this.fromT({ value: parsed }, JSONWrapper)
+    public static from(value: any): JSONWrapper {
+        return this.fromAny(value)
     }
 }

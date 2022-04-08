@@ -15,7 +15,7 @@ class TokenContentMulti extends Serializable implements ITokenContentMulti {
     public value: string | number | boolean
 
     public static from(value: ITokenContentMulti): TokenContentMulti {
-        return super.fromT(value, TokenContentMulti)
+        return this.fromAny(value)
     }
 }
 
@@ -33,7 +33,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("string")
                 expect(object.value).equals("string")
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("string")
                 expect(object.value).equals("string")
@@ -60,7 +60,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("string")
                 expect(object.value).equals("")
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("string")
                 expect(object.value).equals("")
@@ -87,7 +87,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(true)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(true)
@@ -114,7 +114,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(false)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("boolean")
                 expect(object.value).equals(false)
@@ -141,7 +141,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("number")
                 expect(object.value).equals(55.5)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("number")
                 expect(object.value).equals(55.5)
@@ -168,7 +168,7 @@ export class SerializeMultiTypeTest {
                 expect(object.value).be.a("number")
                 expect(object.value).equals(0)
                 const serialized2 = parsed.serialize()
-                const parsed2: TokenContentMulti = TokenContentMulti.deserializeT(serialized2, TokenContentMulti)
+                const parsed2: TokenContentMulti = TokenContentMulti.deserialize(serialized2)
                 expect(parsed2).instanceOf(TokenContentMulti)
                 expect(object.value).be.a("number")
                 expect(object.value).equals(0)

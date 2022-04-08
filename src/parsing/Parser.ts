@@ -4,6 +4,8 @@ import { PrimitiveType } from "../validation/ValidateInterfaces"
 import { Validator } from "../validation/Validator"
 import { ParsingError } from "./ParsingError"
 
+export const METADATA_FIELDS = ["@type", "@context", "@version", "serializeProperty", "serializeAs"]
+
 export abstract class Parser {
     public static parseProperty(
         value: any,
@@ -394,12 +396,12 @@ export abstract class Parser {
             args.push(classInfo)
         }
         if (!fct) {
-            fct = classInfo.from
+            fct = classInfo.fromAny
             args.push(classInfo)
         }
 
         if (!fct) {
-            fct = caller.from
+            fct = caller.fromAny
             thisObj = caller
             args.push(caller)
         }
@@ -477,12 +479,12 @@ export abstract class Parser {
             args.push(classInfo)
         }
         if (!fct) {
-            fct = classInfo.from
+            fct = classInfo.fromAny
             args.push(classInfo)
         }
 
         if (!fct) {
-            fct = caller.from
+            fct = caller.fromAny
             thisObj = caller
             args.push(caller)
         }

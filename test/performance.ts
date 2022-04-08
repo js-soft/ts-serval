@@ -46,7 +46,7 @@ class Role extends Serializable implements IRole {
     public role: string
 
     public static from(value: IRole): Role {
-        return super.fromT<Role>(value, Role)
+        return this.fromAny(value)
     }
 }
 
@@ -64,7 +64,7 @@ class NewCheckEmployee extends Serializable {
     }
 
     public static from(value: Object): NewCheckEmployee {
-        return super.fromT<NewCheckEmployee>(value, NewCheckEmployee)
+        return this.fromAny(value)
     }
 }
 

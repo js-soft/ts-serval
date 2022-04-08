@@ -6,12 +6,8 @@ class RelationshipTemplate extends Serializable {
     @serialize({ deserializeStrings: true })
     public template: Object
 
-    public static deserialize(value: string): RelationshipTemplate {
-        return super.deserializeT<RelationshipTemplate>(value, RelationshipTemplate)
-    }
-
     public static from(value: Object): RelationshipTemplate {
-        return super.fromT<RelationshipTemplate>(value, RelationshipTemplate)
+        return this.fromAny(value)
     }
 }
 
@@ -22,12 +18,8 @@ class TokenContent extends Serializable {
     @serialize()
     public title: string
 
-    public static deserialize(value: string): TokenContent {
-        return super.deserializeT(value, TokenContent)
-    }
-
     public static from(value: Object): TokenContent {
-        return super.fromT(value, TokenContent)
+        return this.fromAny(value)
     }
 }
 
@@ -36,12 +28,8 @@ class TokenContentGeneric extends TokenContent {
     @serialize({ any: true, deserializeStrings: true })
     public content: any
 
-    public static deserialize(value: string): TokenContentGeneric {
-        return super.deserializeT(value, TokenContentGeneric)
-    }
-
-    public static from(value: Object): TokenContentGeneric {
-        return super.fromT(value, TokenContentGeneric)
+    public static override from(value: Object): TokenContentGeneric {
+        return this.fromAny(value)
     }
 }
 
@@ -53,12 +41,8 @@ class TokenContentRelationshipTemplate extends TokenContent {
     @serialize({ optional: true })
     public optionalContent: string
 
-    public static deserialize(value: string): TokenContentRelationshipTemplate {
-        return super.deserializeT(value, TokenContentRelationshipTemplate)
-    }
-
-    public static from(value: Object): TokenContentRelationshipTemplate {
-        return super.fromT(value, TokenContentRelationshipTemplate)
+    public static override from(value: Object): TokenContentRelationshipTemplate {
+        return this.fromAny(value)
     }
 }
 
@@ -67,12 +51,8 @@ class TokenContentString extends TokenContent {
     @serialize()
     public content: String
 
-    public static deserialize(value: string): TokenContentString {
-        return super.deserializeT(value, TokenContentString)
-    }
-
-    public static from(value: Object): TokenContentString {
-        return super.fromT(value, TokenContentString)
+    public static override from(value: Object): TokenContentString {
+        return this.fromAny(value)
     }
 }
 
@@ -81,12 +61,8 @@ class TokenRelationshipTemplates extends Serializable {
     @serialize({ type: TokenContentRelationshipTemplate })
     public templates: TokenContentRelationshipTemplate[]
 
-    public static deserialize(value: string): TokenRelationshipTemplates {
-        return super.deserializeT(value, TokenRelationshipTemplates)
-    }
-
     public static from(value: Object): TokenRelationshipTemplates {
-        return super.fromT(value, TokenRelationshipTemplates)
+        return this.fromAny(value)
     }
 }
 

@@ -16,12 +16,8 @@ class RelationshipTemplateArray extends Serializable {
     @serialize()
     public template: Object
 
-    public static deserialize(value: string): RelationshipTemplateArray {
-        return super.deserializeT(value, RelationshipTemplateArray)
-    }
-
     public static from(value: Object): RelationshipTemplateArray {
-        return super.fromT(value, RelationshipTemplateArray)
+        return this.fromAny(value)
     }
 }
 
@@ -32,12 +28,8 @@ class TokenContentArray extends Serializable {
     @serialize()
     public title: string
 
-    public static deserialize(value: string): TokenContentArray {
-        return super.deserializeT(value, TokenContentArray)
-    }
-
     public static from(value: Object): TokenContentArray {
-        return super.fromT(value, TokenContentArray)
+        return this.fromAny(value)
     }
 }
 
@@ -49,12 +41,8 @@ class TokenContentRelationshipTemplateArray extends TokenContentArray {
     @serialize({ optional: true })
     public optionalContent: string
 
-    public static deserialize(value: string): TokenContentRelationshipTemplateArray {
-        return super.deserializeT(value, TokenContentRelationshipTemplateArray)
-    }
-
-    public static from(value: Object): TokenContentRelationshipTemplateArray {
-        return super.fromT(value, TokenContentRelationshipTemplateArray)
+    public static override from(value: Object): TokenContentRelationshipTemplateArray {
+        return this.fromAny(value)
     }
 }
 
@@ -63,12 +51,8 @@ class TokenRelationshipTemplateArray extends Serializable {
     @serialize({ deserializeStrings: true, type: TokenContentRelationshipTemplateArray })
     public templates: TokenContentRelationshipTemplateArray[]
 
-    public static deserialize(value: string): TokenRelationshipTemplateArray {
-        return super.deserializeT(value, TokenRelationshipTemplateArray)
-    }
-
     public static from(value: Object): TokenRelationshipTemplateArray {
-        return super.fromT(value, TokenRelationshipTemplateArray)
+        return this.fromAny(value)
     }
 }
 

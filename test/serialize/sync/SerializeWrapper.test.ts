@@ -10,7 +10,7 @@ class TokenSerializableWrapper extends Serializable {
     public content: Serializable
 
     public static from(value: Object): TokenSerializableWrapper {
-        return super.fromT(value, TokenSerializableWrapper)
+        return this.fromAny(value)
     }
 }
 
@@ -22,7 +22,7 @@ class TokenSerializableObjectWrapper extends Serializable {
     public content: Object
 
     public static from(value: Object): TokenSerializableObjectWrapper {
-        return super.fromT(value, TokenSerializableObjectWrapper)
+        return this.fromAny(value)
     }
 }
 
@@ -34,7 +34,7 @@ class TokenSerializableAnyWrapper extends Serializable {
     public content: any
 
     public static from(value: Object): TokenSerializableAnyWrapper {
-        return super.fromT(value, TokenSerializableAnyWrapper)
+        return this.fromAny(value)
     }
 }
 
@@ -194,7 +194,7 @@ export class SerializeWrapperTest {
             })
 
             it("should deserialize Token content from string", function () {
-                token = TokenSerializableWrapper.deserialize(serialized) as TokenSerializableWrapper
+                token = TokenSerializableWrapper.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableWrapper)
                 expect(token.content).instanceOf(JSONWrapper)
                 const anyContent = token.content as any
@@ -232,7 +232,7 @@ export class SerializeWrapperTest {
             })
 
             it("should deserialize Token content from string", function () {
-                token = TokenSerializableObjectWrapper.deserialize(serialized) as TokenSerializableObjectWrapper
+                token = TokenSerializableObjectWrapper.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableObjectWrapper)
                 expect(token.content).not.instanceOf(JSONWrapper)
                 const anyContent = token.content as any
@@ -269,7 +269,7 @@ export class SerializeWrapperTest {
             })
 
             it("should deserialize Token content from string", function () {
-                token = TokenSerializableAnyWrapper.deserialize(serialized) as TokenSerializableAnyWrapper
+                token = TokenSerializableAnyWrapper.deserialize(serialized)
                 expect(token).instanceOf(TokenSerializableAnyWrapper)
                 expect(token.content).not.instanceOf(JSONWrapper)
                 const anyContent = token.content

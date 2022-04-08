@@ -17,12 +17,4 @@ export class TokenContentRelationshipTemplate extends TokenContent implements IT
     @validate()
     @serialize()
     public secretKey: CryptoSecretKey
-
-    public static async from(value: ITokenContentRelationshipTemplate): Promise<TokenContentRelationshipTemplate> {
-        return await super.fromT(value, TokenContentRelationshipTemplate)
-    }
-
-    public static async deserialize(value: string): Promise<TokenContentRelationshipTemplate> {
-        return await super.deserializeT(value, TokenContentRelationshipTemplate)
-    }
 }

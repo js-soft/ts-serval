@@ -1,11 +1,16 @@
 import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
-import { Parser } from "./parsing/Parser"
+import { METADATA_FIELDS, Parser } from "./parsing/Parser"
 import { ParsingError } from "./parsing/ParsingError"
-import { IReflectProperty } from "./reflection/ReflectProperty"
 import { SerializableBase } from "./SerializableBase"
 
 export class Serializable extends SerializableBase implements ISerializable {
+    /**
+     * Parses the given object to the class defined in `@type`.
+     *
+     * @param value The JSON object to parse. The object must have the `@type` property set in order to be parsed, in addition to possible `@context` and `@version` properties.
+     * @returns the parsed object of the class defined in `@type`
+     */
     public static fromUnknown(value: any): Serializable {
         const obj: any = value
         let type
@@ -13,7 +18,8 @@ export class Serializable extends SerializableBase implements ISerializable {
             if (typeof obj["@type"] !== "string") {
                 throw new ServalError("Type is not a string.")
             }
-            type = `${obj["@type"]}`
+
+            type = obj["@type"]
         }
 
         let version = 1
@@ -26,7 +32,7 @@ export class Serializable extends SerializableBase implements ISerializable {
         }
 
         if (!type) {
-            return Serializable.from(value)
+            return Serializable.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
@@ -35,32 +41,48 @@ export class Serializable extends SerializableBase implements ISerializable {
                 `Type '${type}' with version ${version} was not found within reflection classes. You might have to install a module first.`
             )
         }
+
         if (typeof result.fromJSON === "function") {
             return result.fromJSON(value)
         }
-        return result.from(value, result)
-    }
 
-    public static deserializeUnknown(value: string): Serializable {
-        let obj
-        try {
-            obj = JSON.parse(value)
-        } catch (e) {
-            throw new ServalError(`DeserializationError ${e}`)
-        }
-        return this.fromUnknown(obj)
+        return result.fromAny(value)
     }
 
     /**
-     * Deserializes the given string to the current class.
+     * Parses the given string to the class defined in `@type`.
      *
-     * @param value The JSON string which should be parsed
-     * @returns An object of the given type T
+     * @param value the string to deserialize
+     * @returns the deserialized and parsed object of the class defined in `@type`
      */
-    public static deserializeT<T>(value: string, type: new () => T): T {
-        let obj
+    public static deserializeUnknown(value: string): Serializable {
+        let object: any
         try {
-            obj = JSON.parse(value)
+            object = JSON.parse(value)
+        } catch (e) {
+            throw new ServalError(`DeserializationError ${e}`)
+        }
+
+        return this.fromUnknown(object)
+    }
+
+    /**
+     * Deserializes the given string to the current class. This method can not be overwritten.
+     * The alternative method for changing the deserialization logic is to overwrite the `{@link preDeserialize}` and `{@link postDeserialize}` methods.
+     *
+     * @param this tells typescript that the context of this method is the current class
+     * @param value the object which should be parsed
+     * @returns the deserialized and parsed object of the class T
+     */
+    public static deserialize<T extends Serializable>(this: Constructor<T>, value: string): T {
+        const type = (this as any).prototype.constructor
+
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof Serializable
+
+        let object
+        try {
+            object = JSON.parse(value)
         } catch (e) {
             throw new ParsingError(
                 type.name,
@@ -69,7 +91,75 @@ export class Serializable extends SerializableBase implements ISerializable {
                 e
             )
         }
-        return this.fromT<T>(obj, type)
+
+        object = that.preDeserialize(object)
+
+        const deserialized = that.fromT<T>(object)
+
+        return that.postDeserialize(deserialized)
+    }
+
+    /**
+     * `preDeserialize` can be overwritten to manipulate the value before the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run before the {@link preFrom} method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns the manipulated object
+     */
+    protected static preDeserialize(value: any): any {
+        return value
+    }
+
+    /**
+     * `postDeserialize` can be overwritten to manipulate the value after the deserialization from string.
+     * This allows to add logic to the deserialization without having to override the deserialize method.
+     *
+     * This function will run after the {@link postFrom} method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns the manipulated object
+     */
+    protected static postDeserialize<T extends Serializable>(value: T): T {
+        return value
+    }
+
+    /**
+     * The main entrypoint of the parsing. This method may be overwritten but the this context also has to be in the method signature.
+     * The recommended method for changing the parsing logic is to overwrite the `{@link preFrom}` and `{@link postFrom}` methods.
+     *
+     * This is an example on how to overwrite it:
+     * ```ts
+     * public static fromAny<T extends ClassThatExtendsSerializable>(this: Constructor<T>, value: IClassThatExtendsSerializable): T {
+     *   return (this as any).fromT(value)
+     * }
+     * ```
+     *
+     * @param this tells typescript that the context of this method is the current class instance, which may be a subclass of Serializable
+     * @param value the object which should be parsed
+     * @returns the parsed object of the class T
+     */
+    public static fromAny<T extends Serializable>(this: Constructor<T>, value: any): T {
+        const type = (this as any).prototype.constructor
+
+        // recreating the this context of this function using `that`
+        const that = this as unknown as typeof Serializable
+
+        if (!type || type === Serializable) {
+            const newValue: any = {}
+
+            if (!value["@type"]) {
+                newValue["@type"] = "JSONWrapper"
+            }
+            if (!value["@version"]) {
+                newValue["@version"] = 1
+            }
+
+            return that.fromUnknown({ ...newValue, ...value }) as T
+        }
+
+        return that.fromT(value)
     }
 
     /**
@@ -78,27 +168,34 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @param value The object which should be parsed
      * @returns An object of the given type T
      *
-     * @throws DeserializationError when the deserialization failed (structure is not correct)
+     * @throws ParsingError when the deserialization failed (structure is not correct)
      * @throws ValidationError when the validation of field failed (structure is correct but content is not)
      */
-    public static fromT<T>(value: any, type: new () => T): T {
-        if (typeof value === "undefined" || value === null || typeof value !== "object") {
+    private static fromT<T extends Serializable>(value: any): T {
+        const type = (this as any).prototype.constructor as Constructor<T>
+
+        value = this.preFrom(value)
+
+        const propertyMap = SerializableBase.getDescriptor(type.name)
+        const nonReservedKeys = propertyMap
+            ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
+            : undefined
+
+        if (typeof value === "undefined" || value === null) {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        const realObj: T = new (<Constructor<T>>type)()
-        const propertyMap = SerializableBase.getDescriptor(type.name)
+        if (typeof value !== "object" && nonReservedKeys?.length !== 0) {
+            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
+        } else if (typeof value !== "object") {
+            return new type(value)
+        }
+
+        const realObj: T = new type()
+
         if (propertyMap) {
-            propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (
-                    key === "@type" ||
-                    key === "@context" ||
-                    key === "@version" ||
-                    key === "serializeProperty" ||
-                    key === "serializeAs"
-                ) {
-                    return
-                }
+            for (const [key, info] of propertyMap.entries()) {
+                if (METADATA_FIELDS.includes(key)) continue
 
                 let jsonKey = key
                 if (typeof value[jsonKey] === "undefined" && info.alias) {
@@ -114,28 +211,31 @@ export class Serializable extends SerializableBase implements ISerializable {
                 if (typeof propertyValue !== "undefined") {
                     realObj[info.key] = propertyValue
                 }
-            })
+            }
         }
-        return realObj
+
+        return this.postFrom(realObj)
     }
 
-    public static deserialize(value: string, type?: new () => Serializable): Serializable {
-        if (type) {
-            return this.deserializeT(value, type)
-        }
-        return this.deserializeUnknown(value)
+    /**
+     * `preFrom` can be overwritten to manipulate the value before the parsing.
+     * This allows to add logic to the parsing without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated before the actual parsing.
+     * @returns the manipulated object
+     */
+    protected static preFrom(value: any): Promise<any> | any {
+        return value
     }
 
-    public static from(value: ISerializable, type?: new () => Serializable): Serializable {
-        if (!type || type === Serializable) {
-            if (!value["@type"]) {
-                value["@type"] = "JSONWrapper"
-            }
-            if (!value["@version"]) {
-                value["@version"] = 1
-            }
-            return this.fromUnknown(value)
-        }
-        return this.fromT(value, type)
+    /**
+     * `postFrom` can be overwritten to manipulate the value after the parsing.
+     * This allows to add logic to the parsing without having to override the fromAny method.
+     *
+     * @param value the object that will be manipulated after the actual parsing.
+     * @returns the manipulated object
+     */
+    protected static postFrom<T extends Serializable>(value: T): T {
+        return value
     }
 }

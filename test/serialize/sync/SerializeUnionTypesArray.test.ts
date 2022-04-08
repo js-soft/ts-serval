@@ -81,10 +81,10 @@ export class SerializeUnionTypesArrayTest {
                 const json = {
                     "@type": "ClassWithUnionArrayProperty",
                     content: [
-                        UnionArrayOption1.from({
+                        UnionArrayOption1.fromAny({
                             "@type": "UnionArrayOption1",
                             p1: "val"
-                        }) as UnionArrayOption1
+                        })
                     ]
                 }
 
@@ -97,10 +97,10 @@ export class SerializeUnionTypesArrayTest {
                 const json = {
                     "@type": "ClassWithUnionArrayProperty",
                     content: [
-                        UnionArrayOption2.from({
+                        UnionArrayOption2.fromAny({
                             "@type": "UnionArrayOption2",
                             p2: "val"
-                        }) as UnionArrayOption2
+                        })
                     ]
                 }
 
@@ -113,14 +113,14 @@ export class SerializeUnionTypesArrayTest {
                 const json = {
                     "@type": "ClassWithUnionArrayProperty",
                     content: [
-                        UnionArrayOption1.from({
+                        UnionArrayOption1.fromAny({
                             "@type": "UnionArrayOption1",
                             p1: "val"
-                        }) as UnionArrayOption1,
-                        UnionArrayOption2.from({
+                        }),
+                        UnionArrayOption2.fromAny({
                             "@type": "UnionArrayOption2",
                             p2: "val"
-                        }) as UnionArrayOption2
+                        })
                     ]
                 }
 
@@ -134,10 +134,10 @@ export class SerializeUnionTypesArrayTest {
                 const json = {
                     "@type": "ClassWithUnionArrayProperty",
                     content: [
-                        UnionArrayOption1.from({
+                        UnionArrayOption1.fromAny({
                             "@type": "UnionArrayOption1",
                             p1: "val"
-                        }) as UnionArrayOption1,
+                        }),
                         InvalidUnionArrayOption.from({
                             "@type": "InvalidUnionArrayOption",
                             p3: "val"
@@ -186,7 +186,7 @@ class InvalidUnionArrayOption extends Serializable {
     public p3: string
 
     public static from(value: any): InvalidUnionArrayOption {
-        return super.fromT(value, InvalidUnionArrayOption)
+        return this.fromAny(value)
     }
 }
 
@@ -197,6 +197,6 @@ class ClassWithUnionArrayProperty extends Serializable implements IClassWithUnio
     public content: (UnionArrayOption1 | UnionArrayOption2)[]
 
     public static from(value: IClassWithUnionArrayProperty): ClassWithUnionArrayProperty {
-        return super.fromT(value, ClassWithUnionArrayProperty)
+        return this.fromAny(value)
     }
 }

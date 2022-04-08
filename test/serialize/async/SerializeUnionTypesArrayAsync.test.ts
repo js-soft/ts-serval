@@ -81,10 +81,10 @@ export class SerializeUnionTypesArrayAsyncTest {
                 const json = {
                     "@type": "AsyncClassWithUnionArrayProperty",
                     content: [
-                        (await AsyncUnionArrayOption1.from({
+                        await AsyncUnionArrayOption1.fromAny({
                             "@type": "AsyncUnionArrayOption1",
                             p1: "val"
-                        })) as AsyncUnionArrayOption1
+                        })
                     ]
                 }
 
@@ -97,10 +97,10 @@ export class SerializeUnionTypesArrayAsyncTest {
                 const json = {
                     "@type": "AsyncClassWithUnionArrayProperty",
                     content: [
-                        (await AsyncUnionArrayOption2.from({
+                        await AsyncUnionArrayOption2.fromAny({
                             "@type": "AsyncUnionArrayOption2",
                             p2: "val"
-                        })) as AsyncUnionArrayOption2
+                        })
                     ]
                 }
 
@@ -113,14 +113,14 @@ export class SerializeUnionTypesArrayAsyncTest {
                 const json = {
                     "@type": "AsyncClassWithUnionArrayProperty",
                     content: [
-                        (await AsyncUnionArrayOption1.from({
+                        await AsyncUnionArrayOption1.fromAny({
                             "@type": "AsyncUnionArrayOption1",
                             p1: "val"
-                        })) as AsyncUnionArrayOption1,
-                        (await AsyncUnionArrayOption2.from({
+                        }),
+                        await AsyncUnionArrayOption2.fromAny({
                             "@type": "AsyncUnionArrayOption2",
                             p2: "val"
-                        })) as AsyncUnionArrayOption2
+                        })
                     ]
                 }
 
@@ -134,10 +134,10 @@ export class SerializeUnionTypesArrayAsyncTest {
                 const json = {
                     "@type": "AsyncClassWithUnionArrayProperty",
                     content: [
-                        (await AsyncUnionArrayOption1.from({
+                        await AsyncUnionArrayOption1.fromAny({
                             "@type": "AsyncUnionArrayOption1",
                             p1: "val"
-                        })) as AsyncUnionArrayOption1,
+                        }),
                         (await InvalidUnionArrayAsyncOption.from({
                             "@type": "InvalidUnionArrayAsyncOption",
                             p3: "val"
@@ -186,7 +186,7 @@ class InvalidUnionArrayAsyncOption extends SerializableAsync {
     public p3: string
 
     public static async from(value: any): Promise<InvalidUnionArrayAsyncOption> {
-        return await super.fromT(value, InvalidUnionArrayAsyncOption)
+        return await this.fromAny(value)
     }
 }
 
@@ -197,6 +197,6 @@ class AsyncClassWithUnionArrayProperty extends SerializableAsync implements ICla
     public content: (AsyncUnionArrayOption1 | AsyncUnionArrayOption2)[]
 
     public static async from(value: IClassWithUnionArrayProperty): Promise<AsyncClassWithUnionArrayProperty> {
-        return await super.fromT(value, AsyncClassWithUnionArrayProperty)
+        return await this.fromAny(value)
     }
 }

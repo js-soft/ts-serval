@@ -9,7 +9,7 @@ class VersionedClassV1Async extends SerializableAsync {
     public propOld: string
 
     public static async from(value: any): Promise<VersionedClassV1Async> {
-        return await SerializableAsync.fromT<VersionedClassV1Async>(value, VersionedClassV1Async)
+        return await this.fromAny(value)
     }
 }
 
@@ -20,7 +20,7 @@ class VersionedClassV2Async extends SerializableAsync {
     public propNew: string
 
     public static async from(value: any): Promise<VersionedClassV2Async> {
-        return await SerializableAsync.fromT<VersionedClassV2Async>(value, VersionedClassV2Async)
+        return await this.fromAny(value)
     }
 }
 
@@ -37,7 +37,7 @@ export class VersioningAsyncTest {
             })
 
             it("fromT", async function () {
-                const obj = await VersionedClassV1Async.fromT<VersionedClassV1Async>(json, VersionedClassV1Async)
+                const obj = await VersionedClassV1Async.fromAny(json)
                 expect(obj).instanceOf(VersionedClassV1Async)
                 expect(obj.propOld).to.equal("valOld")
                 expect((obj.toJSON() as any)["@version"]).to.be.undefined
@@ -58,7 +58,7 @@ export class VersioningAsyncTest {
 
             it("fromT throwsErrorOnWrongVersion", async function () {
                 await expectThrowsAsync(async () => {
-                    await VersionedClassV2Async.fromT<VersionedClassV2Async>(json, VersionedClassV2Async)
+                    await VersionedClassV2Async.fromAny(json)
                 }, "VersionedClassV2Async.propNew :: Value is not defined")
             })
 
@@ -81,7 +81,7 @@ export class VersioningAsyncTest {
             })
 
             it("fromT", async function () {
-                const obj = await VersionedClassV2Async.fromT<VersionedClassV2Async>(json, VersionedClassV2Async)
+                const obj = await VersionedClassV2Async.fromAny(json)
                 expect(obj).instanceOf(VersionedClassV2Async)
                 expect(obj.propNew).to.equal("valNew")
                 expect((obj.toJSON() as any)["@version"]).to.equal(2)
@@ -102,7 +102,7 @@ export class VersioningAsyncTest {
 
             it("fromT throwsErrorOnWrongVersion", async function () {
                 await expectThrowsAsync(async () => {
-                    await VersionedClassV1Async.fromT<VersionedClassV1Async>(json, VersionedClassV1Async)
+                    await VersionedClassV1Async.fromAny(json)
                 }, "VersionedClassV1Async.propOld :: Value is not defined")
             })
 
