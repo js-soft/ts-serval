@@ -280,4 +280,11 @@ export class SerializableBase {
                 }
         }
     }
+
+    protected static isArrayOrTypedArray(value: any): boolean {
+        return (
+            Array.isArray(value) ||
+            (ArrayBuffer.isView(value) && Object.prototype.toString.call(value) !== "[object DataView]")
+        )
+    }
 }
