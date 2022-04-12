@@ -1,3 +1,4 @@
+import { Inheritance2Test } from "./Inheritance.test"
 import { ParentConstructorTest } from "./ParentConstructor.test"
 import { ArrayInheritanceAsyncTest } from "./serialize/async/ArrayInheritanceAsync.test"
 import { InheritanceAsyncTest } from "./serialize/async/InheritanceAsync.test"
@@ -73,6 +74,7 @@ function runUsage() {
     CoreTest.init()
     ParentConstructorTest.init()
     CryptoTest.init()
+    Inheritance2Test.init()
 }
 
 runSerializeAsync()
