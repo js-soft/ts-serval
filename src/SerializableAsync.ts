@@ -187,10 +187,12 @@ export class SerializableAsync extends SerializableBase implements ISerializable
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        if (typeof value !== "object" && nonReservedKeys?.length !== 0) {
-            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
-        } else if (typeof value !== "object" || super.isArrayOrTypedArray(value)) {
+        if (nonReservedKeys?.length !== 0) {
             return new type(value)
+        }
+
+        if (typeof value !== "object") {
+            throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
         const realObj: T = new type()
