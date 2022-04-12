@@ -187,7 +187,7 @@ export class Serializable extends SerializableBase implements ISerializable {
 
         if (typeof value !== "object" && nonReservedKeys?.length !== 0) {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
-        } else if (typeof value !== "object") {
+        } else if (typeof value !== "object" || super.isArrayOrTypedArray(value)) {
             return new type(value)
         }
 

@@ -26,6 +26,7 @@ import { SerializeUnionTypesArrayTest } from "./serialize/sync/SerializeUnionTyp
 import { SerializeWrapperTest } from "./serialize/sync/SerializeWrapper.test"
 import { VersioningTest } from "./serialize/sync/Versioning.test"
 import { CoreTest } from "./usage/Core.test"
+import { CryptoTest } from "./usage/Crypto.test"
 import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
 import { ValidateGenericPropertyTest } from "./validate/ValidateGenericProperty.test"
 import { ValidatePropertyAnnotatedWithTypeTest } from "./validate/ValidatePropertyAnnotatedWithTypeTest.test"
@@ -71,6 +72,7 @@ function runValidate(): void {
 function runUsage() {
     CoreTest.init()
     ParentConstructorTest.init()
+    CryptoTest.init()
 }
 
 runSerializeAsync()
