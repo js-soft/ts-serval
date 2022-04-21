@@ -178,41 +178,36 @@ export class SerializableAsync extends SerializableBase implements ISerializable
 
         value = await this.preFrom(value)
 
-        const realObj: T = new type()
-
-        const propertyMap = SerializableBase.getDescriptor(type.name)
-        const nonReservedKeys = propertyMap
-            ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
-            : undefined
+        const propertyMap = this.getPropertyMap()
+        const nonReservedKeys = Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
 
         if (typeof value === "undefined" || value === null) {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        if (nonReservedKeys?.length === 0) return new type(value)
+        if (nonReservedKeys.length === 0) return new type(value)
 
         if (typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
 
-        if (propertyMap) {
-            for (const [key, info] of propertyMap.entries()) {
-                if (METADATA_FIELDS.includes(key)) continue
+        const realObj: T = new type()
+        for (const [key, info] of propertyMap.entries()) {
+            if (METADATA_FIELDS.includes(key)) continue
 
-                let jsonKey = key
-                if (typeof value[jsonKey] === "undefined" && info.alias) {
-                    jsonKey = info.alias
-                }
+            let jsonKey = key
+            if (typeof value[jsonKey] === "undefined" && info.alias) {
+                jsonKey = info.alias
+            }
 
-                const propertyValue = await Parser.parsePropertyAsync(
-                    value[jsonKey],
-                    info,
-                    (realObj as Object).constructor.name,
-                    SerializableAsync
-                )
-                if (typeof propertyValue !== "undefined") {
-                    realObj[info.key] = propertyValue
-                }
+            const propertyValue = await Parser.parsePropertyAsync(
+                value[jsonKey],
+                info,
+                (realObj as Object).constructor.name,
+                SerializableAsync
+            )
+            if (typeof propertyValue !== "undefined") {
+                realObj[info.key] = propertyValue
             }
         }
 
