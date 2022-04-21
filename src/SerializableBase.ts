@@ -3,9 +3,9 @@ import { IReflectProperty } from "./reflection/ReflectProperty"
 import { Validator } from "./validation/Validator"
 
 export class SerializableBase {
-    public static __classes: Map<string, Map<string, IReflectProperty>> // eslint-disable-line @typescript-eslint/naming-convention
+    public static __propertyDescriptorsByClassName: Map<string, Map<string, IReflectProperty>> // eslint-disable-line @typescript-eslint/naming-convention
     public static __modules: any[] = [SerializableBase] // eslint-disable-line @typescript-eslint/naming-convention
-    private readonly __propertyMap: Map<string, IReflectProperty> | undefined // eslint-disable-line @typescript-eslint/naming-convention
+    private static readonly __inheritedPropertiesByClassName: Map<string, Map<string, IReflectProperty>> = new Map() // eslint-disable-line @typescript-eslint/naming-convention
 
     public static addModule(syncModule: any): void {
         SerializableBase.__modules.push(syncModule)
@@ -20,11 +20,23 @@ export class SerializableBase {
         return null
     }
 
-    public constructor() {
-        this.__propertyMap = SerializableBase.getDescriptor(this.constructor.name)
-        if (this.__propertyMap) {
-            SerializableBase.copyDescriptorsFromPrototypeChain(this.__propertyMap, (this as any).constructor.prototype)
+    protected static getPropertyMap(): Map<string, IReflectProperty> {
+        const map = this.__inheritedPropertiesByClassName.get(this.name)
+
+        if (!map) {
+            return this.createPropertyMap()
         }
+
+        return this.__inheritedPropertiesByClassName.get(this.name)!
+    }
+
+    protected static createPropertyMap(): Map<string, IReflectProperty> {
+        const descriptor = this.__propertyDescriptorsByClassName.get(this.name) ?? new Map()
+        SerializableBase.copyDescriptorsFromPrototypeChain(descriptor, this.prototype)
+
+        this.__inheritedPropertiesByClassName.set(this.name, descriptor)
+
+        return descriptor
     }
 
     private static copyDescriptorsFromPrototypeChain(
@@ -41,7 +53,7 @@ export class SerializableBase {
         ) {
             return
         }
-        const currentDescriptors = SerializableBase.getDescriptor(name)
+        const currentDescriptors = this.__propertyDescriptorsByClassName.get(name)
         if (currentDescriptors) {
             currentDescriptors.forEach((value, key) => {
                 if (key === "@type" || key === "@version" || key === "@context") return
@@ -52,13 +64,8 @@ export class SerializableBase {
         SerializableBase.copyDescriptorsFromPrototypeChain(storeInMap, currentPrototype.__proto__)
     }
 
-    public static getDescriptor(target: string): Map<string, IReflectProperty> | undefined {
-        const map = SerializableBase.__classes.get(target)
-        return map
-    }
-
-    public getDescriptor(): Map<string, IReflectProperty> | undefined {
-        return this.__propertyMap
+    protected getPropertyMap(): Map<string, IReflectProperty> {
+        return (this as any).constructor.getPropertyMap()
     }
 
     /**
@@ -68,34 +75,30 @@ export class SerializableBase {
      */
     public validate(): string | undefined {
         let err
-        const propertyMap = this.getDescriptor()
-        if (propertyMap) {
-            for (const [key, info] of propertyMap) {
-                if (
-                    key === "@type" ||
-                    key === "@version" ||
-                    key === "@context" ||
-                    key === "serializeProperty" ||
-                    key === "serializeAs"
-                ) {
-                    continue
-                }
+        const propertyMap = this.getPropertyMap()
+        for (const [key, info] of propertyMap) {
+            if (
+                key === "@type" ||
+                key === "@version" ||
+                key === "@context" ||
+                key === "serializeProperty" ||
+                key === "serializeAs"
+            ) {
+                continue
+            }
 
-                err = this.validateProperty(key, info)
-                if (err) {
-                    return `Validating ${key}:${info.type} :: ${err}`
-                }
+            err = this.validateProperty(key, info)
+            if (err) {
+                return `Validating ${key}:${info.type} :: ${err}`
             }
         }
+
         return undefined
     }
 
     public validateProperty(key: string, descriptor?: IReflectProperty): string | undefined {
         if (!descriptor) {
-            const propertyMap = this.getDescriptor()
-            if (!propertyMap) {
-                return `No descriptor available for key ${key} (propertyMap is missing)`
-            }
+            const propertyMap = this.getPropertyMap()
             descriptor = propertyMap.get(key)
         }
         if (!descriptor) {
@@ -106,7 +109,7 @@ export class SerializableBase {
     }
 
     public static checkProperty(value: any, key: string, className: string): string | undefined {
-        const propertyMap = this.getDescriptor(className)
+        const propertyMap = this.__propertyDescriptorsByClassName.get(className)
         if (!propertyMap) {
             return `No descriptor available for key ${key} (propertyMap is missing)`
         }
@@ -134,38 +137,37 @@ export class SerializableBase {
      */
     public toJSON(verbose = true, serializeAsString = false): Object {
         const obj: any = {}
-        const propertyMap = this.getDescriptor()
+        const propertyMap = this.getPropertyMap()
         let serializeAs: "number" | "boolean" | "string" | "array" | "object" = "object"
         let serializeProperty: string | undefined = undefined
-        if (propertyMap) {
-            propertyMap.forEach((info: IReflectProperty, key: string) => {
-                if (key === "serializeAs") {
-                    serializeAs = info.value
-                } else if (key === "serializeProperty") {
-                    serializeProperty = info.value
-                } else if (key === "@type") {
-                    if (verbose) {
-                        obj[key] = info.value
-                    }
-                } else if (key === "@version") {
-                    if (info.value !== 1 && verbose) {
-                        obj[key] = info.value
-                    }
-                } else if (key === "@context") {
-                    if (verbose) {
-                        obj[key] = info.value
-                    }
-                } else {
-                    const jsonKey = info.alias ? info.alias : key
-                    const value = this.serializeProperty(this[key], info, false, serializeAsString)
-                    if (typeof value !== "undefined") {
-                        obj[jsonKey] = value
-                    }
+        propertyMap.forEach((info: IReflectProperty, key: string) => {
+            if (key === "serializeAs") {
+                serializeAs = info.value
+            } else if (key === "serializeProperty") {
+                serializeProperty = info.value
+            } else if (key === "@type") {
+                if (verbose) {
+                    obj[key] = info.value
                 }
-            })
-        }
+            } else if (key === "@version") {
+                if (info.value !== 1 && verbose) {
+                    obj[key] = info.value
+                }
+            } else if (key === "@context") {
+                if (verbose) {
+                    obj[key] = info.value
+                }
+            } else {
+                const jsonKey = info.alias ? info.alias : key
+                const value = this.serializeProperty(this[key], info, false, serializeAsString)
+                if (typeof value !== "undefined") {
+                    obj[jsonKey] = value
+                }
+            }
+        })
+
         if (typeof serializeAs !== "undefined" && typeof serializeProperty !== "undefined") {
-            if (!propertyMap?.has(serializeProperty)) {
+            if (!propertyMap.has(serializeProperty)) {
                 throw new SerializationError(
                     this.constructor.name,
                     serializeProperty,
