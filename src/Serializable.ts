@@ -176,6 +176,8 @@ export class Serializable extends SerializableBase implements ISerializable {
 
         value = this.preFrom(value)
 
+        const realObj: T = new type()
+
         const propertyMap = SerializableBase.getDescriptor(type.name)
         const nonReservedKeys = propertyMap
             ? Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
@@ -190,8 +192,6 @@ export class Serializable extends SerializableBase implements ISerializable {
         if (typeof value !== "object") {
             throw new ParsingError(type.name, "from()", `Parameter must be an object - is '${value}'`)
         }
-
-        const realObj: T = new type()
 
         if (propertyMap) {
             for (const [key, info] of propertyMap.entries()) {
