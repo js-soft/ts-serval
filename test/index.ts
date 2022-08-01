@@ -31,6 +31,7 @@ import { CryptoTest } from "./usage/Crypto.test"
 import { ValidateAnyPropertyTest } from "./validate/ValidateAnyProperty.test"
 import { ValidateGenericPropertyTest } from "./validate/ValidateGenericProperty.test"
 import { ValidatePropertyAnnotatedWithTypeTest } from "./validate/ValidatePropertyAnnotatedWithTypeTest.test"
+import { ValidateStringTest } from "./validate/ValidateString.test"
 
 function runSerializeAsync(): void {
     SerializeAsyncEnforceStringPropertyTest.init()
@@ -68,6 +69,7 @@ function runSerializeSync(): void {
 function runValidate(): void {
     ValidateAnyPropertyTest.init()
     ValidateGenericPropertyTest.init()
+    ValidateStringTest.init()
 }
 
 function runUsage() {
