@@ -10,7 +10,24 @@ export type ValidatorFunction = (target: any, propertyKey: string) => void
 export class Validate {
     public static validate(params?: ValidateParameter): ValidatorFunction {
         return function (target: any, propertyKey: string): void {
-            const prop = getReflectProperty(target, propertyKey)
+            const result = Reflect.getOwnMetadata("design:type", target, propertyKey)
+            if (!result) {
+                throw new Error(
+                    `No type information for property ${propertyKey} of class ${target} (constructor ${target.constructor}). This usually happens if you declare classes in one scope, but access them from another scope - try to check your imports if you importing the same class.`
+                )
+            }
+
+            const prop = getReflectProperty(target, propertyKey, result.name)
+            prop.type = result.name
+            prop.typeInfo = result
+
+            const lowerType = prop.type.toLowerCase()
+            if (lowerType === "boolean" || lowerType === "array" || lowerType === "number" || lowerType === "string") {
+                prop.primitiveType = lowerType
+            } else {
+                prop.primitiveType = "object"
+            }
+
             prop.validate = true
 
             const propertyGetter = function (): any {
