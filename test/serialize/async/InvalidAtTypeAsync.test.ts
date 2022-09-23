@@ -1,5 +1,5 @@
+import { SerializableAsync } from "@js-soft/ts-serval"
 import itParam from "mocha-param"
-import { SerializableAsync } from "../../../src"
 import { expectThrowsAsync } from "../../testUtil"
 
 export class InvalidAtTypeAsyncTest {

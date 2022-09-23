@@ -1,6 +1,6 @@
+import { Serializable } from "@js-soft/ts-serval"
 import { expect } from "chai"
 import itParam from "mocha-param"
-import { Serializable } from "../../../src"
 
 export class InvalidAtTypeTest {
     public static init(): void {
