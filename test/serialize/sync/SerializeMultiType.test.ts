@@ -184,9 +184,14 @@ export class SerializeMultiTypeTest {
                 expect(object.value).equals(0)
             })
 
-            it("should not parse properties with wrong type", function () {
+            it("should not parse properties with invalid type (array)", function () {
                 const value: any = { value: ["a", "b"] }
                 expectThrows(() => TokenContentMulti.from(value), "TokenContentMulti.value")
+            })
+
+            it("should not deserialize property with invalid type (object)", function () {
+                const value: any = { value: {} }
+                expectThrows(() => TokenContentMulti.fromAny(value), "TokenContentMulti.value")
             })
         })
     }

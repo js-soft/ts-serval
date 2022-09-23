@@ -8,14 +8,14 @@ export function getReflectProperty(target: any, propertyKey: string, type = "any
         target.constructor.name !== "Function" ? target.constructor.prototype.constructor : target
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!SerializableBase.__classes) {
-        SerializableBase.__classes = new Map<string, any>()
+    if (!SerializableBase.__propertyDescriptorsByClassName) {
+        SerializableBase.__propertyDescriptorsByClassName = new Map<string, any>()
     }
 
-    let propClass = SerializableBase.__classes.get(constructorDefinition.name)
+    let propClass = SerializableBase.__propertyDescriptorsByClassName.get(constructorDefinition.name)
     if (!propClass) {
         propClass = new Map<string, IReflectProperty>()
-        SerializableBase.__classes.set(constructorDefinition.name, propClass)
+        SerializableBase.__propertyDescriptorsByClassName.set(constructorDefinition.name, propClass)
     }
 
     let propInstance = propClass.get(propertyKey)

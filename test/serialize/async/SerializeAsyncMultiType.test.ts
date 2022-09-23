@@ -180,8 +180,16 @@ export class SerializeAsyncMultiTypeTest {
                 expect(object.value).equals(0)
             })
 
-            it("should not deserialize property with invalid type", async function () {
+            it("should not deserialize property with invalid type (array)", async function () {
                 const value: any = { value: ["a", "b"] }
+                await expectThrowsAsync(
+                    async () => await TokenContentMultiAsync.fromAny(value),
+                    "TokenContentMultiAsync.value"
+                )
+            })
+
+            it("should not deserialize property with invalid type (object)", async function () {
+                const value: any = { value: {} }
                 await expectThrowsAsync(
                     async () => await TokenContentMultiAsync.fromAny(value),
                     "TokenContentMultiAsync.value"
