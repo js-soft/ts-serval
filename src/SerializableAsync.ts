@@ -144,7 +144,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
         const that = this as unknown as typeof SerializableAsync
 
         if (!type || type === SerializableAsync || type === Serializable) {
-            return (await that.fromUnknown({ ...value, "@type": "JSONWrapper", "@version": 1 })) as T
+            return (await that.fromUnknown({ ...value, "@type": "JSONWrapperAsync", "@version": 1 })) as T
         }
 
         return await that.fromT(value)
