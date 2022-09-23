@@ -1,6 +1,6 @@
 import { expect } from "chai"
 
-export function expectThrows(method: Function, errorMessage = ""): void {
+export function expectThrows(method: Function, errorMessage: string | RegExp = ""): void {
     let error: Error | undefined
     try {
         if (typeof method === "function") {
@@ -16,7 +16,10 @@ export function expectThrows(method: Function, errorMessage = ""): void {
     }
 }
 
-export async function expectThrowsAsync(method: Function | Promise<any>, errorMessage = ""): Promise<void> {
+export async function expectThrowsAsync(
+    method: Function | Promise<any>,
+    errorMessage: string | RegExp = ""
+): Promise<void> {
     let error: Error | undefined
     try {
         if (typeof method === "function") {

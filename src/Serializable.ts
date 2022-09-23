@@ -12,27 +12,23 @@ export class Serializable extends SerializableBase implements ISerializable {
      * @returns the parsed object of the class defined in `@type`
      */
     public static fromUnknown(value: any): Serializable {
-        const obj: any = value
-        let type
-        if (obj["@type"]) {
-            if (typeof obj["@type"] !== "string") {
-                throw new ServalError("Type is not a string.")
-            }
+        if (!value.hasOwnProperty("@type")) {
+            return Serializable.fromAny(value)
+        }
 
-            type = obj["@type"]
+        const type = value["@type"]
+
+        if (typeof type !== "string") {
+            throw new ServalError("@type is not a string.")
         }
 
         let version = 1
-        if (obj["@version"]) {
+        if (value["@version"]) {
             try {
-                version = parseInt(obj["@version"])
+                version = parseInt(value["@version"])
             } catch (e) {
                 throw new ServalError("Version is not a number.")
             }
-        }
-
-        if (!type) {
-            return Serializable.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
