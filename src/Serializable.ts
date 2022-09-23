@@ -139,20 +139,10 @@ export class Serializable extends SerializableBase implements ISerializable {
     public static fromAny<T extends Serializable>(this: Constructor<T>, value: any): T {
         const type = (this as any).prototype.constructor
 
-        // recreating the this context of this function using `that`
         const that = this as unknown as typeof Serializable
 
         if (!type || type === Serializable) {
-            const newValue: any = {}
-
-            if (!value["@type"]) {
-                newValue["@type"] = "JSONWrapper"
-            }
-            if (!value["@version"]) {
-                newValue["@version"] = 1
-            }
-
-            return that.fromUnknown({ ...newValue, ...value }) as T
+            return that.fromUnknown({ ...value, "@type": "JSONWrapper", "@version": 1 }) as T
         }
 
         return that.fromT(value)

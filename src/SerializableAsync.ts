@@ -141,20 +141,10 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     public static async fromAny<T extends SerializableAsync>(this: Constructor<T>, value: any): Promise<T> {
         const type = (this as any).prototype.constructor
 
-        // recreating the this context of this function using `that`
         const that = this as unknown as typeof SerializableAsync
 
         if (!type || type === SerializableAsync || type === Serializable) {
-            const newValue: any = {}
-
-            if (!value["@type"]) {
-                newValue["@type"] = "JSONWrapperAsync"
-            }
-            if (!value["@version"]) {
-                newValue["@version"] = 1
-            }
-
-            return (await that.fromUnknown({ ...newValue, ...value })) as T
+            return (await that.fromUnknown({ ...value, "@type": "JSONWrapper", "@version": 1 })) as T
         }
 
         return await that.fromT(value)
