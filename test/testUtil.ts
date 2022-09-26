@@ -12,7 +12,7 @@ export function expectThrows(method: Function, errorMessage: string | RegExp = "
     expect(error, "No Error was thrown!").to.exist
     expect(error).to.be.an("Error")
     if (errorMessage) {
-        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(`^${errorMessage}`))
+        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(errorMessage))
     }
 }
 
@@ -33,6 +33,6 @@ export async function expectThrowsAsync(
     expect(error, "No Error was thrown!").to.exist
     expect(error, `'${error}' is not an error`).to.be.an("Error")
     if (errorMessage) {
-        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(`^${errorMessage}`))
+        expect(error!.message, `Error Message: ${error!.message}`).to.match(new RegExp(errorMessage))
     }
 }
