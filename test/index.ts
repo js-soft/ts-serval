@@ -2,6 +2,7 @@ import { Inheritance2Test } from "./Inheritance.test"
 import { ParentConstructorTest } from "./ParentConstructor.test"
 import { ArrayInheritanceAsyncTest } from "./serialize/async/ArrayInheritanceAsync.test"
 import { InheritanceAsyncTest } from "./serialize/async/InheritanceAsync.test"
+import { InvalidAtTypeAsyncTest } from "./serialize/async/InvalidAtTypeAsync.test"
 import { SerializeAsyncAnyPropertyTest } from "./serialize/async/SerializeAsyncAnyProperty.test"
 import { SerializeAsyncClassPropertyTest } from "./serialize/async/SerializeAsyncClassProperty.test"
 import { SerializeAsyncEnforceStringPropertyTest } from "./serialize/async/SerializeAsyncEnforceStringProperty.test"
@@ -15,6 +16,7 @@ import { SerializeUnionTypesAsyncTest } from "./serialize/async/SerializeUnionTy
 import { VersioningAsyncTest } from "./serialize/async/VersioningAsync.test"
 import { ArrayInheritanceTest } from "./serialize/sync/ArrayInheritance.test"
 import { InheritanceTest } from "./serialize/sync/Inheritance.test"
+import { InvalidAtTypeTest } from "./serialize/sync/InvalidAtType.test"
 import { SerializeAnyPropertyTest } from "./serialize/sync/SerializeAnyProperty.test"
 import { SerializeClassPropertyTest } from "./serialize/sync/SerializeClassProperty.test"
 import { SerializeEnforceStringPropertyTest } from "./serialize/sync/SerializeEnforceStringProperty.test"
@@ -47,6 +49,7 @@ function runSerializeAsync(): void {
     SerializeUnionTypesAsyncTest.init()
     SerializeAsyncWrapperTest.init()
     VersioningAsyncTest.init()
+    InvalidAtTypeAsyncTest.init()
 }
 
 function runSerializeSync(): void {
@@ -64,6 +67,7 @@ function runSerializeSync(): void {
     SerializeUnionTypesTest.init()
     SerializeWrapperTest.init()
     VersioningTest.init()
+    InvalidAtTypeTest.init()
 }
 
 function runValidate(): void {
