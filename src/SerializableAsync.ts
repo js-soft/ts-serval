@@ -14,27 +14,23 @@ export class SerializableAsync extends SerializableBase implements ISerializable
      * @returns a promise that resolves in the parsed object of the class defined in `@type`
      */
     public static async fromUnknown(value: any): Promise<SerializableAsync> {
-        const obj: any = value
-        let type
-        if (obj["@type"]) {
-            if (typeof obj["@type"] !== "string") {
-                throw new ServalError("Type is not a string.")
-            }
+        if (!value.hasOwnProperty("@type")) {
+            return await SerializableAsync.fromAny(value)
+        }
 
-            type = obj["@type"]
+        const type = value["@type"]
+
+        if (typeof type !== "string") {
+            throw new ServalError("@type is not a string.")
         }
 
         let version = 1
-        if (obj["@version"]) {
+        if (value["@version"]) {
             try {
-                version = parseInt(obj["@version"])
+                version = parseInt(value["@version"])
             } catch (e) {
                 throw new ServalError("Version is not a number.")
             }
-        }
-
-        if (!type) {
-            return await SerializableAsync.fromAny(value)
         }
 
         const result = SerializableBase.getModule(type, version)
@@ -145,20 +141,10 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     public static async fromAny<T extends SerializableAsync>(this: Constructor<T>, value: any): Promise<T> {
         const type = (this as any).prototype.constructor
 
-        // recreating the this context of this function using `that`
         const that = this as unknown as typeof SerializableAsync
 
         if (!type || type === SerializableAsync || type === Serializable) {
-            const newValue: any = {}
-
-            if (!value["@type"]) {
-                newValue["@type"] = "JSONWrapperAsync"
-            }
-            if (!value["@version"]) {
-                newValue["@version"] = 1
-            }
-
-            return (await that.fromUnknown({ ...newValue, ...value })) as T
+            return (await that.fromUnknown({ ...value, "@type": "JSONWrapperAsync", "@version": 1 })) as T
         }
 
         return await that.fromT(value)
