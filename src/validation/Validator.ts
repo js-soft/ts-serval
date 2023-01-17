@@ -3,8 +3,7 @@ import { PrimitiveType } from "./ValidateInterfaces"
 
 export abstract class Validator {
     public static checkDefined(value: any, _descriptor?: IReflectProperty): string | undefined {
-        // eslint-disable-next-line use-isnan
-        if (typeof value === "undefined" || value === null || value === NaN) {
+        if (typeof value === "undefined" || value === null || Number.isNaN(value)) {
             return "Value is not defined"
         }
         return
@@ -178,8 +177,7 @@ export abstract class Validator {
         if (!descriptor.optional) {
             err = this.checkDefined(value, descriptor)
             if (err) return err
-            // eslint-disable-next-line use-isnan
-        } else if (typeof value === "undefined" || value === null || value === NaN) {
+        } else if (typeof value === "undefined" || value === null || Number.isNaN(value)) {
             return
         }
 
