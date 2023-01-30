@@ -160,7 +160,15 @@ export class Serializable extends SerializableBase implements ISerializable {
     private static fromT<T extends Serializable>(value: any): T {
         const type = (this as any).prototype.constructor as Constructor<T>
 
-        value = this.preFrom(value)
+        if (this.preFrom !== Serializable.preFrom) {
+            if (value instanceof SerializableBase) {
+                value = value.toJSON()
+            } else {
+                value = { ...value }
+            }
+
+            value = this.preFrom(value)
+        }
 
         const propertyMap = this.getPropertyMap()
         const nonReservedKeys = Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))

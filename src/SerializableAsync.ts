@@ -162,7 +162,15 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
         const type = (this as any).prototype.constructor as Constructor<T>
 
-        value = await this.preFrom(value)
+        if (this.preFrom !== SerializableAsync.preFrom) {
+            if (value instanceof SerializableBase) {
+                value = value.toJSON()
+            } else {
+                value = { ...value }
+            }
+
+            value = await this.preFrom(value)
+        }
 
         const propertyMap = this.getPropertyMap()
         const nonReservedKeys = Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))
