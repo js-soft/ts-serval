@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
 import { METADATA_FIELDS, Parser } from "./parsing/Parser"
@@ -162,14 +163,8 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
         const type = (this as any).prototype.constructor as Constructor<T>
 
-        if (this.preFrom !== SerializableAsync.preFrom) {
-            if (value instanceof SerializableBase) {
-                value = value.toJSON()
-            } else {
-                value = { ...value }
-            }
-
-            value = await this.preFrom(value)
+        if (this.preFrom !== SerializableAsync.preFrom && !(value instanceof SerializableBase)) {
+            value = this.preFrom(_.cloneDeep(value))
         }
 
         const propertyMap = this.getPropertyMap()

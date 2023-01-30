@@ -47,7 +47,7 @@ export class PreFromTest {
                 const value = PreFromSerializable.fromAny({ x: "x" })
 
                 const s = PreFromSerializable.fromAny(value)
-                expect(s.x).to.equal("xyy")
+                expect(s.x).to.equal("xy")
 
                 expect(value.toJSON()).to.deep.equal({ "@type": "PreFromSerializable", x: "xy" })
             })
@@ -67,7 +67,7 @@ export class PreFromTest {
                 const value = PreFromSerializableAsync.fromAny({ x: "x" })
 
                 const s = PreFromSerializableAsync.fromAny(value)
-                expect(s.x).to.equal("xyy")
+                expect(s.x).to.equal("xy")
 
                 expect(value.toJSON()).to.deep.equal({ "@type": "PreFromSerializableAsync", x: "xy" })
             })
