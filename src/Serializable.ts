@@ -161,6 +161,7 @@ export class Serializable extends SerializableBase implements ISerializable {
     private static fromT<T extends Serializable>(value: any): T {
         const type = (this as any).prototype.constructor as Constructor<T>
 
+        // run preFrom only if it was overwritten and the value is not already a SerializableBase
         if (this.preFrom !== Serializable.preFrom && !(value instanceof SerializableBase)) {
             value = this.preFrom(_.cloneDeep(value))
         }

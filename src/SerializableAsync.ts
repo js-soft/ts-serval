@@ -163,6 +163,7 @@ export class SerializableAsync extends SerializableBase implements ISerializable
     private static async fromT<T extends SerializableAsync>(value: any): Promise<T> {
         const type = (this as any).prototype.constructor as Constructor<T>
 
+        // run preFrom only if it was overwritten and the value is not already a SerializableBase
         if (this.preFrom !== SerializableAsync.preFrom && !(value instanceof SerializableBase)) {
             value = this.preFrom(_.cloneDeep(value))
         }
