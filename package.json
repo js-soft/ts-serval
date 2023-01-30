@@ -1,6 +1,6 @@
 {
     "name": "@js-soft/ts-serval",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
@@ -40,21 +40,23 @@
         "test:web:debug": "browsertest-runner-debug"
     },
     "dependencies": {
+        "lodash": "^4.17.21",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@js-soft/eslint-config-ts": "1.6.2",
-        "mocha-param": "^2.0.1",
         "@js-soft/license-check": "1.0.6",
         "@types/chai": "^4.3.4",
+        "@types/lodash": "^4.14.191",
         "@types/mocha": "^10.0.1",
         "@types/node": "^18.11.18",
         "bt-runner": "^3.1.0",
         "buffer": "^6.0.3",
         "chai": "^4.3.7",
-        "eslint": "8.32.0",
-        "madge": "^5.0.1",
+        "eslint": "8.33.0",
+        "madge": "^6.0.0",
         "mocha": "^10.2.0",
+        "mocha-param": "^2.0.1",
         "prettier": "^2.8.3",
         "terser-webpack-plugin": "5.3.6",
         "ts-node": "^10.9.1",

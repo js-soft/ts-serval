@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { ServalError } from "./errors"
 import { Constructor, ISerializable } from "./interfaces"
 import { METADATA_FIELDS, Parser } from "./parsing/Parser"
@@ -160,7 +161,10 @@ export class Serializable extends SerializableBase implements ISerializable {
     private static fromT<T extends Serializable>(value: any): T {
         const type = (this as any).prototype.constructor as Constructor<T>
 
-        value = this.preFrom(value)
+        // run preFrom only if it was overwritten and the value is not already a SerializableBase
+        if (this.preFrom !== Serializable.preFrom && !(value instanceof SerializableBase)) {
+            value = this.preFrom(_.cloneDeep(value))
+        }
 
         const propertyMap = this.getPropertyMap()
         const nonReservedKeys = Array.from(propertyMap.keys()).filter((k) => !METADATA_FIELDS.includes(k))

@@ -10,10 +10,9 @@ export class JSONWrapper extends Serializable {
     public value: any
 
     public static override preFrom(value: any): any {
-        const parsed = JSON.parse(JSON.stringify(value))
-        delete parsed["@type"]
-        delete parsed["@version"]
-        return { value: parsed }
+        delete value["@type"]
+        delete value["@version"]
+        return { value: value }
     }
 
     public static from(value: any): JSONWrapper {

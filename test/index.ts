@@ -14,6 +14,7 @@ import { SerializeOnlyAsyncTest } from "./serialize/async/SerializeOnlyAsync.tes
 import { SerializeUnionTypesArrayAsyncTest } from "./serialize/async/SerializeUnionTypesArrayAsync.test"
 import { SerializeUnionTypesAsyncTest } from "./serialize/async/SerializeUnionTypesAsync.test"
 import { VersioningAsyncTest } from "./serialize/async/VersioningAsync.test"
+import { PreFromTest } from "./serialize/PreFrom.test"
 import { ArrayInheritanceTest } from "./serialize/sync/ArrayInheritance.test"
 import { InheritanceTest } from "./serialize/sync/Inheritance.test"
 import { InvalidAtTypeTest } from "./serialize/sync/InvalidAtType.test"
@@ -68,6 +69,7 @@ function runSerializeSync(): void {
     SerializeWrapperTest.init()
     VersioningTest.init()
     InvalidAtTypeTest.init()
+    PreFromTest.init()
 }
 
 function runValidate(): void {
