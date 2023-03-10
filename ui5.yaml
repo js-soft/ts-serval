@@ -4,6 +4,6 @@ type: module
 resources:
   configuration:
     paths:
-      /resources/ts-serval: ./lib-web/
+      /resources/ts-serval/: ./lib-web/
 metadata:
   name: ts-serval
