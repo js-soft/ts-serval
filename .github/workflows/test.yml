@@ -8,10 +8,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: jssoft/node_browsertests
     steps:
       - uses: actions/checkout@v2
-      - run: apt-get update && apt-get install jq -y
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: browser-actions/setup-chrome@latest
       - run: bash .ci/build.sh
         env:
           BUILD_NUMBER: ${{ github.run_number }}
