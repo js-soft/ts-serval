@@ -15,6 +15,13 @@ class ValidateStringRegexTestType extends Serializable {
     public value: string
 }
 
+@type("ValidateStringMaxHigherTestType")
+class ValidateStringMaxHigherTestType extends ValidateStringMinMaxTestType {
+    @serialize()
+    @validate({ min: 10, max: 20 })
+    public override value: string
+}
+
 export class ValidateStringTest {
     public static init(): void {
         describe("ValidateString", function () {
@@ -31,6 +38,19 @@ export class ValidateStringTest {
                 })
             })
 
+            describe("Min Inheritance", function () {
+                it("accepts a correct value", function () {
+                    const value = ValidateStringMaxHigherTestType.fromAny({ value: "abcdefabcdefabcdef" })
+                    expect(value.value).to.equal("abcdefabcdefabcdef")
+                })
+
+                it("rejects a too short value", function () {
+                    expect(() => ValidateStringMaxHigherTestType.fromAny({ value: "a" })).to.throw(
+                        "Value is shorter than 10 characters"
+                    )
+                })
+            })
+
             describe("Max", function () {
                 it("accepts a correct value", function () {
                     const value = ValidateStringMinMaxTestType.fromAny({ value: "ab" })
@@ -41,6 +61,19 @@ export class ValidateStringTest {
                     expect(() => ValidateStringMinMaxTestType.fromAny({ value: "abc" })).to.throw(
                         "Value is longer than 2 characters"
                     )
+                })
+            })
+
+            describe("Max Inheritance", function () {
+                it("accepts a correct value", function () {
+                    const value = ValidateStringMaxHigherTestType.fromAny({ value: "abcdefabcdefabcdef" })
+                    expect(value.value).to.equal("abcdefabcdefabcdef")
+                })
+
+                it("rejects a too long value", function () {
+                    expect(() =>
+                        ValidateStringMaxHigherTestType.fromAny({ value: "abcdefabcdefabcdefabcdefabcdefabcdef" })
+                    ).to.throw("Value is longer than 20 characters")
                 })
             })
 
