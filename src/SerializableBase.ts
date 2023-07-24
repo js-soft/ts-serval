@@ -57,7 +57,9 @@ export class SerializableBase {
         if (currentDescriptors) {
             currentDescriptors.forEach((value, key) => {
                 if (key === "@type" || key === "@version" || key === "@context") return
-                storeInMap.set(key, value)
+                if (!storeInMap.has(key)) {
+                    storeInMap.set(key, value)
+                }
             })
         }
 
