@@ -264,7 +264,7 @@ export class SerializableBase {
                     verbose = true
                 }
                 if (value instanceof SerializableBase) {
-                    if (descriptor.enforceString || serializeAsString) {
+                    if (!!descriptor.enforceString || serializeAsString) {
                         return value.serialize(verbose)
                     }
                     return value.toJSON(verbose)
@@ -275,7 +275,7 @@ export class SerializableBase {
                         "Object is not yet resolved. You have to wait for Promises to proceed with serialization."
                     )
                 } else if (typeof value.toJSON === "function") {
-                    if (descriptor.enforceString || serializeAsString) {
+                    if (!!descriptor.enforceString || serializeAsString) {
                         return JSON.stringify(value.toJSON())
                     }
                     return value.toJSON()

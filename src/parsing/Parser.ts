@@ -137,7 +137,7 @@ export abstract class Parser {
         let fct: Function | undefined
         const args: any[] = [value]
 
-        if ((descriptor.parseUnknown || descriptor.type === "Serializable") && value && value["@type"]) {
+        if ((!!descriptor.parseUnknown || descriptor.type === "Serializable") && value?.["@type"]) {
             return caller.deserializeUnknown(value)
         }
 
@@ -184,11 +184,10 @@ export abstract class Parser {
         const args: any[] = [value]
 
         if (
-            (descriptor.parseUnknown ||
+            (!!descriptor.parseUnknown ||
                 descriptor.type === "Serializable" ||
                 descriptor.type === "SerializableAsync") &&
-            value &&
-            value["@type"]
+            value?.["@type"]
         ) {
             // eslint-disable-next-line @typescript-eslint/return-await
             return await caller.deserializeUnknown(value)
@@ -357,7 +356,7 @@ export abstract class Parser {
             return value
         } else if (descriptor.unionTypes?.some((t) => value instanceof t)) {
             return value
-        } else if ((typeof value === "string" && descriptor.deserializeStrings) || descriptor.enforceString) {
+        } else if (!!(typeof value === "string" && descriptor.deserializeStrings) || descriptor.enforceString) {
             return Parser.parseStringObject(value, descriptor, className, caller)
         } else if (descriptor.any) {
             return value
@@ -367,7 +366,7 @@ export abstract class Parser {
 
         if (
             value?.["@type"] &&
-            (descriptor.parseUnknown ||
+            (!!descriptor.parseUnknown ||
                 descriptor.type === "Serializable" ||
                 typeof descriptor.allowSubclasses === "undefined" ||
                 descriptor.allowSubclasses)
@@ -440,7 +439,7 @@ export abstract class Parser {
             return await Promise.resolve(value)
         } else if (descriptor.unionTypes?.some((t) => value instanceof t)) {
             return await Promise.resolve(value)
-        } else if ((typeof value === "string" && descriptor.deserializeStrings) || descriptor.enforceString) {
+        } else if (!!(typeof value === "string" && descriptor.deserializeStrings) || descriptor.enforceString) {
             return await Parser.parseStringObjectAsync(value, descriptor, className, caller)
         } else if (descriptor.any) {
             return await Promise.resolve(value)
@@ -450,7 +449,7 @@ export abstract class Parser {
 
         if (
             value?.["@type"] &&
-            (descriptor.parseUnknown ||
+            (!!descriptor.parseUnknown ||
                 descriptor.type === "Serializable" ||
                 typeof descriptor.allowSubclasses === "undefined" ||
                 descriptor.allowSubclasses)
