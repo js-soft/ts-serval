@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "target": "es2017",
+        "target": "ES2022",
         "module": "commonjs",
         "sourceMap": true,
         "declaration": true,
+        "declarationMap": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "outDir": "dist",
@@ -16,7 +17,7 @@
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
-        "lib": ["es2017", "dom"],
+        "lib": ["ES2022", "DOM"],
         "typeRoots": ["./node_modules/@types"],
         "baseUrl": ".",
         "paths": {
