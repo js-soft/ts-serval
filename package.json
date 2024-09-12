@@ -1,6 +1,6 @@
 {
     "name": "@js-soft/ts-serval",
-    "version": "2.0.10",
+    "version": "2.0.11",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
@@ -9,12 +9,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist",
-        "lib-web/tsserval.js",
-        "lib-web/tsserval.min.js",
-        "lib-web/tsserval.js.map",
-        "lib-web/tsserval.min.js.map",
-        "ui5.yaml"
+        "dist"
     ],
     "scripts": {
         "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:tsc",
@@ -41,27 +36,27 @@
     },
     "dependencies": {
         "lodash": "^4.17.21",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.2.2"
     },
     "devDependencies": {
         "@js-soft/eslint-config-ts": "1.6.5",
-        "@js-soft/license-check": "1.0.8",
-        "@types/chai": "^4.3.10",
-        "@types/lodash": "^4.14.201",
-        "@types/mocha": "^10.0.4",
-        "@types/node": "^20.9.1",
-        "bt-runner": "^4.0.2",
+        "@js-soft/license-check": "1.0.9",
+        "@types/chai": "^4.3.19",
+        "@types/lodash": "^4.17.7",
+        "@types/mocha": "^10.0.7",
+        "@types/node": "^22.5.4",
+        "bt-runner": "^4.0.3",
         "buffer": "^6.0.3",
         "chai": "^4.3.10",
         "eslint": "8.53.0",
-        "madge": "^6.1.0",
+        "madge": "^8.0.0",
         "mocha": "^10.2.0",
         "mocha-param": "^2.0.1",
-        "prettier": "^3.1.0",
+        "prettier": "^3.3.3",
         "terser-webpack-plugin": "5.3.9",
-        "ts-node": "^10.9.1",
+        "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.2.2",
+        "typescript": "^5.6.2",
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4"
     },
