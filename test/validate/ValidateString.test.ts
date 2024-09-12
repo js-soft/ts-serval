@@ -19,7 +19,7 @@ class ValidateStringRegexTestType extends Serializable {
 class ValidateStringMaxHigherTestType extends ValidateStringMinMaxTestType {
     @serialize()
     @validate({ min: 10, max: 20 })
-    public declare value: string
+    public override value: string
 }
 
 export class ValidateStringTest {
