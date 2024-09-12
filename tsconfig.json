@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
+        "target": "es2017",
         "module": "commonjs",
         "sourceMap": true,
         "declaration": true,
@@ -17,7 +17,7 @@
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
-        "lib": ["ES2022", "DOM"],
+        "lib": ["es2017", "DOM"],
         "typeRoots": ["./node_modules/@types"],
         "baseUrl": ".",
         "paths": {
