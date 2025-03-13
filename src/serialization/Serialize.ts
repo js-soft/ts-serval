@@ -86,6 +86,9 @@ export class Serialize {
             if (params.customDeserializer) {
                 prop.customDeserializer = params.customDeserializer
             }
+            if (params.customSerializer) {
+                prop.customSerializer = params.customSerializer
+            }
             if (params.customParser) {
                 prop.customParser = params.customParser
             }
