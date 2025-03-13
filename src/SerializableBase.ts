@@ -265,6 +265,10 @@ export class SerializableBase {
                 }
                 if (value instanceof SerializableBase) {
                     if (!!descriptor.enforceString || serializeAsString) {
+                        if (typeof descriptor.customSerializer === "function") {
+                            return descriptor.customSerializer(value, descriptor, verbose)
+                        }
+
                         return value.serialize(verbose)
                     }
                     return value.toJSON(verbose)
