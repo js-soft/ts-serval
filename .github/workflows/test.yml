@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: current
       - uses: browser-actions/setup-chrome@latest
       - run: bash .ci/build.sh
         env:
