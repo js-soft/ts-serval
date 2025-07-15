@@ -27,7 +27,7 @@ export class Serializable extends SerializableBase implements ISerializable {
         if (value["@version"]) {
             try {
                 version = parseInt(value["@version"])
-            } catch (e) {
+            } catch (_) {
                 throw new ServalError("Version is not a number.")
             }
         }

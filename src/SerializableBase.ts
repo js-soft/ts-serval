@@ -160,7 +160,7 @@ export class SerializableBase {
                     obj[key] = info.value
                 }
             } else {
-                const jsonKey = info.alias ? info.alias : key
+                const jsonKey = info.alias ?? key
                 const value = this.serializeProperty(this[key], info, false, serializeAsString)
                 if (typeof value !== "undefined") {
                     obj[jsonKey] = value

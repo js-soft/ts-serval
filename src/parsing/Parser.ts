@@ -47,6 +47,7 @@ export abstract class Parser {
 
             case "string":
                 return Parser.parseString(value, descriptor, className)
+            case undefined:
             default:
                 // Ignore everything else
                 break
@@ -106,6 +107,7 @@ export abstract class Parser {
 
             case "string":
                 return await Promise.resolve(Parser.parseString(value, descriptor, className))
+            case undefined:
             default:
                 // Ignore everything else
                 break
@@ -131,7 +133,7 @@ export abstract class Parser {
         return await Parser.parseObjectAsync(value, descriptor, className, caller)
     }
 
-    public static parseStringObject(value: any, descriptor: IReflectProperty, className: string, caller: any): any {
+    public static parseStringObject(value: any, descriptor: IReflectProperty, _className: string, caller: any): any {
         const classInfo: any = descriptor.typeInfo
         const thisObj: any = classInfo
         let fct: Function | undefined
@@ -189,7 +191,6 @@ export abstract class Parser {
                 descriptor.type === "SerializableAsync") &&
             value?.["@type"]
         ) {
-            // eslint-disable-next-line @typescript-eslint/return-await
             return await caller.deserializeUnknown(value)
         }
 

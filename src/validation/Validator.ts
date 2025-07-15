@@ -51,7 +51,7 @@ export abstract class Validator {
             return "Value is not within the list of allowed values."
         }
 
-        if (typeof descriptor.disallowedValues !== "undefined" && descriptor.disallowedValues.includes(value)) {
+        if (descriptor.disallowedValues?.includes(value)) {
             return "Value is within the list of disallowed values."
         }
 
@@ -79,7 +79,7 @@ export abstract class Validator {
             return "Value is not within the list of allowed values."
         }
 
-        if (typeof descriptor.disallowedValues !== "undefined" && descriptor.disallowedValues.includes(value)) {
+        if (descriptor.disallowedValues?.includes(value)) {
             return "Value is within the list of disallowed values."
         }
 
@@ -105,7 +105,7 @@ export abstract class Validator {
                 return `Value of item ${i} is not within the list of allowed values.`
             }
 
-            if (typeof descriptor.disallowedValues !== "undefined" && descriptor.disallowedValues.includes(item)) {
+            if (descriptor.disallowedValues?.includes(item)) {
                 return `Value of item ${i} is within the list of disallowed values.`
             }
             i++
@@ -203,6 +203,7 @@ export abstract class Validator {
 
             case "string":
                 return this.checkString(value, descriptor)
+            case undefined:
             default:
                 // Ignore all other values
                 break

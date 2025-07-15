@@ -106,11 +106,11 @@ export interface ISchemaParameters {
 
 export function schema(context: string, type?: string, parameters: ISchemaParameters = { version: 1 }) {
     return (target: any): void => {
-        const version = parameters.version ? parameters.version : 1
+        const version = parameters.version ?? 1
         Reflect.defineMetadata("design:type", String, target, "@context")
         Reflect.defineMetadata("design:type", String, target, "@type")
         Reflect.defineMetadata("design:type", String, target, "@version")
-        type = type ? type : target.constructor.name
+        type = type ?? target.constructor.name
         const typeAndVersion = `${type}@${version}`
         Reflect.defineMetadata(typeAndVersion, target, SerializableBase, "types")
 
@@ -135,7 +135,7 @@ export interface ITypeParameters {
 
 export function type(type: string, parameters: ITypeParameters = { version: 1 }) {
     return (target: any): void => {
-        const version = parameters.version ? parameters.version : 1
+        const version = parameters.version ?? 1
         Reflect.defineMetadata("design:type", String, target, "@context")
         Reflect.defineMetadata("design:type", String, target, "@type")
         Reflect.defineMetadata("design:type", String, target, "@version")
