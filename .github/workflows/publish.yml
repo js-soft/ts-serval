@@ -12,11 +12,11 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: current
-          registry-url: https://registry.npmjs.org/
+          registry-url: https://registry.npmjs.org
       - uses: browser-actions/setup-chrome@latest
       - run: bash .ci/build.sh
         env:
@@ -24,5 +24,3 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}
       - run: bash .ci/test.sh
       - run: bash .ci/publish.sh
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
