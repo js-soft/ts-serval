@@ -1,11 +1,11 @@
 {
     "name": "@js-soft/ts-serval",
-    "version": "2.0.14",
+    "version": "2.0.15",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
     "license": "MIT",
-    "author": "j&s-soft GmbH",
+    "author": "j&s-soft AG",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
@@ -50,7 +50,7 @@
         "chai": "^6.2.0",
         "eslint": "9.37.0",
         "madge": "^8.0.0",
-        "mocha": "^11.7.4",
+        "mocha": "^11.3.0",
         "mocha-param": "^2.0.1",
         "prettier": "^3.6.2",
         "terser-webpack-plugin": "5.3.14",
