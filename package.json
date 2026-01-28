@@ -5,7 +5,7 @@
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
     "license": "MIT",
-    "author": "j&s-soft GmbH",
+    "author": "j&s-soft AG",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
