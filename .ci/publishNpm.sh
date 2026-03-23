@@ -12,7 +12,7 @@ if printf -- "$VERSION" | grep -q " "; then
 fi
 
 # set the version of all packages in the workspace to $VERSION
-npm version $VERSION
+npm version --no-git-tag-version $VERSION
 
 # npm i to update the lockfile
 npm i
