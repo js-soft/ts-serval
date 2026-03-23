@@ -2,25 +2,34 @@ name: Publish
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
 
 jobs:
+  run-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: bash .ci/runChecks.sh
+
   publish-npm:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: current
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
-      - uses: browser-actions/setup-chrome@latest
-      - run: bash .ci/build.sh
+      - run: npm ci
+      - run: npm run build:ci
         env:
           BUILD_NUMBER: ${{ github.run_number }}
           COMMIT_HASH: ${{ github.sha }}
-      - run: bash .ci/test.sh
-      - run: bash .ci/publish.sh
+          VERSION: ${{ github.ref_name }}
+      - run: bash .ci/publishNpm.sh
+        env:
+          VERSION: ${{ github.ref_name }}
+    needs: ["run-checks"]
