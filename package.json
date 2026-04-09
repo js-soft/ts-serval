@@ -1,6 +1,5 @@
 {
     "name": "@js-soft/ts-serval",
-    "version": "2.0.17",
     "description": "TypeScript Runtime Serialization and Validation",
     "homepage": "https://github.com/js-soft/ts-serval#readme",
     "repository": "github:js-soft/ts-serval",
@@ -17,7 +16,7 @@
         "lint:eslint": "eslint",
         "lint:tsc": "tsc --noEmit && tsc -p test/tsconfig.json --noEmit",
         "bt": "npm run test:node && npm run build:node && npm run build:test && npm run bundle && npm run test:web",
-        "build": "npm run build:node && npm run bundle",
+        "build": "npm run build:node && npm run build:test && npm run bundle",
         "build:node": "tsc -p tsconfig.json && madge --circular dist",
         "build:ci": "npm run build:node && .ci/writeBuildInformation.sh && npm run build:test && npm run bundle",
         "build:test": "tsc -p tsconfig.test.json",
@@ -48,6 +47,7 @@
         "bt-runner": "^4.0.9",
         "buffer": "^6.0.3",
         "chai": "^6.2.2",
+        "enhanced-publish": "^1.1.8",
         "eslint": "9.39.2",
         "madge": "^8.0.0",
         "mocha": "^11.7.5",

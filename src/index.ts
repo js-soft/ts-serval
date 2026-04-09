@@ -1,4 +1,4 @@
-export * from "./BuildInformation"
+export * from "./buildInformation"
 export * from "./errors"
 export * from "./interfaces"
 export * from "./parsing/ParsingError"

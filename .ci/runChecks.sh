@@ -1,9 +1,9 @@
 set -e
-set -x
 
 npm ci
-npm run lint:prettier
+npm run build:node
 npm run lint:eslint
+npm run lint:prettier
+npm run cdep
 npx license-check
 npx better-npm-audit audit --exclude 1112706,1113686,1115723
-npm run build:ci
