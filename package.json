@@ -47,7 +47,7 @@
         "bt-runner": "^4.0.9",
         "buffer": "^6.0.3",
         "chai": "^6.2.2",
-        "enhanced-publish": "^1.1.7",
+        "enhanced-publish": "^1.1.8",
         "eslint": "9.39.2",
         "madge": "^8.0.0",
         "mocha": "^11.7.5",
