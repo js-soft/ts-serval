@@ -118,5 +118,5 @@ e.role = Role.from({ role: "aRole" })
 
 let serialized = e.serialize()
 const parsed = JSON.parse(serialized)
-const loaded: NewCheckEmployee = NewCheckEmployee.from(parsed) as any
+const loaded: NewCheckEmployee = NewCheckEmployee.from(parsed)
 serialized = loaded.serialize()
