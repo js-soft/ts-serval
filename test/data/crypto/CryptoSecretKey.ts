@@ -51,7 +51,7 @@ export class CryptoSecretKey extends CryptoSerializableAsync implements ICryptoS
     public static async fromJSON(value: ICryptoSecretKeySerialized): Promise<CryptoSecretKey> {
         const buffer = CoreBuffer.deserialize(value.key)
         return await this.fromAny({
-            algorithm: value.alg as CryptoEncryptionAlgorithm,
+            algorithm: value.alg,
             secretKey: buffer
         })
     }
