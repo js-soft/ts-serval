@@ -19,6 +19,7 @@
         "noImplicitOverride": true,
         "lib": ["es2017", "dom"],
         "typeRoots": ["./node_modules/@types"],
+        "types": [],
         "baseUrl": ".",
         "paths": {
             "@js-soft/ts-serval": ["./src"]
