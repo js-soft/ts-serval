@@ -25,9 +25,7 @@ export interface SerializeParameterBase {
      * @default undefined - the internal .deserialize() function is used
      */
     customDeserializer?:
-        | ((value: string) => SerializableBase)
-        | ((value: string) => Promise<SerializableBase>)
-        | Function
+        ((value: string) => SerializableBase) | ((value: string) => Promise<SerializableBase>) | Function
 
     /**
      * The custom function to parse an object from another (usually untyped) JSON object
