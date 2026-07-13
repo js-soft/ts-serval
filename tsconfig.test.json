@@ -18,7 +18,7 @@
         "lib": ["es2017", "es2020.bigint", "dom"],
         "types": [],
         "paths": {
-            "@js-soft/ts-serval": ["../dist"]
+            "@js-soft/ts-serval": ["./dist"]
         }
     },
     "include": ["test/**/*.ts"],
