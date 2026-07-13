@@ -1,26 +1,24 @@
 {
     "compilerOptions": {
         "target": "es2017",
-        "module": "commonjs",
+        "module": "nodenext",
         "sourceMap": true,
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "rootDir": "test",
         "outDir": "dist-test",
         "strict": false, // Unfortunately strict mode has problems with decorators accessing the this context within getters/setters
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "moduleResolution": "node",
         "forceConsistentCasingInFileNames": true,
-        "downlevelIteration": true,
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
         "lib": ["es2017", "es2020.bigint", "dom"],
         "types": [],
-        "baseUrl": "./test",
         "paths": {
-            "@js-soft/ts-serval": ["../dist"]
+            "@js-soft/ts-serval": ["./dist"]
         }
     },
     "include": ["test/**/*.ts"],
