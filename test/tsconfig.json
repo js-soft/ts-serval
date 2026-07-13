@@ -10,17 +10,14 @@
         "strict": false, // Unfortunately strict mode has problems with decorators accessing the this context within getters/setters
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "moduleResolution": "node",
         "forceConsistentCasingInFileNames": true,
-        "downlevelIteration": true,
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "noImplicitOverride": true,
         "lib": ["es2017", "dom"],
         "typeRoots": ["../node_modules/@types"],
-        "baseUrl": "../",
         "paths": {
-            "@js-soft/ts-serval": ["src"]
+            "@js-soft/ts-serval": ["../src"]
         }
     },
     "include": ["**/*.ts"],
