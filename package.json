@@ -47,7 +47,7 @@
         "bt-runner": "4.0.11",
         "buffer": "6.0.3",
         "chai": "6.2.2",
-        "dependency-cruiser": "17.4.3",
+        "dependency-cruiser": "18.1.0",
         "enhanced-publish": "1.1.9",
         "eslint": "10.7.0",
         "mocha": "11.7.6",
