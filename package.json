@@ -49,7 +49,7 @@
         "chai": "6.2.2",
         "dependency-cruiser": "17.4.3",
         "enhanced-publish": "1.1.10",
-        "eslint": "10.7.0",
+        "eslint": "10.8.0",
         "mocha": "11.7.6",
         "mocha-param": "2.0.1",
         "prettier": "3.9.6",
