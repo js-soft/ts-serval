@@ -1,0 +1,92 @@
+name: better-npm-audit
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # every day at 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: better-npm-audit
+  cancel-in-progress: false
+
+jobs:
+  better-npm-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          token: ${{ secrets.GH_PAT || github.token }}
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Handle npm audit
+        run: node .ci/handleNpmAudit.mjs
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- package.json package-lock.json .nsprc; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create branch
+        id: branch
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          branch_name="handle-vulnerabilities"
+
+          git config user.name "js-soft-ops"
+          git config user.email "ci@js-soft.com"
+          git fetch origin "$branch_name" || true
+          git switch -C "$branch_name"
+
+          echo "branch_name=$branch_name" >> "$GITHUB_OUTPUT"
+
+      - name: Commit changes
+        id: commit
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git add package.json package-lock.json .nsprc
+
+          if git diff --cached --quiet; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git commit -m "Handle vulnerabilities"
+          git push --force-with-lease --set-upstream origin "${{ steps.branch.outputs.branch_name }}"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        if: steps.commit.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          BRANCH_NAME: ${{ steps.branch.outputs.branch_name }}
+        run: |
+          existing_pr_url=$(gh pr list --head "$BRANCH_NAME" --state open --json url --jq '.[0].url')
+
+          if [ -n "$existing_pr_url" ]; then
+            echo "Pull request already exists: $existing_pr_url"
+            exit 0
+          fi
+
+          cat > audit-pr-body.md <<EOF
+          This PR was created automatically because better-npm-audit found vulnerabilities that are not in .nsprc.
+
+          Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+          EOF
+
+          gh pr create \
+            --head "$BRANCH_NAME" \
+            --base "${{ github.event.repository.default_branch }}" \
+            --title "chore: handle npm audit vulnerabilities" \
+            --body-file audit-pr-body.md \
+            --label dependencies
