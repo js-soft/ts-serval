@@ -1,4 +1,4 @@
-name: better-npm-audit
+name: Handle npm audit
 
 on:
   schedule:
