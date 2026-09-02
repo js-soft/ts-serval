@@ -29,7 +29,7 @@
         "test:local:node": "npm run test:node",
         "test:ci": "npm run test",
         "test": "npm run test:node && npm run test:web",
-        "test:node": "mocha -r ts-node/register -r tsconfig-paths/register ./test/index.ts --project ./test/tsconfig.json --exit",
+        "test:node": "TS_NODE_PROJECT=./test/tsconfig.json mocha -r ts-node/register -r tsconfig-paths/register ./test/index.ts --exit",
         "test:web": "browsertest-runner",
         "test:web:debug": "browsertest-runner --debug"
     },
