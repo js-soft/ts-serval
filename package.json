@@ -47,9 +47,9 @@
         "bt-runner": "4.0.22",
         "buffer": "6.0.3",
         "chai": "6.2.2",
-        "dependency-cruiser": "18.2.0",
+        "dependency-cruiser": "18.3.1",
         "enhanced-publish": "1.1.13",
-        "eslint": "10.10.0",
+        "eslint": "10.11.0",
         "mocha": "12.0.2",
         "mocha-param": "2.0.1",
         "prettier": "3.9.8",
@@ -58,7 +58,7 @@
         "tsconfig-paths": "4.2.0",
         "typescript": "6.0.3",
         "typescript-eslint": "8.70.0",
-        "webpack": "5.110.3",
+        "webpack": "5.111.1",
         "webpack-cli": "7.2.3"
     },
     "publishConfig": {
