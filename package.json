@@ -43,7 +43,7 @@
         "@types/chai": "5.2.3",
         "@types/lodash": "4.17.27",
         "@types/mocha": "10.0.10",
-        "@types/node": "25.9.9",
+        "@types/node": "26.6.5",
         "bt-runner": "4.0.27",
         "buffer": "6.0.3",
         "chai": "6.3.0",
