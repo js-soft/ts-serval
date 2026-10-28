@@ -38,17 +38,17 @@
         "reflect-metadata": "^0.2.2"
     },
     "devDependencies": {
-        "@js-soft/eslint-config-ts": "2.0.12",
+        "@js-soft/eslint-config-ts": "2.0.13",
         "@js-soft/license-check": "1.0.16",
         "@types/chai": "5.2.3",
-        "@types/lodash": "4.17.26",
+        "@types/lodash": "4.17.27",
         "@types/mocha": "10.0.10",
         "@types/node": "25.9.9",
-        "bt-runner": "4.0.26",
+        "bt-runner": "4.0.27",
         "buffer": "6.0.3",
         "chai": "6.3.0",
         "dependency-cruiser": "18.6.0",
-        "enhanced-publish": "1.1.17",
+        "enhanced-publish": "1.1.18",
         "eslint": "10.13.0",
         "mocha": "12.0.3",
         "mocha-param": "2.0.1",
@@ -58,7 +58,7 @@
         "tsconfig-paths": "4.2.0",
         "typescript": "6.0.3",
         "typescript-eslint": "8.71.2",
-        "webpack": "5.112.0",
+        "webpack": "5.112.2",
         "webpack-cli": "7.2.3"
     },
     "publishConfig": {
